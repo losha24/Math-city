@@ -16,10 +16,6 @@
 
 <body>
 
-<div class="version">
-Math City <span id="version"></span>
-</div>
-
 <div id="startScreen">
 
 <h1>Math City</h1>
@@ -35,9 +31,9 @@ Math City <span id="version"></span>
 
 <header>
 
-<div class="coinsBox">
+<div>
 
-🪙 <span id="coins">0</span>
+🪙 <span id="coins">0</span>  
 ⭐ רמה <span id="level">1</span>
 
 </div>
@@ -46,8 +42,14 @@ Math City <span id="version"></span>
 
 <button onclick="openShop()">🛒 חנות</button>
 <button onclick="openPrizes()">🎁 פרסים</button>
-<button onclick="checkUpdate()">🔄 רענן</button>
+<button onclick="refreshGame()">🔄 רענן</button>
 <button id="installBtn" class="hidden">📲 התקן</button>
+
+</div>
+
+<div class="version">
+
+Math City v1.0
 
 </div>
 
@@ -95,11 +97,11 @@ Math City <span id="version"></span>
 
 <div id="updatePopup" class="popup hidden">
 
-<h2>🚀 גרסה חדשה זמינה</h2>
+<h2>🚀 עדכון חדש</h2>
 
-<p id="newVersion"></p>
+<p>יש גרסה חדשה של המשחק</p>
 
-<button onclick="updateGame()">עדכן עכשיו</button>
+<button onclick="updateGame()">עדכן</button>
 
 </div>
 
@@ -111,9 +113,7 @@ Math City <span id="version"></span>
 
 <script>
 
-const VERSION="v1.0"
-
-document.getElementById("version").innerText=VERSION
+const VERSION="1.0"
 
 let coins=0
 let correctCount=0
@@ -183,6 +183,44 @@ newQuestion()
 
 }
 
+function refreshGame(){
+
+fetch("version.json?"+Date.now())
+
+.then(r=>r.json())
+
+.then(data=>{
+
+if(data.version!==VERSION){
+
+document.getElementById("updatePopup").classList.remove("hidden")
+
+}else{
+
+location.reload()
+
+}
+
+})
+
+}
+
+function updateGame(){
+
+caches.keys().then(names=>{
+
+names.forEach(name=>{
+
+caches.delete(name)
+
+})
+
+})
+
+location.reload(true)
+
+}
+
 function newQuestion(){
 
 tries=0
@@ -224,15 +262,6 @@ if(correctCount%20===0){
 
 level++
 alert("עלית רמה!")
-
-}
-
-if(correctCount%10===0){
-
-let p="🎁 פרס "+(prizes.length+1)
-prizes.push(p)
-
-alert("קיבלת פרס!")
 
 }
 
@@ -307,135 +336,6 @@ c.appendChild(d)
 })
 
 }
-
-function openShop(){
-
-document.getElementById("shop").classList.remove("hidden")
-
-document.getElementById("shopCoins").innerText=coins
-
-renderShop()
-
-}
-
-function closeShop(){
-
-document.getElementById("shop").classList.add("hidden")
-
-}
-
-function renderShop(){
-
-let s=document.getElementById("shopItems")
-
-s.innerHTML=""
-
-shopItems.forEach((item,i)=>{
-
-let d=document.createElement("div")
-
-d.className="shopItem"
-
-d.innerHTML=
-
-item.icon+"<br>"+
-item.name+"<br>"+
-item.price+"<br>"+
-"<button onclick='buyItem("+i+")'>קנה</button>"
-
-s.appendChild(d)
-
-})
-
-}
-
-function buyItem(i){
-
-let item=shopItems[i]
-
-if(coins>=item.price){
-
-coins-=item.price
-
-city.push(item.icon)
-
-renderCity()
-
-updateCoins()
-
-save()
-
-}
-
-}
-
-function openPrizes(){
-
-document.getElementById("prizes").classList.remove("hidden")
-
-let list=document.getElementById("prizeList")
-
-list.innerHTML=""
-
-prizes.forEach(p=>{
-
-let li=document.createElement("li")
-
-li.innerText=p
-
-list.appendChild(li)
-
-})
-
-}
-
-function closePrizes(){
-
-document.getElementById("prizes").classList.add("hidden")
-
-}
-
-function checkUpdate(){
-
-document.getElementById("newVersion").innerText="גרסה "+VERSION
-
-document.getElementById("updatePopup").classList.remove("hidden")
-
-}
-
-function updateGame(){
-
-caches.keys().then(names=>{
-
-names.forEach(name=>{
-
-caches.delete(name)
-
-})
-
-})
-
-location.reload(true)
-
-}
-
-let deferredPrompt
-
-window.addEventListener('beforeinstallprompt',(e)=>{
-
-e.preventDefault()
-
-deferredPrompt=e
-
-document.getElementById("installBtn").classList.remove("hidden")
-
-})
-
-document.getElementById("installBtn").addEventListener("click",()=>{
-
-deferredPrompt.prompt()
-
-})
 
 load()
 
