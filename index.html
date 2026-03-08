@@ -32,10 +32,7 @@
 <header>
 
 <div class="coinsBox">
-
 🪙 <span id="coins">0</span>
-⭐ רמה <span id="level">1</span>
-
 </div>
 
 <div>
@@ -43,13 +40,11 @@
 <button onclick="openShop()">🛒 חנות</button>
 <button onclick="openPrizes()">🎁 פרסים</button>
 <button onclick="refreshGame()">🔄 רענן</button>
-<button id="installBtn" class="hidden">📲 התקן</button>
+<button id="installBtn" class="hidden">📲 התקן אפליקציה</button>
 
 </div>
 
 </header>
-
-<div class="city" id="city"></div>
 
 <div class="questionBox">
 
@@ -71,17 +66,38 @@
 
 <h2>🛒 חנות</h2>
 
+<div>
 מטבעות: <span id="shopCoins"></span>
+</div>
 
 <div id="shopItems" class="shopGrid"></div>
 
+<button onclick="openAdmin()">⚙ ניהול חנות</button>
 <button onclick="closeShop()">סגור</button>
+
+</div>
+
+<div id="admin" class="hidden">
+
+<h2>ניהול חנות</h2>
+
+<input id="itemName" placeholder="שם">
+
+<input id="itemPrice" type="number" placeholder="מחיר">
+
+<input id="itemIcon" placeholder="אייקון">
+
+<button onclick="addItem()">הוסף</button>
+
+<div id="adminList"></div>
+
+<button onclick="closeAdmin()">סגור</button>
 
 </div>
 
 <div id="prizes" class="hidden">
 
-<h2>🎁 הפרסים שלך</h2>
+<h2>🎁 פרסים</h2>
 
 <ul id="prizeList"></ul>
 
@@ -99,35 +115,28 @@
 
 let coins=0
 let correctCount=0
-let level=1
 let tries=0
-
 let a=0
 let b=0
 let op="+"
 
 let prizes=[]
 
-let city=[]
-
 let shopItems=[
-
 {name:"בית",price:20,icon:"🏠"},
 {name:"עץ",price:10,icon:"🌳"},
 {name:"פארק",price:25,icon:"🏞"},
 {name:"כביש",price:15,icon:"🛣"},
-{name:"מגדל",price:40,icon:"🏢"},
-{name:"תחנה",price:30,icon:"🚏"}
-
+{name:"מגדל",price:30,icon:"🏢"},
+{name:"תחנה",price:20,icon:"🚏"}
 ]
 
 function save(){
 
 localStorage.setItem("coins",coins)
-localStorage.setItem("correct",correctCount)
-localStorage.setItem("level",level)
+localStorage.setItem("correctCount",correctCount)
 localStorage.setItem("prizes",JSON.stringify(prizes))
-localStorage.setItem("city",JSON.stringify(city))
+localStorage.setItem("shop",JSON.stringify(shopItems))
 localStorage.setItem("screen","game")
 
 }
@@ -135,16 +144,17 @@ localStorage.setItem("screen","game")
 function load(){
 
 coins=parseInt(localStorage.getItem("coins"))||0
-correctCount=parseInt(localStorage.getItem("correct"))||0
-level=parseInt(localStorage.getItem("level"))||1
-
+correctCount=parseInt(localStorage.getItem("correctCount"))||0
 prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
-city=JSON.parse(localStorage.getItem("city")||"[]")
+
+let s=localStorage.getItem("shop")
+if(s)shopItems=JSON.parse(s)
 
 updateCoins()
-renderCity()
 
-if(localStorage.getItem("screen")==="game"){
+let screen=localStorage.getItem("screen")
+
+if(screen==="game"){
 
 document.getElementById("startScreen").classList.add("hidden")
 document.getElementById("game").classList.remove("hidden")
@@ -176,23 +186,24 @@ function newQuestion(){
 
 tries=0
 
-if(Math.random()<0.5){
+let type=Math.random()
+
+if(type<0.5){
 
 op="+"
-
 a=Math.floor(Math.random()*10)
 b=Math.floor(Math.random()*10)
 
 }else{
 
 op="-"
-
 a=Math.floor(Math.random()*10)+5
 b=Math.floor(Math.random()*5)
 
 }
 
 document.getElementById("question").innerText=a+" "+op+" "+b
+
 document.getElementById("answer").value=""
 
 }
@@ -210,13 +221,6 @@ document.getElementById("result").innerText="נכון!"
 
 coins+=5
 correctCount++
-
-if(correctCount%20===0){
-
-level++
-alert("עלית רמה!")
-
-}
 
 if(correctCount%10===0){
 
@@ -246,6 +250,8 @@ document.getElementById("result").innerText="נסה שוב"
 
 }else{
 
+document.getElementById("result").innerText="טעות"
+
 setTimeout(newQuestion,1000)
 
 }
@@ -260,7 +266,7 @@ if(Math.random()<0.3){
 
 let m=document.getElementById("monster")
 
-m.innerText="👾 מפלצת הופיעה!"
+m.innerText="👾 מפלצת תקפה!"
 
 setTimeout(()=>{
 
@@ -275,27 +281,6 @@ m.innerText=""
 function updateCoins(){
 
 document.getElementById("coins").innerText=coins
-document.getElementById("level").innerText=level
-
-}
-
-function renderCity(){
-
-let c=document.getElementById("city")
-
-c.innerHTML=""
-
-city.forEach(b=>{
-
-let d=document.createElement("span")
-
-d.className="building"
-
-d.innerText=b
-
-c.appendChild(d)
-
-})
 
 }
 
@@ -347,13 +332,7 @@ let item=shopItems[i]
 if(coins>=item.price){
 
 coins-=item.price
-
-city.push(item.icon)
-
-renderCity()
-
 updateCoins()
-
 save()
 
 }
@@ -371,9 +350,7 @@ list.innerHTML=""
 prizes.forEach(p=>{
 
 let li=document.createElement("li")
-
 li.innerText=p
-
 list.appendChild(li)
 
 })
@@ -385,6 +362,67 @@ function closePrizes(){
 document.getElementById("prizes").classList.add("hidden")
 
 }
+
+function openAdmin(){
+
+document.getElementById("admin").classList.remove("hidden")
+
+renderAdmin()
+
+}
+
+function closeAdmin(){
+
+document.getElementById("admin").classList.add("hidden")
+
+}
+
+function renderAdmin(){
+
+let a=document.getElementById("adminList")
+
+a.innerHTML=""
+
+shopItems.forEach((item,i)=>{
+
+let d=document.createElement("div")
+
+d.innerHTML=item.icon+" "+item.name+" "+item.price+
+"<button onclick='deleteItem("+i+")'>❌</button>"
+
+a.appendChild(d)
+
+})
+
+}
+
+function addItem(){
+
+let name=document.getElementById("itemName").value
+let price=parseInt(document.getElementById("itemPrice").value)
+let icon=document.getElementById("itemIcon").value
+
+shopItems.push({name,price,icon})
+
+save()
+
+renderAdmin()
+renderShop()
+
+}
+
+function deleteItem(i){
+
+shopItems.splice(i,1)
+
+save()
+
+renderAdmin()
+renderShop()
+
+}
+
+/* install app */
 
 let deferredPrompt
 
