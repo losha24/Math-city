@@ -1,4 +1,4 @@
-const cacheName="mathcity-v1.4"
+const cacheName="mathcity-v1.5"
 
 self.addEventListener("install",e=>{
 e.waitUntil(
