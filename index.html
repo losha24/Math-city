@@ -16,6 +16,10 @@
 
 <body>
 
+<div class="version">
+Math City <span id="version"></span>
+</div>
+
 <div id="startScreen">
 
 <h1>Math City</h1>
@@ -42,7 +46,7 @@
 
 <button onclick="openShop()">🛒 חנות</button>
 <button onclick="openPrizes()">🎁 פרסים</button>
-<button onclick="refreshGame()">🔄 רענן</button>
+<button onclick="checkUpdate()">🔄 רענן</button>
 <button id="installBtn" class="hidden">📲 התקן</button>
 
 </div>
@@ -89,6 +93,16 @@
 
 </div>
 
+<div id="updatePopup" class="popup hidden">
+
+<h2>🚀 גרסה חדשה זמינה</h2>
+
+<p id="newVersion"></p>
+
+<button onclick="updateGame()">עדכן עכשיו</button>
+
+</div>
+
 <footer>
 
 © אלכסיי זבודיסקר
@@ -96,6 +110,10 @@
 </footer>
 
 <script>
+
+const VERSION="v1.0"
+
+document.getElementById("version").innerText=VERSION
 
 let coins=0
 let correctCount=0
@@ -107,7 +125,6 @@ let b=0
 let op="+"
 
 let prizes=[]
-
 let city=[]
 
 let shopItems=[
@@ -166,12 +183,6 @@ newQuestion()
 
 }
 
-function refreshGame(){
-
-location.reload()
-
-}
-
 function newQuestion(){
 
 tries=0
@@ -179,14 +190,12 @@ tries=0
 if(Math.random()<0.5){
 
 op="+"
-
 a=Math.floor(Math.random()*10)
 b=Math.floor(Math.random()*10)
 
 }else{
 
 op="-"
-
 a=Math.floor(Math.random()*10)+5
 b=Math.floor(Math.random()*5)
 
@@ -383,6 +392,30 @@ list.appendChild(li)
 function closePrizes(){
 
 document.getElementById("prizes").classList.add("hidden")
+
+}
+
+function checkUpdate(){
+
+document.getElementById("newVersion").innerText="גרסה "+VERSION
+
+document.getElementById("updatePopup").classList.remove("hidden")
+
+}
+
+function updateGame(){
+
+caches.keys().then(names=>{
+
+names.forEach(name=>{
+
+caches.delete(name)
+
+})
+
+})
+
+location.reload(true)
 
 }
 
