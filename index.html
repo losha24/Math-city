@@ -8,308 +8,232 @@
 <title>Math City</title>
 
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 
-<style>
+<link rel="icon" href="icon.png">
 
-body{
-font-family:Arial;
-background:#eef5ff;
-text-align:center;
-margin:0;
-}
-
-header{
-background:#4CAF50;
-color:white;
-padding:15px;
-}
-
-.logo{
-width:180px;
-}
-
-.screen{
-display:none;
-}
-
-.active{
-display:block;
-}
-
-.city{
-display:grid;
-grid-template-columns:repeat(5,60px);
-gap:8px;
-justify-content:center;
-margin:20px;
-font-size:30px;
-}
-
-button{
-padding:12px;
-margin:6px;
-font-size:16px;
-border-radius:8px;
-border:none;
-background:#2196F3;
-color:white;
-}
-
-.shopItem{
-background:white;
-border-radius:10px;
-padding:10px;
-margin:8px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-
-.correct{
-background:#b8f5b8;
-border:2px solid green;
-}
-
-.wrong{
-background:#ffb3b3;
-border:2px solid red;
-}
-
-.reward{
-background:linear-gradient(45deg,#ffeb3b,#ff9800);
-padding:10px;
-border-radius:10px;
-margin:10px;
-}
-
-.monster{
-font-size:35px;
-}
-
-footer{
-margin-top:30px;
-padding:10px;
-font-size:14px;
-color:#555;
-}
-
-</style>
 </head>
 
 <body>
 
-<!-- START -->
-
-<div id="startScreen" class="screen active">
+<div id="startScreen">
 
 <h1>Math City</h1>
 
 <img src="logo.png" class="logo">
 
-<br><br>
-
-<button onclick="startGame()">🎮 התחל משחק</button>
-
-<br>
-
-<button onclick="openRewards()">🏆 פרסים</button>
-
-<button onclick="openShop()">🏪 חנות</button>
-
-<button onclick="openStats()">📊 סטטיסטיקות</button>
+<button onclick="startGame()">התחל משחק</button>
+<button onclick="openPrizes()">פרסים</button>
 
 </div>
 
-<!-- GAME -->
-
-<div id="gameScreen" class="screen">
+<div id="game" class="hidden">
 
 <header>
 
-<h2>Math City</h2>
+<div class="coins">
+🪙 מטבעות:
+<span id="coins">0</span>
+</div>
 
-<img src="logo.png" class="logo">
+<button onclick="openShop()">חנות</button>
+<button onclick="openPrizes()">פרסים</button>
 
 </header>
 
-<h3>
-
-רמה: <span id="level">1</span>  
-⭐ נקודות: <span id="score">0</span>  
-🪙 מטבעות: <span id="coins">0</span>
-
-</h3>
-
-<div id="monster" class="monster"></div>
-
-<div id="rewardBox"></div>
+<div class="questionBox">
 
 <h2 id="question"></h2>
 
 <input id="answer">
 
-<br><br>
+<button onclick="checkAnswer()">בדוק</button>
 
-<button onclick="check()">בדוק</button>
-
-<div class="city" id="city"></div>
-
-<br>
-
-<button onclick="openRewards()">🏆 פרסים</button>
-
-<button onclick="openShop()">🏪 חנות</button>
-
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-
-<button onclick="resetGame()">♻️ איפוס</button>
+<p id="result"></p>
 
 </div>
 
-<!-- SHOP -->
+<div id="city"></div>
 
-<div id="shopScreen" class="screen">
-
-<h2>🏪 חנות</h2>
-
-<div id="shopList"></div>
-
-<button onclick="backGame()">⬅ חזרה</button>
+<div id="monster"></div>
 
 </div>
 
-<!-- REWARDS -->
+<div id="shop" class="hidden">
 
-<div id="rewardsScreen" class="screen">
+<h2>חנות</h2>
 
-<h2>🏆 הפרסים</h2>
+<div class="coinsTop">
+מטבעות:
+<span id="shopCoins"></span>
+</div>
 
-<div id="rewardList"></div>
+<div id="shopItems" class="shopGrid"></div>
 
-<button onclick="backGame()">⬅ חזרה</button>
+<button onclick="openAdmin()">⚙ ניהול חנות</button>
+
+<button onclick="closeShop()">סגור</button>
 
 </div>
 
-<!-- STATS -->
+<div id="admin" class="hidden">
 
-<div id="statsScreen" class="screen">
+<h2>ניהול חנות</h2>
 
-<h2>📊 סטטיסטיקות</h2>
+<input id="itemName" placeholder="שם מתנה">
 
-<div id="statsBox"></div>
+<input id="itemPrice" type="number" placeholder="מחיר">
 
-<button onclick="backGame()">⬅ חזרה</button>
+<input id="itemIcon" placeholder="אייקון">
+
+<button onclick="addItem()">הוסף</button>
+
+<div id="adminList"></div>
+
+<button onclick="closeAdmin()">סגור</button>
+
+</div>
+
+<div id="prizes" class="hidden">
+
+<h2>פרסים</h2>
+
+<ul id="prizeList"></ul>
+
+<button onclick="closePrizes()">סגור</button>
 
 </div>
 
 <footer>
 
-© 2026 אלכסיי זבודיסקר
+© אלכסיי זבודיסקר
 
 </footer>
 
 <script>
 
-let level=1
-let score=0
 let coins=0
-let attempts=0
-let correct=0
+let correctCount=0
+let tries=0
 
-let solved=0
-let mistakes=0
+let a=0
+let b=0
+let op="+"
 
-let rewards=[]
-let trophies=[]
-
-let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"]
-
-let monsters=["👾","👻","🤖","🦖"]
-
-let monsterActive=false
+let prizes=[]
 
 let shopItems=[
-{name:"🚗 מכונית",price:50,icon:"🚗"},
-{name:"🌳 עץ מיוחד",price:40,icon:"🌳"},
-{name:"🏠 בית גדול",price:80,icon:"🏠"},
-{name:"🏪 קניון",price:120,icon:"🏪"},
-{name:"🏫 בית ספר",price:150,icon:"🏫"},
-{name:"🎡 לונה פארק",price:200,icon:"🎡"},
-{name:"🏰 טירה",price:300,icon:"🏰"},
-{name:"🗼 מגדל",price:400,icon:"🗼"},
-{name:"🎢 רכבת הרים",price:500,icon:"🎢"},
-{name:"🚀 חללית",price:700,icon:"🚀"}
+{name:"בית",price:20,icon:"🏠"},
+{name:"עץ",price:10,icon:"🌳"},
+{name:"כביש",price:15,icon:"🛣"},
+{name:"מגדל",price:30,icon:"🏢"},
+{name:"פארק",price:25,icon:"🏞"},
+{name:"תחנה",price:20,icon:"🚏"}
 ]
 
-function showScreen(id){
+function save(){
+localStorage.setItem("coins",coins)
+localStorage.setItem("prizes",JSON.stringify(prizes))
+localStorage.setItem("shop",JSON.stringify(shopItems))
+}
 
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
+function load(){
 
-document.getElementById(id).classList.add("active")
+coins=parseInt(localStorage.getItem("coins"))||0
+
+prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
+
+let s=localStorage.getItem("shop")
+if(s)shopItems=JSON.parse(s)
+
+updateCoins()
 
 }
 
 function startGame(){
 
-showScreen("gameScreen")
+document.getElementById("startScreen").classList.add("hidden")
+document.getElementById("game").classList.remove("hidden")
 
-}
-
-function backGame(){
-
-showScreen("gameScreen")
-
-}
-
-function openShop(){
-
-renderShop()
-
-showScreen("shopScreen")
-
-}
-
-function openRewards(){
-
-updateRewardList()
-
-showScreen("rewardsScreen")
-
-}
-
-function openStats(){
-
-renderStats()
-
-showScreen("statsScreen")
+newQuestion()
 
 }
 
 function newQuestion(){
 
-answer.classList.remove("correct","wrong")
+tries=0
 
-attempts=0
+let type=Math.random()
 
-let a,b
+if(type<0.5){
 
-if(level<3){
+op="+"
 
 a=Math.floor(Math.random()*10)
-
 b=Math.floor(Math.random()*10)
-
-correct=a+b
-
-question.innerText=a+" + "+b
 
 }else{
 
-a=Math.floor(Math.random()*10)
+op="-"
 
-b=Math.floor(Math.random()*a)
+a=Math.floor(Math.random()*10)+5
+b=Math.floor(Math.random()*5)
 
-correct=a-b
+}
 
-question.innerText=a+" - "+b
+document.getElementById("question").innerText=a+" "+op+" "+b
+
+document.getElementById("answer").value=""
+
+}
+
+function checkAnswer(){
+
+let ans=parseInt(document.getElementById("answer").value)
+
+let correct= op=="+" ? a+b : a-b
+
+if(ans===correct){
+
+document.getElementById("result").style.color="green"
+document.getElementById("result").innerText="נכון!"
+
+coins+=5
+correctCount++
+
+if(correctCount%10==0){
+
+let prize="🎁 פרס "+(prizes.length+1)
+prizes.push(prize)
+
+alert("קיבלת פרס!")
+
+}
+
+spawnMonster()
+
+updateCoins()
+
+save()
+
+setTimeout(newQuestion,1000)
+
+}else{
+
+tries++
+
+if(tries==1){
+
+document.getElementById("result").style.color="red"
+document.getElementById("result").innerText="נסה שוב"
+
+}else{
+
+document.getElementById("result").innerText="טעות"
+
+setTimeout(newQuestion,1000)
+
+}
 
 }
 
@@ -317,276 +241,183 @@ question.innerText=a+" - "+b
 
 function spawnMonster(){
 
-monster.innerText=monsters[Math.floor(Math.random()*monsters.length)]
+if(Math.random()<0.3){
 
-monsterActive=true
+let m=document.getElementById("monster")
 
-}
-
-function destroyBuilding(){
-
-let c=city.children
-
-if(c.length>0){
-
-city.removeChild(c[Math.floor(Math.random()*c.length)])
-
-}
-
-}
-
-function check(){
-
-let val=parseInt(answer.value)
-
-if(isNaN(val)) return
-
-if(val==correct){
-
-answer.classList.add("correct")
-
-score++
-
-solved++
-
-coins+=5
-
-if(monsterActive){
-
-monster.innerText=""
-
-monsterActive=false
-
-}else{
-
-build()
-
-}
-
-if(score%10==0){
-
-coins+=20
-
-giveReward()
-
-}
-
-if(score%5==0){
-
-level++
-
-spawnMonster()
-
-destroyBuilding()
-
-}
-
-updateUI()
+m.innerText="👾 מפלצת!"
 
 setTimeout(()=>{
 
-answer.value=""
-
-newQuestion()
-
-},500)
-
-save()
-
-}else{
-
-attempts++
-
-mistakes++
-
-answer.classList.add("wrong")
-
-if(attempts>=2){
-
-setTimeout(()=>{
-
-answer.value=""
-
-newQuestion()
-
-answer.classList.remove("wrong")
-
-},700)
-
-}
-
-}
-
-}
-
-function build(){
-
-let el=document.createElement("div")
-
-el.innerText=buildings[Math.floor(Math.random()*buildings.length)]
-
-city.appendChild(el)
-
-}
-
-function giveReward(){
-
-let icons=["🚗","🎡","🏰","🗼","🎢"]
-
-let r=icons[Math.floor(Math.random()*icons.length)]
-
-rewards.push(r)
-
-rewardBox.innerHTML='<div class="reward">🎁 פרס חדש '+r+'</div>'
-
-setTimeout(()=>{
-
-rewardBox.innerHTML=""
+m.innerText=""
 
 },3000)
 
 }
 
+}
+
+function updateCoins(){
+
+document.getElementById("coins").innerText=coins
+
+}
+
+function openShop(){
+
+document.getElementById("shop").classList.remove("hidden")
+
+document.getElementById("shopCoins").innerText=coins
+
+renderShop()
+
+}
+
+function closeShop(){
+
+document.getElementById("shop").classList.add("hidden")
+
+}
+
 function renderShop(){
 
-shopList.innerHTML=""
+let s=document.getElementById("shopItems")
 
-shopItems.forEach(item=>{
+s.innerHTML=""
 
-shopList.innerHTML+=`
+shopItems.forEach((item,i)=>{
 
-<div class="shopItem">
+let d=document.createElement("div")
 
-<h3>${item.icon} ${item.name}</h3>
+d.className="shopItem"
 
-מחיר: ${item.price} 🪙
+d.innerHTML=
 
-<br><br>
+item.icon+
 
-<button onclick="buyItem('${item.icon}',${item.price})">קנה</button>
+"<br>"+
 
-</div>
+item.name+
 
-`
+"<br>"+
+
+item.price+
+
+"<br>"+
+
+"<button onclick='buyItem("+i+")'>קנה</button>"
+
+s.appendChild(d)
 
 })
 
 }
 
-function buyItem(icon,price){
+function buyItem(i){
 
-if(coins<price){
+let item=shopItems[i]
 
-alert("אין מספיק מטבעות")
+if(coins>=item.price){
 
-return
+coins-=item.price
 
-}
-
-coins-=price
-
-let el=document.createElement("div")
-
-el.innerText=icon
-
-city.appendChild(el)
-
-updateUI()
+updateCoins()
 
 save()
 
 }
 
-function updateRewardList(){
+}
 
-rewardList.innerHTML=rewards.join(" ")
+function openPrizes(){
+
+document.getElementById("prizes").classList.remove("hidden")
+
+let list=document.getElementById("prizeList")
+
+list.innerHTML=""
+
+prizes.forEach(p=>{
+
+let li=document.createElement("li")
+li.innerText=p
+list.appendChild(li)
+
+})
 
 }
 
-function renderStats(){
+function closePrizes(){
 
-let accuracy=solved==0?0:Math.round((solved/(solved+mistakes))*100)
-
-statsBox.innerHTML=
-
-`
-
-תרגילים שנפתרו: ${solved}<br>
-
-טעויות: ${mistakes}<br>
-
-אחוז הצלחה: ${accuracy}%<br>
-
-מטבעות: ${coins}
-
-`
+document.getElementById("prizes").classList.add("hidden")
 
 }
 
-function updateUI(){
+function openAdmin(){
 
-scoreEl.innerText=score
+document.getElementById("admin").classList.remove("hidden")
 
-levelEl.innerText=level
-
-coinsEl.innerText=coins
+renderAdmin()
 
 }
 
-function save(){
+function closeAdmin(){
 
-localStorage.setItem("mathCity",
-
-JSON.stringify({
-
-score,level,coins,
-
-city:city.innerHTML,
-
-rewards,solved,mistakes
-
-}))
+document.getElementById("admin").classList.add("hidden")
 
 }
 
-function load(){
+function renderAdmin(){
 
-let data=localStorage.getItem("mathCity")
+let a=document.getElementById("adminList")
 
-if(data){
+a.innerHTML=""
 
-let d=JSON.parse(data)
+shopItems.forEach((item,i)=>{
 
-score=d.score||0
-level=d.level||1
-coins=d.coins||0
-rewards=d.rewards||[]
-solved=d.solved||0
-mistakes=d.mistakes||0
+let div=document.createElement("div")
 
-city.innerHTML=d.city||""
+div.innerHTML=
 
-}
+item.icon+" "+item.name+" "+item.price+
 
-updateUI()
+"<button onclick='deleteItem("+i+")'>❌</button>"
 
-}
+a.appendChild(div)
 
-function resetGame(){
-
-localStorage.clear()
-
-location.reload()
+})
 
 }
 
-let scoreEl=document.getElementById("score")
-let levelEl=document.getElementById("level")
-let coinsEl=document.getElementById("coins")
+function addItem(){
+
+let name=document.getElementById("itemName").value
+let price=parseInt(document.getElementById("itemPrice").value)
+let icon=document.getElementById("itemIcon").value
+
+shopItems.push({name,price,icon})
+
+save()
+
+renderAdmin()
+
+renderShop()
+
+}
+
+function deleteItem(i){
+
+shopItems.splice(i,1)
+
+save()
+
+renderAdmin()
+
+renderShop()
+
+}
 
 load()
-
-newQuestion()
 
 </script>
 
