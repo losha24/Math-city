@@ -26,7 +26,6 @@ padding:15px;
 
 .logo{
 width:180px;
-margin-top:10px;
 }
 
 .screen{
@@ -48,24 +47,20 @@ font-size:30px;
 
 button{
 padding:12px;
-margin:8px;
-font-size:18px;
+margin:6px;
+font-size:16px;
 border-radius:8px;
 border:none;
 background:#2196F3;
 color:white;
 }
 
-.startBtn{
-background:#4CAF50;
-}
-
-.reward{
-font-size:22px;
-background:linear-gradient(45deg,#ffeb3b,#ff9800);
-padding:10px;
+.shopItem{
+background:white;
 border-radius:10px;
-margin:10px;
+padding:10px;
+margin:8px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
 
 .correct{
@@ -78,9 +73,15 @@ background:#ffb3b3;
 border:2px solid red;
 }
 
+.reward{
+background:linear-gradient(45deg,#ffeb3b,#ff9800);
+padding:10px;
+border-radius:10px;
+margin:10px;
+}
+
 .monster{
 font-size:35px;
-margin:10px;
 }
 
 footer{
@@ -90,16 +91,12 @@ font-size:14px;
 color:#555;
 }
 
-.rewardList{
-font-size:28px;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
+<!-- START -->
 
 <div id="startScreen" class="screen active">
 
@@ -107,17 +104,21 @@ font-size:28px;
 
 <img src="logo.png" class="logo">
 
-<br>
+<br><br>
 
-<button class="startBtn" onclick="startGame()">🎮 התחל משחק</button>
+<button onclick="startGame()">🎮 התחל משחק</button>
 
 <br>
 
 <button onclick="openRewards()">🏆 פרסים</button>
 
+<button onclick="openShop()">🏪 חנות</button>
+
+<button onclick="openStats()">📊 סטטיסטיקות</button>
+
 </div>
 
-<!-- GAME SCREEN -->
+<!-- GAME -->
 
 <div id="gameScreen" class="screen">
 
@@ -132,7 +133,8 @@ font-size:28px;
 <h3>
 
 רמה: <span id="level">1</span>  
-⭐ נקודות: <span id="score">0</span>
+⭐ נקודות: <span id="score">0</span>  
+🪙 מטבעות: <span id="coins">0</span>
 
 </h3>
 
@@ -154,25 +156,47 @@ font-size:28px;
 
 <button onclick="openRewards()">🏆 פרסים</button>
 
-<button id="installBtn">📲 התקן אפליקציה</button>
+<button onclick="openShop()">🏪 חנות</button>
 
-<button onclick="updateApp()">🔄 עדכון</button>
+<button onclick="openStats()">📊 סטטיסטיקות</button>
 
 <button onclick="resetGame()">♻️ איפוס</button>
 
 </div>
 
-<!-- REWARDS SCREEN -->
+<!-- SHOP -->
+
+<div id="shopScreen" class="screen">
+
+<h2>🏪 חנות</h2>
+
+<div id="shopList"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+<!-- REWARDS -->
 
 <div id="rewardsScreen" class="screen">
 
-<h2>🏆 הפרסים שלך</h2>
+<h2>🏆 הפרסים</h2>
 
-<div id="rewardList" class="rewardList"></div>
+<div id="rewardList"></div>
 
-<br>
+<button onclick="backGame()">⬅ חזרה</button>
 
-<button onclick="backToGame()">⬅ חזרה</button>
+</div>
+
+<!-- STATS -->
+
+<div id="statsScreen" class="screen">
+
+<h2>📊 סטטיסטיקות</h2>
+
+<div id="statsBox"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
 
 </div>
 
@@ -186,22 +210,60 @@ font-size:28px;
 
 let level=1
 let score=0
-let correct=0
+let coins=0
 let attempts=0
+let correct=0
+
+let solved=0
+let mistakes=0
 
 let rewards=[]
+let trophies=[]
 
 let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"]
-
-let rewardItems=["🚗","🎡","🏰","🗼","🎢"]
 
 let monsters=["👾","👻","🤖","🦖"]
 
 let monsterActive=false
 
+let shopItems=[
+{name:"🚗 מכונית",price:50,icon:"🚗"},
+{name:"🌳 עץ מיוחד",price:40,icon:"🌳"},
+{name:"🏠 בית גדול",price:80,icon:"🏠"},
+{name:"🏪 קניון",price:120,icon:"🏪"},
+{name:"🏫 בית ספר",price:150,icon:"🏫"},
+{name:"🎡 לונה פארק",price:200,icon:"🎡"},
+{name:"🏰 טירה",price:300,icon:"🏰"},
+{name:"🗼 מגדל",price:400,icon:"🗼"},
+{name:"🎢 רכבת הרים",price:500,icon:"🎢"},
+{name:"🚀 חללית",price:700,icon:"🚀"}
+]
+
+function showScreen(id){
+
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
+
+document.getElementById(id).classList.add("active")
+
+}
+
 function startGame(){
 
 showScreen("gameScreen")
+
+}
+
+function backGame(){
+
+showScreen("gameScreen")
+
+}
+
+function openShop(){
+
+renderShop()
+
+showScreen("shopScreen")
 
 }
 
@@ -213,17 +275,11 @@ showScreen("rewardsScreen")
 
 }
 
-function backToGame(){
+function openStats(){
 
-showScreen("gameScreen")
+renderStats()
 
-}
-
-function showScreen(id){
-
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-
-document.getElementById(id).classList.add("active")
+showScreen("statsScreen")
 
 }
 
@@ -235,19 +291,7 @@ attempts=0
 
 let a,b
 
-if(level==1){
-
-a=Math.floor(Math.random()*5)
-
-b=Math.floor(Math.random()*5)
-
-correct=a+b
-
-question.innerText=a+" + "+b
-
-}
-
-else if(level==2){
+if(level<3){
 
 a=Math.floor(Math.random()*10)
 
@@ -257,9 +301,7 @@ correct=a+b
 
 question.innerText=a+" + "+b
 
-}
-
-else if(level==3){
+}else{
 
 a=Math.floor(Math.random()*10)
 
@@ -271,18 +313,6 @@ question.innerText=a+" - "+b
 
 }
 
-else{
-
-a=Math.floor(Math.random()*5)
-
-b=Math.floor(Math.random()*5)
-
-correct=a*b
-
-question.innerText=a+" × "+b
-
-}
-
 }
 
 function spawnMonster(){
@@ -290,6 +320,18 @@ function spawnMonster(){
 monster.innerText=monsters[Math.floor(Math.random()*monsters.length)]
 
 monsterActive=true
+
+}
+
+function destroyBuilding(){
+
+let c=city.children
+
+if(c.length>0){
+
+city.removeChild(c[Math.floor(Math.random()*c.length)])
+
+}
 
 }
 
@@ -305,7 +347,9 @@ answer.classList.add("correct")
 
 score++
 
-scoreEl.innerText=score
+solved++
+
+coins+=5
 
 if(monsterActive){
 
@@ -321,6 +365,8 @@ build()
 
 if(score%10==0){
 
+coins+=20
+
 giveReward()
 
 }
@@ -329,11 +375,13 @@ if(score%5==0){
 
 level++
 
-levelEl.innerText=level
-
 spawnMonster()
 
+destroyBuilding()
+
 }
+
+updateUI()
 
 setTimeout(()=>{
 
@@ -348,6 +396,8 @@ save()
 }else{
 
 attempts++
+
+mistakes++
 
 answer.classList.add("wrong")
 
@@ -381,7 +431,9 @@ city.appendChild(el)
 
 function giveReward(){
 
-let r=rewardItems[Math.floor(Math.random()*rewardItems.length)]
+let icons=["🚗","🎡","🏰","🗼","🎢"]
+
+let r=icons[Math.floor(Math.random()*icons.length)]
 
 rewards.push(r)
 
@@ -395,23 +447,89 @@ rewardBox.innerHTML=""
 
 }
 
-function updateRewardList(){
+function renderShop(){
 
-rewardList.innerHTML=""
+shopList.innerHTML=""
 
-if(rewards.length==0){
+shopItems.forEach(item=>{
 
-rewardList.innerHTML="עדיין אין פרסים"
+shopList.innerHTML+=`
+
+<div class="shopItem">
+
+<h3>${item.icon} ${item.name}</h3>
+
+מחיר: ${item.price} 🪙
+
+<br><br>
+
+<button onclick="buyItem('${item.icon}',${item.price})">קנה</button>
+
+</div>
+
+`
+
+})
+
+}
+
+function buyItem(icon,price){
+
+if(coins<price){
+
+alert("אין מספיק מטבעות")
 
 return
 
 }
 
-rewards.forEach(r=>{
+coins-=price
 
-rewardList.innerHTML+=r+" "
+let el=document.createElement("div")
 
-})
+el.innerText=icon
+
+city.appendChild(el)
+
+updateUI()
+
+save()
+
+}
+
+function updateRewardList(){
+
+rewardList.innerHTML=rewards.join(" ")
+
+}
+
+function renderStats(){
+
+let accuracy=solved==0?0:Math.round((solved/(solved+mistakes))*100)
+
+statsBox.innerHTML=
+
+`
+
+תרגילים שנפתרו: ${solved}<br>
+
+טעויות: ${mistakes}<br>
+
+אחוז הצלחה: ${accuracy}%<br>
+
+מטבעות: ${coins}
+
+`
+
+}
+
+function updateUI(){
+
+scoreEl.innerText=score
+
+levelEl.innerText=level
+
+coinsEl.innerText=coins
 
 }
 
@@ -421,13 +539,11 @@ localStorage.setItem("mathCity",
 
 JSON.stringify({
 
-score:score,
-
-level:level,
+score,level,coins,
 
 city:city.innerHTML,
 
-rewards:rewards
+rewards,solved,mistakes
 
 }))
 
@@ -442,18 +558,17 @@ if(data){
 let d=JSON.parse(data)
 
 score=d.score||0
-
 level=d.level||1
-
+coins=d.coins||0
 rewards=d.rewards||[]
-
-scoreEl.innerText=score
-
-levelEl.innerText=level
+solved=d.solved||0
+mistakes=d.mistakes||0
 
 city.innerHTML=d.city||""
 
 }
+
+updateUI()
 
 }
 
@@ -465,33 +580,13 @@ location.reload()
 
 }
 
-function updateApp(){
-
-caches.keys().then(names=>{
-
-for(let name of names)
-
-caches.delete(name)
-
-})
-
-location.reload()
-
-}
-
 let scoreEl=document.getElementById("score")
-
 let levelEl=document.getElementById("level")
+let coinsEl=document.getElementById("coins")
 
 load()
 
 newQuestion()
-
-if('serviceWorker' in navigator){
-
-navigator.serviceWorker.register('sw.js')
-
-}
 
 </script>
 
