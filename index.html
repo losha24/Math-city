@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
 
 <meta charset="UTF-8">
@@ -8,8 +7,9 @@
 
 <title>Math City</title>
 
-<link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+
 <link rel="icon" href="icon.png">
 
 </head>
@@ -22,8 +22,8 @@
 
 <img src="logo.png" class="logo">
 
-<button onclick="startGame()">🎮 התחל משחק</button>
-<button onclick="openPrizes()">🎁 פרסים</button>
+<button onclick="startGame()">התחל משחק</button>
+<button onclick="openPrizes()">פרסים</button>
 
 </div>
 
@@ -31,18 +31,13 @@
 
 <header>
 
-<div class="coinsBox">
-🪙 <span id="coins">0</span>
+<div class="coins">
+🪙 מטבעות:
+<span id="coins">0</span>
 </div>
 
-<div>
-
-<button onclick="openShop()">🛒 חנות</button>
-<button onclick="openPrizes()">🎁 פרסים</button>
-<button onclick="refreshGame()">🔄 רענן</button>
-<button id="installBtn" class="hidden">📲 התקן אפליקציה</button>
-
-</div>
+<button onclick="openShop()">חנות</button>
+<button onclick="openPrizes()">פרסים</button>
 
 </header>
 
@@ -58,21 +53,25 @@
 
 </div>
 
+<div id="city"></div>
+
 <div id="monster"></div>
 
 </div>
 
 <div id="shop" class="hidden">
 
-<h2>🛒 חנות</h2>
+<h2>חנות</h2>
 
-<div>
-מטבעות: <span id="shopCoins"></span>
+<div class="coinsTop">
+מטבעות:
+<span id="shopCoins"></span>
 </div>
 
 <div id="shopItems" class="shopGrid"></div>
 
 <button onclick="openAdmin()">⚙ ניהול חנות</button>
+
 <button onclick="closeShop()">סגור</button>
 
 </div>
@@ -81,7 +80,7 @@
 
 <h2>ניהול חנות</h2>
 
-<input id="itemName" placeholder="שם">
+<input id="itemName" placeholder="שם מתנה">
 
 <input id="itemPrice" type="number" placeholder="מחיר">
 
@@ -97,7 +96,7 @@
 
 <div id="prizes" class="hidden">
 
-<h2>🎁 פרסים</h2>
+<h2>פרסים</h2>
 
 <ul id="prizeList"></ul>
 
@@ -116,6 +115,7 @@
 let coins=0
 let correctCount=0
 let tries=0
+
 let a=0
 let b=0
 let op="+"
@@ -125,43 +125,28 @@ let prizes=[]
 let shopItems=[
 {name:"בית",price:20,icon:"🏠"},
 {name:"עץ",price:10,icon:"🌳"},
-{name:"פארק",price:25,icon:"🏞"},
 {name:"כביש",price:15,icon:"🛣"},
 {name:"מגדל",price:30,icon:"🏢"},
+{name:"פארק",price:25,icon:"🏞"},
 {name:"תחנה",price:20,icon:"🚏"}
 ]
 
 function save(){
-
 localStorage.setItem("coins",coins)
-localStorage.setItem("correctCount",correctCount)
 localStorage.setItem("prizes",JSON.stringify(prizes))
 localStorage.setItem("shop",JSON.stringify(shopItems))
-localStorage.setItem("screen","game")
-
 }
 
 function load(){
 
 coins=parseInt(localStorage.getItem("coins"))||0
-correctCount=parseInt(localStorage.getItem("correctCount"))||0
+
 prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
 
 let s=localStorage.getItem("shop")
 if(s)shopItems=JSON.parse(s)
 
 updateCoins()
-
-let screen=localStorage.getItem("screen")
-
-if(screen==="game"){
-
-document.getElementById("startScreen").classList.add("hidden")
-document.getElementById("game").classList.remove("hidden")
-
-newQuestion()
-
-}
 
 }
 
@@ -170,15 +155,7 @@ function startGame(){
 document.getElementById("startScreen").classList.add("hidden")
 document.getElementById("game").classList.remove("hidden")
 
-save()
-
 newQuestion()
-
-}
-
-function refreshGame(){
-
-location.reload()
 
 }
 
@@ -191,12 +168,14 @@ let type=Math.random()
 if(type<0.5){
 
 op="+"
+
 a=Math.floor(Math.random()*10)
 b=Math.floor(Math.random()*10)
 
 }else{
 
 op="-"
+
 a=Math.floor(Math.random()*10)+5
 b=Math.floor(Math.random()*5)
 
@@ -212,7 +191,7 @@ function checkAnswer(){
 
 let ans=parseInt(document.getElementById("answer").value)
 
-let correct=op=="+"?a+b:a-b
+let correct= op=="+" ? a+b : a-b
 
 if(ans===correct){
 
@@ -222,10 +201,10 @@ document.getElementById("result").innerText="נכון!"
 coins+=5
 correctCount++
 
-if(correctCount%10===0){
+if(correctCount%10==0){
 
-let p="🎁 פרס "+(prizes.length+1)
-prizes.push(p)
+let prize="🎁 פרס "+(prizes.length+1)
+prizes.push(prize)
 
 alert("קיבלת פרס!")
 
@@ -243,7 +222,7 @@ setTimeout(newQuestion,1000)
 
 tries++
 
-if(tries===1){
+if(tries==1){
 
 document.getElementById("result").style.color="red"
 document.getElementById("result").innerText="נסה שוב"
@@ -266,13 +245,13 @@ if(Math.random()<0.3){
 
 let m=document.getElementById("monster")
 
-m.innerText="👾 מפלצת תקפה!"
+m.innerText="👾 מפלצת!"
 
 setTimeout(()=>{
 
 m.innerText=""
 
-},2000)
+},3000)
 
 }
 
@@ -314,9 +293,18 @@ d.className="shopItem"
 
 d.innerHTML=
 
-item.icon+"<br>"+
-item.name+"<br>"+
-item.price+"<br>"+
+item.icon+
+
+"<br>"+
+
+item.name+
+
+"<br>"+
+
+item.price+
+
+"<br>"+
+
 "<button onclick='buyItem("+i+")'>קנה</button>"
 
 s.appendChild(d)
@@ -332,7 +320,9 @@ let item=shopItems[i]
 if(coins>=item.price){
 
 coins-=item.price
+
 updateCoins()
+
 save()
 
 }
@@ -385,12 +375,15 @@ a.innerHTML=""
 
 shopItems.forEach((item,i)=>{
 
-let d=document.createElement("div")
+let div=document.createElement("div")
 
-d.innerHTML=item.icon+" "+item.name+" "+item.price+
+div.innerHTML=
+
+item.icon+" "+item.name+" "+item.price+
+
 "<button onclick='deleteItem("+i+")'>❌</button>"
 
-a.appendChild(d)
+a.appendChild(div)
 
 })
 
@@ -407,6 +400,7 @@ shopItems.push({name,price,icon})
 save()
 
 renderAdmin()
+
 renderShop()
 
 }
@@ -418,29 +412,10 @@ shopItems.splice(i,1)
 save()
 
 renderAdmin()
+
 renderShop()
 
 }
-
-/* install app */
-
-let deferredPrompt
-
-window.addEventListener('beforeinstallprompt',(e)=>{
-
-e.preventDefault()
-
-deferredPrompt=e
-
-document.getElementById("installBtn").classList.remove("hidden")
-
-})
-
-document.getElementById("installBtn").addEventListener("click",()=>{
-
-deferredPrompt.prompt()
-
-})
 
 load()
 
