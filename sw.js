@@ -1,21 +1,23 @@
-const CACHE_NAME = "math-city-v1.3";
-const urls = [
-  "./",
-  "./index.html",
-  "./icon.png",
-  "./logo.png"
-];
+const cacheName="mathcity-v1.4"
 
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urls))
-  );
-});
+self.addEventListener("install",e=>{
+e.waitUntil(
+caches.open(cacheName).then(cache=>{
+return cache.addAll([
+"/",
+"/index.html",
+"/style.css",
+"/icon.png",
+"/logo.png"
+])
+})
+)
+})
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request)
-      .then(res => res || fetch(e.request))
-  );
-});
+self.addEventListener("fetch",e=>{
+e.respondWith(
+caches.match(e.request).then(r=>{
+return r||fetch(e.request)
+})
+)
+})
