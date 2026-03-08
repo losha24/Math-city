@@ -1,4 +1,4 @@
-const CACHE_NAME="math-city-v1"
+const CACHE_NAME="math-city-v1.1"
 
 const urls=[
 
