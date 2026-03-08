@@ -29,4 +29,10 @@ header{display:flex;justify-content:space-between;padding:10px;background:#222;c
     text-align:center;
     z-index:999;
 }
+.statsBox{
+    background:#eee;
+    padding:10px;
+    margin:10px;
+    border-radius:6px;
+}
 footer{margin-top:20px;padding:10px;background:#eee;}
