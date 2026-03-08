@@ -1,55 +1,129 @@
 body{
+
 font-family:Arial;
-background:#eef2f7;
+background:linear-gradient(#6dd5fa,#ffffff);
 text-align:center;
 margin:0
+
 }
 
 .hidden{
-display:none
-}
 
-header{
-display:flex;
-justify-content:space-between;
-padding:10px;
-background:#2c3e50;
-color:white
+display:none
+
 }
 
 .logo{
-width:120px;
-margin:10px
-}
 
-.shopGrid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-padding:10px
-}
+width:150px;
+margin:15px
 
-.shopItem{
-background:white;
-border-radius:10px;
-padding:10px;
-box-shadow:0 0 5px rgba(0,0,0,0.2)
 }
 
 button{
-padding:8px 14px;
+
+background:linear-gradient(135deg,#ff7e5f,#feb47b);
+
 border:none;
-border-radius:6px;
-background:#3498db;
-color:white
+
+color:white;
+
+padding:12px 18px;
+
+border-radius:12px;
+
+font-size:16px;
+
+margin:6px;
+
+cursor:pointer;
+
+box-shadow:0 4px 8px rgba(0,0,0,0.2);
+
 }
 
 button:hover{
-background:#2980b9
+
+transform:scale(1.05)
+
+}
+
+header{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:10px;
+
+background:#2c3e50;
+
+color:white
+
+}
+
+.coinsBox{
+
+font-size:18px
+
+}
+
+.questionBox{
+
+background:white;
+
+margin:20px;
+
+padding:20px;
+
+border-radius:12px;
+
+box-shadow:0 3px 10px rgba(0,0,0,0.2)
+
+}
+
+#answer{
+
+padding:10px;
+
+font-size:18px;
+
+border-radius:10px;
+
+border:1px solid #ccc
+
+}
+
+.shopGrid{
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:10px;
+
+padding:10px
+
+}
+
+.shopItem{
+
+background:white;
+
+padding:10px;
+
+border-radius:10px;
+
+box-shadow:0 3px 6px rgba(0,0,0,0.2)
+
 }
 
 footer{
+
 margin-top:20px;
+
 padding:10px;
-background:#ddd
+
+background:#eee
+
 }
