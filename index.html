@@ -16,8 +16,6 @@
 
 <body>
 
-<!-- מסך פתיחה -->
-
 <div id="startScreen">
 
 <h1>Math City</h1>
@@ -25,30 +23,33 @@
 <img src="logo.png" class="logo">
 
 <button onclick="startGame()">🎮 התחל משחק</button>
-
 <button onclick="openPrizes()">🎁 פרסים</button>
 
 </div>
-
-<!-- המשחק -->
 
 <div id="game" class="hidden">
 
 <header>
 
 <div class="coinsBox">
-🪙 מטבעות
-<span id="coins">0</span>
+
+🪙 <span id="coins">0</span>
+⭐ רמה <span id="level">1</span>
+
 </div>
 
 <div>
 
 <button onclick="openShop()">🛒 חנות</button>
 <button onclick="openPrizes()">🎁 פרסים</button>
+<button onclick="refreshGame()">🔄 רענן</button>
+<button id="installBtn" class="hidden">📲 התקן</button>
 
 </div>
 
 </header>
+
+<div class="city" id="city"></div>
 
 <div class="questionBox">
 
@@ -66,45 +67,17 @@
 
 </div>
 
-<!-- חנות -->
-
 <div id="shop" class="hidden">
 
 <h2>🛒 חנות</h2>
 
-<div class="coinsTop">
 מטבעות: <span id="shopCoins"></span>
-</div>
 
 <div id="shopItems" class="shopGrid"></div>
-
-<button onclick="openAdmin()">⚙ ניהול חנות</button>
 
 <button onclick="closeShop()">סגור</button>
 
 </div>
-
-<!-- ניהול חנות -->
-
-<div id="admin" class="hidden">
-
-<h2>ניהול חנות</h2>
-
-<input id="itemName" placeholder="שם">
-
-<input id="itemPrice" type="number" placeholder="מחיר">
-
-<input id="itemIcon" placeholder="אייקון">
-
-<button onclick="addItem()">הוסף</button>
-
-<div id="adminList"></div>
-
-<button onclick="closeAdmin()">סגור</button>
-
-</div>
-
-<!-- פרסים -->
 
 <div id="prizes" class="hidden">
 
@@ -126,6 +99,7 @@
 
 let coins=0
 let correctCount=0
+let level=1
 let tries=0
 
 let a=0
@@ -134,42 +108,48 @@ let op="+"
 
 let prizes=[]
 
+let city=[]
+
 let shopItems=[
 
 {name:"בית",price:20,icon:"🏠"},
 {name:"עץ",price:10,icon:"🌳"},
 {name:"פארק",price:25,icon:"🏞"},
 {name:"כביש",price:15,icon:"🛣"},
-{name:"מגדל",price:30,icon:"🏢"},
-{name:"תחנה",price:20,icon:"🚏"}
+{name:"מגדל",price:40,icon:"🏢"},
+{name:"תחנה",price:30,icon:"🚏"}
 
 ]
 
 function save(){
 
 localStorage.setItem("coins",coins)
-localStorage.setItem("correctCount",correctCount)
+localStorage.setItem("correct",correctCount)
+localStorage.setItem("level",level)
 localStorage.setItem("prizes",JSON.stringify(prizes))
-localStorage.setItem("shop",JSON.stringify(shopItems))
-localStorage.setItem("inGame","true")
+localStorage.setItem("city",JSON.stringify(city))
+localStorage.setItem("screen","game")
 
 }
 
 function load(){
 
 coins=parseInt(localStorage.getItem("coins"))||0
-correctCount=parseInt(localStorage.getItem("correctCount"))||0
-prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
+correctCount=parseInt(localStorage.getItem("correct"))||0
+level=parseInt(localStorage.getItem("level"))||1
 
-let s=localStorage.getItem("shop")
-if(s)shopItems=JSON.parse(s)
+prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
+city=JSON.parse(localStorage.getItem("city")||"[]")
 
 updateCoins()
+renderCity()
 
-if(localStorage.getItem("inGame")=="true"){
+if(localStorage.getItem("screen")==="game"){
 
 document.getElementById("startScreen").classList.add("hidden")
 document.getElementById("game").classList.remove("hidden")
+
+newQuestion()
 
 }
 
@@ -186,13 +166,17 @@ newQuestion()
 
 }
 
+function refreshGame(){
+
+location.reload()
+
+}
+
 function newQuestion(){
 
 tries=0
 
-let type=Math.random()
-
-if(type<0.5){
+if(Math.random()<0.5){
 
 op="+"
 
@@ -209,7 +193,6 @@ b=Math.floor(Math.random()*5)
 }
 
 document.getElementById("question").innerText=a+" "+op+" "+b
-
 document.getElementById("answer").value=""
 
 }
@@ -228,7 +211,14 @@ document.getElementById("result").innerText="נכון!"
 coins+=5
 correctCount++
 
-if(correctCount%10==0){
+if(correctCount%20===0){
+
+level++
+alert("עלית רמה!")
+
+}
+
+if(correctCount%10===0){
 
 let p="🎁 פרס "+(prizes.length+1)
 prizes.push(p)
@@ -249,14 +239,12 @@ setTimeout(newQuestion,1000)
 
 tries++
 
-if(tries==1){
+if(tries===1){
 
 document.getElementById("result").style.color="red"
 document.getElementById("result").innerText="נסה שוב"
 
 }else{
-
-document.getElementById("result").innerText="טעות"
 
 setTimeout(newQuestion,1000)
 
@@ -272,7 +260,7 @@ if(Math.random()<0.3){
 
 let m=document.getElementById("monster")
 
-m.innerText="👾 מפלצת תקפה!"
+m.innerText="👾 מפלצת הופיעה!"
 
 setTimeout(()=>{
 
@@ -287,6 +275,27 @@ m.innerText=""
 function updateCoins(){
 
 document.getElementById("coins").innerText=coins
+document.getElementById("level").innerText=level
+
+}
+
+function renderCity(){
+
+let c=document.getElementById("city")
+
+c.innerHTML=""
+
+city.forEach(b=>{
+
+let d=document.createElement("span")
+
+d.className="building"
+
+d.innerText=b
+
+c.appendChild(d)
+
+})
 
 }
 
@@ -320,18 +329,9 @@ d.className="shopItem"
 
 d.innerHTML=
 
-item.icon+
-
-"<br>"+
-
-item.name+
-
-"<br>"+
-
-item.price+
-
-"<br>"+
-
+item.icon+"<br>"+
+item.name+"<br>"+
+item.price+"<br>"+
 "<button onclick='buyItem("+i+")'>קנה</button>"
 
 s.appendChild(d)
@@ -347,6 +347,10 @@ let item=shopItems[i]
 if(coins>=item.price){
 
 coins-=item.price
+
+city.push(item.icon)
+
+renderCity()
 
 updateCoins()
 
@@ -382,64 +386,23 @@ document.getElementById("prizes").classList.add("hidden")
 
 }
 
-function openAdmin(){
+let deferredPrompt
 
-document.getElementById("admin").classList.remove("hidden")
+window.addEventListener('beforeinstallprompt',(e)=>{
 
-renderAdmin()
+e.preventDefault()
 
-}
+deferredPrompt=e
 
-function closeAdmin(){
-
-document.getElementById("admin").classList.add("hidden")
-
-}
-
-function renderAdmin(){
-
-let a=document.getElementById("adminList")
-
-a.innerHTML=""
-
-shopItems.forEach((item,i)=>{
-
-let d=document.createElement("div")
-
-d.innerHTML=item.icon+" "+item.name+" "+item.price+
-"<button onclick='deleteItem("+i+")'>❌</button>"
-
-a.appendChild(d)
+document.getElementById("installBtn").classList.remove("hidden")
 
 })
 
-}
+document.getElementById("installBtn").addEventListener("click",()=>{
 
-function addItem(){
+deferredPrompt.prompt()
 
-let name=document.getElementById("itemName").value
-let price=parseInt(document.getElementById("itemPrice").value)
-let icon=document.getElementById("itemIcon").value
-
-shopItems.push({name,price,icon})
-
-save()
-
-renderAdmin()
-renderShop()
-
-}
-
-function deleteItem(i){
-
-shopItems.splice(i,1)
-
-save()
-
-renderAdmin()
-renderShop()
-
-}
+})
 
 load()
 
