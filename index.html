@@ -24,13 +24,17 @@ color:white;
 padding:15px;
 }
 
-.subtitle{
-font-size:18px;
-}
-
 .logo{
 width:180px;
 margin-top:10px;
+}
+
+.screen{
+display:none;
+}
+
+.active{
+display:block;
 }
 
 .city{
@@ -43,36 +47,17 @@ font-size:30px;
 }
 
 button{
-padding:10px;
-margin:5px;
-font-size:16px;
+padding:12px;
+margin:8px;
+font-size:18px;
 border-radius:8px;
 border:none;
 background:#2196F3;
 color:white;
 }
 
-input{
-font-size:22px;
-width:90px;
-text-align:center;
-border-radius:6px;
-border:2px solid #ccc;
-}
-
-.correct{
-background:#b8f5b8;
-border-color:green;
-}
-
-.wrong{
-background:#ffb3b3;
-border-color:red;
-}
-
-.monster{
-font-size:35px;
-margin:10px;
+.startBtn{
+background:#4CAF50;
 }
 
 .reward{
@@ -83,6 +68,21 @@ border-radius:10px;
 margin:10px;
 }
 
+.correct{
+background:#b8f5b8;
+border:2px solid green;
+}
+
+.wrong{
+background:#ffb3b3;
+border:2px solid red;
+}
+
+.monster{
+font-size:35px;
+margin:10px;
+}
+
 footer{
 margin-top:30px;
 padding:10px;
@@ -90,18 +90,40 @@ font-size:14px;
 color:#555;
 }
 
+.rewardList{
+font-size:28px;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- START SCREEN -->
+
+<div id="startScreen" class="screen active">
+
+<h1>Math City</h1>
+
+<img src="logo.png" class="logo">
+
+<br>
+
+<button class="startBtn" onclick="startGame()">🎮 התחל משחק</button>
+
+<br>
+
+<button onclick="openRewards()">🏆 פרסים</button>
+
+</div>
+
+<!-- GAME SCREEN -->
+
+<div id="gameScreen" class="screen">
+
 <header>
 
 <h2>Math City</h2>
-
-<div class="subtitle">
-בונים עיר עם חשבון
-</div>
 
 <img src="logo.png" class="logo">
 
@@ -130,9 +152,29 @@ color:#555;
 
 <br>
 
+<button onclick="openRewards()">🏆 פרסים</button>
+
 <button id="installBtn">📲 התקן אפליקציה</button>
+
 <button onclick="updateApp()">🔄 עדכון</button>
+
 <button onclick="resetGame()">♻️ איפוס</button>
+
+</div>
+
+<!-- REWARDS SCREEN -->
+
+<div id="rewardsScreen" class="screen">
+
+<h2>🏆 הפרסים שלך</h2>
+
+<div id="rewardList" class="rewardList"></div>
+
+<br>
+
+<button onclick="backToGame()">⬅ חזרה</button>
+
+</div>
 
 <footer>
 
@@ -145,16 +187,45 @@ color:#555;
 let level=1
 let score=0
 let correct=0
-
 let attempts=0
+
+let rewards=[]
 
 let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"]
 
-let rewards=["🚗","🎡","🏰","🗼","🎢"]
+let rewardItems=["🚗","🎡","🏰","🗼","🎢"]
 
 let monsters=["👾","👻","🤖","🦖"]
 
 let monsterActive=false
+
+function startGame(){
+
+showScreen("gameScreen")
+
+}
+
+function openRewards(){
+
+updateRewardList()
+
+showScreen("rewardsScreen")
+
+}
+
+function backToGame(){
+
+showScreen("gameScreen")
+
+}
+
+function showScreen(id){
+
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
+
+document.getElementById(id).classList.add("active")
+
+}
 
 function newQuestion(){
 
@@ -165,22 +236,33 @@ attempts=0
 let a,b
 
 if(level==1){
+
 a=Math.floor(Math.random()*5)
+
 b=Math.floor(Math.random()*5)
+
 correct=a+b
+
 question.innerText=a+" + "+b
+
 }
 
 else if(level==2){
+
 a=Math.floor(Math.random()*10)
+
 b=Math.floor(Math.random()*10)
+
 correct=a+b
+
 question.innerText=a+" + "+b
+
 }
 
 else if(level==3){
 
 a=Math.floor(Math.random()*10)
+
 b=Math.floor(Math.random()*a)
 
 correct=a-b
@@ -192,6 +274,7 @@ question.innerText=a+" - "+b
 else{
 
 a=Math.floor(Math.random()*5)
+
 b=Math.floor(Math.random()*5)
 
 correct=a*b
@@ -218,7 +301,6 @@ if(isNaN(val)) return
 
 if(val==correct){
 
-answer.classList.remove("wrong")
 answer.classList.add("correct")
 
 score++
@@ -228,6 +310,7 @@ scoreEl.innerText=score
 if(monsterActive){
 
 monster.innerText=""
+
 monsterActive=false
 
 }else{
@@ -255,6 +338,7 @@ spawnMonster()
 setTimeout(()=>{
 
 answer.value=""
+
 newQuestion()
 
 },500)
@@ -272,11 +356,12 @@ if(attempts>=2){
 setTimeout(()=>{
 
 answer.value=""
+
 newQuestion()
 
 answer.classList.remove("wrong")
 
-},600)
+},700)
 
 }
 
@@ -296,17 +381,37 @@ city.appendChild(el)
 
 function giveReward(){
 
-let r=rewards[Math.floor(Math.random()*rewards.length)]
+let r=rewardItems[Math.floor(Math.random()*rewardItems.length)]
 
-rewardBox.innerHTML=
+rewards.push(r)
 
-'<div class="reward">🎁 פרס חדש בעיר '+r+'</div>'
+rewardBox.innerHTML='<div class="reward">🎁 פרס חדש '+r+'</div>'
 
 setTimeout(()=>{
 
 rewardBox.innerHTML=""
 
 },3000)
+
+}
+
+function updateRewardList(){
+
+rewardList.innerHTML=""
+
+if(rewards.length==0){
+
+rewardList.innerHTML="עדיין אין פרסים"
+
+return
+
+}
+
+rewards.forEach(r=>{
+
+rewardList.innerHTML+=r+" "
+
+})
 
 }
 
@@ -317,8 +422,12 @@ localStorage.setItem("mathCity",
 JSON.stringify({
 
 score:score,
+
 level:level,
-city:city.innerHTML
+
+city:city.innerHTML,
+
+rewards:rewards
 
 }))
 
@@ -332,13 +441,17 @@ if(data){
 
 let d=JSON.parse(data)
 
-score=d.score
-level=d.level
+score=d.score||0
+
+level=d.level||1
+
+rewards=d.rewards||[]
 
 scoreEl.innerText=score
+
 levelEl.innerText=level
 
-city.innerHTML=d.city
+city.innerHTML=d.city||""
 
 }
 
@@ -367,6 +480,7 @@ location.reload()
 }
 
 let scoreEl=document.getElementById("score")
+
 let levelEl=document.getElementById("level")
 
 load()
