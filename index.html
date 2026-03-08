@@ -42,6 +42,10 @@
         <p id="result"></p>
     </div>
 
+    <div class="statsBox" id="stats">
+        <p>נכון: <span id="statCorrect">0</span> | שגוי: <span id="statWrong">0</span></p>
+    </div>
+
     <div id="monster"></div>
 </div>
 
@@ -74,8 +78,7 @@
 
 <script>
 const VERSION="1.0";
-
-let coins=0, correctCount=0, level=1, tries=0;
+let coins=0, correctCount=0, wrongCount=0, level=1, tries=0;
 let a=0, b=0, op="+";
 let prizes=[], city=[];
 let shopItems=[
@@ -91,6 +94,7 @@ let shopItems=[
 function save(){
     localStorage.setItem("coins",coins);
     localStorage.setItem("correct",correctCount);
+    localStorage.setItem("wrong",wrongCount);
     localStorage.setItem("level",level);
     localStorage.setItem("prizes",JSON.stringify(prizes));
     localStorage.setItem("city",JSON.stringify(city));
@@ -99,10 +103,11 @@ function save(){
 function load(){
     coins=parseInt(localStorage.getItem("coins"))||0;
     correctCount=parseInt(localStorage.getItem("correct"))||0;
+    wrongCount=parseInt(localStorage.getItem("wrong"))||0;
     level=parseInt(localStorage.getItem("level"))||1;
     prizes=JSON.parse(localStorage.getItem("prizes")||"[]");
     city=JSON.parse(localStorage.getItem("city")||"[]");
-    updateCoins(); renderCity();
+    updateUI();
     if(localStorage.getItem("screen")==="game"){
         document.getElementById("startScreen").classList.add("hidden");
         document.getElementById("game").classList.remove("hidden");
@@ -156,6 +161,7 @@ function newQuestion(){
     }
     document.getElementById("question").innerText=a+" "+op+" "+b;
     document.getElementById("answer").value="";
+    document.getElementById("result").innerText="";
 }
 
 function checkAnswer(){
@@ -167,10 +173,14 @@ function checkAnswer(){
         coins+=5; correctCount++;
         if(correctCount%20===0){ level++; alert("עלית רמה!"); }
         if(correctCount%10===0){ let p="פרס "+(prizes.length+1); prizes.push(p); alert("קיבלת פרס!"); }
-        spawnMonster(); updateCoins(); save();
+        spawnMonster();
+        updateUI();
+        save();
         setTimeout(newQuestion,1000);
     } else {
         tries++;
+        wrongCount++;
+        updateUI();
         if(tries===1){ document.getElementById("result").style.color="red"; document.getElementById("result").innerText="נסה שוב"; }
         else { setTimeout(newQuestion,1000); }
     }
@@ -185,10 +195,13 @@ function spawnMonster(){
     }
 }
 
-// עדכון UI
-function updateCoins(){
+// UI
+function updateUI(){
     document.getElementById("coins").innerText=coins;
     document.getElementById("level").innerText=level;
+    document.getElementById("statCorrect").innerText=correctCount;
+    document.getElementById("statWrong").innerText=wrongCount;
+    renderCity();
 }
 
 function renderCity(){
@@ -209,7 +222,7 @@ function openShop(){
     shopItems.forEach(item=>{
         let div=document.createElement("div"); div.className="shopItem";
         div.innerText=item.icon+" "+item.name+" - "+item.price+" 🪙";
-        div.onclick=()=>{ if(coins>=item.price){ coins-=item.price; city.push(item.icon); updateCoins(); save(); renderCity(); } };
+        div.onclick=()=>{ if(coins>=item.price){ coins-=item.price; city.push(item.icon); updateUI(); save(); } };
         shopGrid.appendChild(div);
     });
 }
@@ -227,6 +240,5 @@ function closePrizes(){ document.getElementById("prizes").classList.add("hidden"
 
 load();
 </script>
-
 </body>
 </html>
