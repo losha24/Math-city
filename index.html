@@ -7,54 +7,87 @@
 
 <title>Math City</title>
 
+<link rel="manifest" href="manifest.json">
+
 <style>
 
 body{
 font-family:Arial;
-background:#f2f7ff;
+background:#eef5ff;
 text-align:center;
 margin:0;
-padding:0;
 }
 
 header{
 background:#4CAF50;
 color:white;
 padding:15px;
-font-size:24px;
 }
 
-.stats{
-margin:10px;
+.subtitle{
 font-size:18px;
+}
+
+.logo{
+width:180px;
+margin-top:10px;
 }
 
 .city{
 display:grid;
-grid-template-columns:repeat(4,70px);
-gap:10px;
+grid-template-columns:repeat(5,60px);
+gap:8px;
 justify-content:center;
 margin:20px;
-}
-
-.building{
 font-size:30px;
 }
 
 button{
-padding:10px 15px;
+padding:10px;
 margin:5px;
 font-size:16px;
-border:none;
 border-radius:8px;
+border:none;
 background:#2196F3;
 color:white;
 }
 
 input{
-font-size:20px;
+font-size:22px;
+width:90px;
 text-align:center;
-width:80px;
+border-radius:6px;
+border:2px solid #ccc;
+}
+
+.correct{
+background:#b8f5b8;
+border-color:green;
+}
+
+.wrong{
+background:#ffb3b3;
+border-color:red;
+}
+
+.monster{
+font-size:35px;
+margin:10px;
+}
+
+.reward{
+font-size:22px;
+background:linear-gradient(45deg,#ffeb3b,#ff9800);
+padding:10px;
+border-radius:10px;
+margin:10px;
+}
+
+footer{
+margin-top:30px;
+padding:10px;
+font-size:14px;
+color:#555;
 }
 
 </style>
@@ -63,13 +96,27 @@ width:80px;
 <body>
 
 <header>
-🏙 Math City
+
+<h2>Math City</h2>
+
+<div class="subtitle">
+בונים עיר עם חשבון
+</div>
+
+<img src="logo.png" class="logo">
+
 </header>
 
-<div class="stats">
-רמה: <span id="level">1</span>
+<h3>
+
+רמה: <span id="level">1</span>  
 ⭐ נקודות: <span id="score">0</span>
-</div>
+
+</h3>
+
+<div id="monster" class="monster"></div>
+
+<div id="rewardBox"></div>
 
 <h2 id="question"></h2>
 
@@ -77,7 +124,7 @@ width:80px;
 
 <br><br>
 
-<button onclick="checkAnswer()">בדוק</button>
+<button onclick="check()">בדוק</button>
 
 <div class="city" id="city"></div>
 
@@ -87,89 +134,193 @@ width:80px;
 <button onclick="updateApp()">🔄 עדכון</button>
 <button onclick="resetGame()">♻️ איפוס</button>
 
+<footer>
+
+© 2026 אלכסיי זבודיסקר
+
+</footer>
+
 <script>
 
 let level=1
 let score=0
-let correctAnswer=0
-let buildings=["🏠","🛣","🌳","🏪","🏫","🎡","🏢"]
+let correct=0
+
+let attempts=0
+
+let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"]
+
+let rewards=["🚗","🎡","🏰","🗼","🎢"]
+
+let monsters=["👾","👻","🤖","🦖"]
+
+let monsterActive=false
 
 function newQuestion(){
+
+answer.classList.remove("correct","wrong")
+
+attempts=0
 
 let a,b
 
 if(level==1){
 a=Math.floor(Math.random()*5)
 b=Math.floor(Math.random()*5)
-correctAnswer=a+b
+correct=a+b
 question.innerText=a+" + "+b
 }
 
-if(level==2){
+else if(level==2){
 a=Math.floor(Math.random()*10)
 b=Math.floor(Math.random()*10)
-correctAnswer=a+b
+correct=a+b
 question.innerText=a+" + "+b
 }
 
-if(level==3){
+else if(level==3){
+
 a=Math.floor(Math.random()*10)
-b=Math.floor(Math.random()*10)
-correctAnswer=a-b
+b=Math.floor(Math.random()*a)
+
+correct=a-b
+
 question.innerText=a+" - "+b
+
 }
 
-if(level>=4){
+else{
+
 a=Math.floor(Math.random()*5)
 b=Math.floor(Math.random()*5)
-correctAnswer=a*b
+
+correct=a*b
+
 question.innerText=a+" × "+b
-}
 
 }
 
-function checkAnswer(){
+}
+
+function spawnMonster(){
+
+monster.innerText=monsters[Math.floor(Math.random()*monsters.length)]
+
+monsterActive=true
+
+}
+
+function check(){
 
 let val=parseInt(answer.value)
 
-if(val==correctAnswer){
+if(isNaN(val)) return
+
+if(val==correct){
+
+answer.classList.remove("wrong")
+answer.classList.add("correct")
 
 score++
+
 scoreEl.innerText=score
+
+if(monsterActive){
+
+monster.innerText=""
+monsterActive=false
+
+}else{
 
 build()
 
-if(score%5==0){
-level++
-levelEl.innerText=level
 }
 
+if(score%10==0){
+
+giveReward()
+
 }
+
+if(score%5==0){
+
+level++
+
+levelEl.innerText=level
+
+spawnMonster()
+
+}
+
+setTimeout(()=>{
 
 answer.value=""
-
 newQuestion()
 
+},500)
+
 save()
+
+}else{
+
+attempts++
+
+answer.classList.add("wrong")
+
+if(attempts>=2){
+
+setTimeout(()=>{
+
+answer.value=""
+newQuestion()
+
+answer.classList.remove("wrong")
+
+},600)
+
+}
+
+}
 
 }
 
 function build(){
 
-let i=score%buildings.length
-
 let el=document.createElement("div")
-el.className="building"
-el.innerText=buildings[i]
+
+el.innerText=buildings[Math.floor(Math.random()*buildings.length)]
 
 city.appendChild(el)
+
+}
+
+function giveReward(){
+
+let r=rewards[Math.floor(Math.random()*rewards.length)]
+
+rewardBox.innerHTML=
+
+'<div class="reward">🎁 פרס חדש בעיר '+r+'</div>'
+
+setTimeout(()=>{
+
+rewardBox.innerHTML=""
+
+},3000)
 
 }
 
 function save(){
 
 localStorage.setItem("mathCity",
-JSON.stringify({level,score,city:city.innerHTML}))
+
+JSON.stringify({
+
+score:score,
+level:level,
+city:city.innerHTML
+
+}))
 
 }
 
@@ -181,11 +332,11 @@ if(data){
 
 let d=JSON.parse(data)
 
-level=d.level
 score=d.score
+level=d.level
 
-levelEl.innerText=level
 scoreEl.innerText=score
+levelEl.innerText=level
 
 city.innerHTML=d.city
 
@@ -196,12 +347,23 @@ city.innerHTML=d.city
 function resetGame(){
 
 localStorage.clear()
+
 location.reload()
 
 }
 
 function updateApp(){
-location.reload(true)
+
+caches.keys().then(names=>{
+
+for(let name of names)
+
+caches.delete(name)
+
+})
+
+location.reload()
+
 }
 
 let scoreEl=document.getElementById("score")
@@ -210,6 +372,12 @@ let levelEl=document.getElementById("level")
 load()
 
 newQuestion()
+
+if('serviceWorker' in navigator){
+
+navigator.serviceWorker.register('sw.js')
+
+}
 
 </script>
 
