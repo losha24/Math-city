@@ -1,18 +1,24 @@
-const cacheName="mathcity-v2"
+const CACHE="math-city-v3"
 
-self.addEventListener("install",e=>{
+const urls=[
 
-e.waitUntil(
-
-caches.open(cacheName).then(cache=>{
-
-return cache.addAll([
 "/",
 "/index.html",
 "/style.css",
 "/icon.png",
 "/logo.png"
-])
+
+]
+
+self.addEventListener("install",event=>{
+
+self.skipWaiting()
+
+event.waitUntil(
+
+caches.open(CACHE).then(cache=>{
+
+return cache.addAll(urls)
 
 })
 
@@ -20,13 +26,39 @@ return cache.addAll([
 
 })
 
-self.addEventListener("fetch",e=>{
+self.addEventListener("activate",event=>{
 
-e.respondWith(
+event.waitUntil(
 
-caches.match(e.request).then(r=>{
+caches.keys().then(keys=>{
 
-return r||fetch(e.request)
+return Promise.all(
+
+keys.map(key=>{
+
+if(key!==CACHE){
+
+return caches.delete(key)
+
+}
+
+})
+
+)
+
+})
+
+)
+
+})
+
+self.addEventListener("fetch",event=>{
+
+event.respondWith(
+
+caches.match(event.request).then(res=>{
+
+return res || fetch(event.request)
 
 })
 
