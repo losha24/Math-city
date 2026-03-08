@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Math City</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f7ff;
+text-align:center;
+margin:0;
+padding:0;
+}
+
+header{
+background:#4CAF50;
+color:white;
+padding:15px;
+font-size:24px;
+}
+
+.stats{
+margin:10px;
+font-size:18px;
+}
+
+.city{
+display:grid;
+grid-template-columns:repeat(4,70px);
+gap:10px;
+justify-content:center;
+margin:20px;
+}
+
+.building{
+font-size:30px;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:#2196F3;
+color:white;
+}
+
+input{
+font-size:20px;
+text-align:center;
+width:80px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+🏙 Math City
+</header>
+
+<div class="stats">
+רמה: <span id="level">1</span>
+⭐ נקודות: <span id="score">0</span>
+</div>
+
+<h2 id="question"></h2>
+
+<input id="answer">
+
+<br><br>
+
+<button onclick="checkAnswer()">בדוק</button>
+
+<div class="city" id="city"></div>
+
+<br>
+
+<button id="installBtn">📲 התקן אפליקציה</button>
+<button onclick="updateApp()">🔄 עדכון</button>
+<button onclick="resetGame()">♻️ איפוס</button>
+
+<script>
+
+let level=1
+let score=0
+let correctAnswer=0
+let buildings=["🏠","🛣","🌳","🏪","🏫","🎡","🏢"]
+
+function newQuestion(){
+
+let a,b
+
+if(level==1){
+a=Math.floor(Math.random()*5)
+b=Math.floor(Math.random()*5)
+correctAnswer=a+b
+question.innerText=a+" + "+b
+}
+
+if(level==2){
+a=Math.floor(Math.random()*10)
+b=Math.floor(Math.random()*10)
+correctAnswer=a+b
+question.innerText=a+" + "+b
+}
+
+if(level==3){
+a=Math.floor(Math.random()*10)
+b=Math.floor(Math.random()*10)
+correctAnswer=a-b
+question.innerText=a+" - "+b
+}
+
+if(level>=4){
+a=Math.floor(Math.random()*5)
+b=Math.floor(Math.random()*5)
+correctAnswer=a*b
+question.innerText=a+" × "+b
+}
+
+}
+
+function checkAnswer(){
+
+let val=parseInt(answer.value)
+
+if(val==correctAnswer){
+
+score++
+scoreEl.innerText=score
+
+build()
+
+if(score%5==0){
+level++
+levelEl.innerText=level
+}
+
+}
+
+answer.value=""
+
+newQuestion()
+
+save()
+
+}
+
+function build(){
+
+let i=score%buildings.length
+
+let el=document.createElement("div")
+el.className="building"
+el.innerText=buildings[i]
+
+city.appendChild(el)
+
+}
+
+function save(){
+
+localStorage.setItem("mathCity",
+JSON.stringify({level,score,city:city.innerHTML}))
+
+}
+
+function load(){
+
+let data=localStorage.getItem("mathCity")
+
+if(data){
+
+let d=JSON.parse(data)
+
+level=d.level
+score=d.score
+
+levelEl.innerText=level
+scoreEl.innerText=score
+
+city.innerHTML=d.city
+
+}
+
+}
+
+function resetGame(){
+
+localStorage.clear()
+location.reload()
+
+}
+
+function updateApp(){
+location.reload(true)
+}
+
+let scoreEl=document.getElementById("score")
+let levelEl=document.getElementById("level")
+
+load()
+
+newQuestion()
+
+</script>
+
+</body>
+</html>
