@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,14 +8,15 @@
 
 <title>Math City</title>
 
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
-
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.png">
 
 </head>
 
 <body>
+
+<!-- מסך פתיחה -->
 
 <div id="startScreen">
 
@@ -22,22 +24,29 @@
 
 <img src="logo.png" class="logo">
 
-<button onclick="startGame()">התחל משחק</button>
-<button onclick="openPrizes()">פרסים</button>
+<button onclick="startGame()">🎮 התחל משחק</button>
+
+<button onclick="openPrizes()">🎁 פרסים</button>
 
 </div>
+
+<!-- המשחק -->
 
 <div id="game" class="hidden">
 
 <header>
 
-<div class="coins">
-🪙 מטבעות:
+<div class="coinsBox">
+🪙 מטבעות
 <span id="coins">0</span>
 </div>
 
-<button onclick="openShop()">חנות</button>
-<button onclick="openPrizes()">פרסים</button>
+<div>
+
+<button onclick="openShop()">🛒 חנות</button>
+<button onclick="openPrizes()">🎁 פרסים</button>
+
+</div>
 
 </header>
 
@@ -53,19 +62,18 @@
 
 </div>
 
-<div id="city"></div>
-
 <div id="monster"></div>
 
 </div>
 
+<!-- חנות -->
+
 <div id="shop" class="hidden">
 
-<h2>חנות</h2>
+<h2>🛒 חנות</h2>
 
 <div class="coinsTop">
-מטבעות:
-<span id="shopCoins"></span>
+מטבעות: <span id="shopCoins"></span>
 </div>
 
 <div id="shopItems" class="shopGrid"></div>
@@ -76,11 +84,13 @@
 
 </div>
 
+<!-- ניהול חנות -->
+
 <div id="admin" class="hidden">
 
 <h2>ניהול חנות</h2>
 
-<input id="itemName" placeholder="שם מתנה">
+<input id="itemName" placeholder="שם">
 
 <input id="itemPrice" type="number" placeholder="מחיר">
 
@@ -94,9 +104,11 @@
 
 </div>
 
+<!-- פרסים -->
+
 <div id="prizes" class="hidden">
 
-<h2>פרסים</h2>
+<h2>🎁 הפרסים שלך</h2>
 
 <ul id="prizeList"></ul>
 
@@ -123,24 +135,30 @@ let op="+"
 let prizes=[]
 
 let shopItems=[
+
 {name:"בית",price:20,icon:"🏠"},
 {name:"עץ",price:10,icon:"🌳"},
+{name:"פארק",price:25,icon:"🏞"},
 {name:"כביש",price:15,icon:"🛣"},
 {name:"מגדל",price:30,icon:"🏢"},
-{name:"פארק",price:25,icon:"🏞"},
 {name:"תחנה",price:20,icon:"🚏"}
+
 ]
 
 function save(){
+
 localStorage.setItem("coins",coins)
+localStorage.setItem("correctCount",correctCount)
 localStorage.setItem("prizes",JSON.stringify(prizes))
 localStorage.setItem("shop",JSON.stringify(shopItems))
+localStorage.setItem("inGame","true")
+
 }
 
 function load(){
 
 coins=parseInt(localStorage.getItem("coins"))||0
-
+correctCount=parseInt(localStorage.getItem("correctCount"))||0
 prizes=JSON.parse(localStorage.getItem("prizes")||"[]")
 
 let s=localStorage.getItem("shop")
@@ -148,12 +166,21 @@ if(s)shopItems=JSON.parse(s)
 
 updateCoins()
 
+if(localStorage.getItem("inGame")=="true"){
+
+document.getElementById("startScreen").classList.add("hidden")
+document.getElementById("game").classList.remove("hidden")
+
+}
+
 }
 
 function startGame(){
 
 document.getElementById("startScreen").classList.add("hidden")
 document.getElementById("game").classList.remove("hidden")
+
+save()
 
 newQuestion()
 
@@ -191,7 +218,7 @@ function checkAnswer(){
 
 let ans=parseInt(document.getElementById("answer").value)
 
-let correct= op=="+" ? a+b : a-b
+let correct=op=="+"?a+b:a-b
 
 if(ans===correct){
 
@@ -203,8 +230,8 @@ correctCount++
 
 if(correctCount%10==0){
 
-let prize="🎁 פרס "+(prizes.length+1)
-prizes.push(prize)
+let p="🎁 פרס "+(prizes.length+1)
+prizes.push(p)
 
 alert("קיבלת פרס!")
 
@@ -245,13 +272,13 @@ if(Math.random()<0.3){
 
 let m=document.getElementById("monster")
 
-m.innerText="👾 מפלצת!"
+m.innerText="👾 מפלצת תקפה!"
 
 setTimeout(()=>{
 
 m.innerText=""
 
-},3000)
+},2000)
 
 }
 
@@ -340,7 +367,9 @@ list.innerHTML=""
 prizes.forEach(p=>{
 
 let li=document.createElement("li")
+
 li.innerText=p
+
 list.appendChild(li)
 
 })
@@ -375,15 +404,12 @@ a.innerHTML=""
 
 shopItems.forEach((item,i)=>{
 
-let div=document.createElement("div")
+let d=document.createElement("div")
 
-div.innerHTML=
-
-item.icon+" "+item.name+" "+item.price+
-
+d.innerHTML=item.icon+" "+item.name+" "+item.price+
 "<button onclick='deleteItem("+i+")'>❌</button>"
 
-a.appendChild(div)
+a.appendChild(d)
 
 })
 
@@ -400,7 +426,6 @@ shopItems.push({name,price,icon})
 save()
 
 renderAdmin()
-
 renderShop()
 
 }
@@ -412,7 +437,6 @@ shopItems.splice(i,1)
 save()
 
 renderAdmin()
-
 renderShop()
 
 }
