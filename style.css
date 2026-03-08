@@ -8,16 +8,12 @@ margin:0
 }
 
 .hidden{
-
 display:none
-
 }
 
 .logo{
-
 width:150px;
 margin:15px
-
 }
 
 button{
@@ -34,38 +30,38 @@ border-radius:12px;
 
 font-size:16px;
 
-margin:6px;
+margin:5px;
 
 cursor:pointer;
 
-box-shadow:0 4px 8px rgba(0,0,0,0.2);
+box-shadow:0 4px 8px rgba(0,0,0,0.2)
 
 }
 
 button:hover{
-
 transform:scale(1.05)
-
 }
 
 header{
 
 display:flex;
-
 justify-content:space-between;
-
 padding:10px;
-
 background:#2c3e50;
-
 color:white
 
 }
 
-.coinsBox{
+.city{
 
-font-size:18px
+min-height:80px;
+font-size:40px;
+padding:10px
 
+}
+
+.building{
+margin:5px
 }
 
 .questionBox{
@@ -121,9 +117,7 @@ box-shadow:0 3px 6px rgba(0,0,0,0.2)
 footer{
 
 margin-top:20px;
-
 padding:10px;
-
 background:#eee
 
 }
