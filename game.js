@@ -49,13 +49,10 @@ if(score%5==0){spawnMonster();destroyBuilding();}else{let el=document.createElem
 
 function spawnMonster(){document.getElementById("monster").innerText=monsters[Math.floor(Math.random()*monsters.length)];monsterActive=true;}
 function destroyBuilding(){let c=document.getElementById("city").children;if(c.length>0)document.getElementById("city").removeChild(c[Math.floor(Math.random()*c.length)]);}
-
 function giveReward(){let icons=["🚗","🎡","🏰","🗼","🎢"],r=icons[Math.floor(Math.random()*icons.length)];rewards.push(r);document.getElementById("rewardBox").innerHTML='<div class="reward">🎁 פרס חדש '+r+'</div>';setTimeout(()=>{document.getElementById("rewardBox").innerHTML=""},3000)}
 
 function renderShop(){let shop=document.getElementById("shopList");shop.innerHTML="";shopItems.forEach((item,i)=>{shop.innerHTML+=`<div class="shopItem"><h3>${item.icon} ${item.name}</h3>מחיר: <span id="price${i}">${item.price}</span> 🪙<br><br><button onclick="buyItem(${i})">קנה</button>${parentMode?`<br><button onclick="editItem(${i})">✏️ שנה מחיר</button><button onclick="deleteItem(${i})">🗑️ מחק</button>`:""}</div>`})}
-
 function buyItem(index){let item=shopItems[index];if(coins<item.price){alert("אין מספיק מטבעות");return;}coins-=item.price;let el=document.createElement("div");el.innerText=item.icon;document.getElementById("city").appendChild(el);updateUI();save()}
-
 function editItem(index){let newPrice=prompt("הכנס מחיר חדש:",shopItems[index].price);if(newPrice!==null){shopItems[index].price=parseInt(newPrice);renderShop();save()}}
 function deleteItem(index){shopItems.splice(index,1);renderShop();save()}
 function toggleParentMode(){parentMode=!parentMode;renderShop();alert(parentMode?"מצב הורים מופעל":"מצב הורים כבוי")}
@@ -71,4 +68,13 @@ function resetGame(){localStorage.clear();location.reload()}
 load();newQuestion()
 
 // עדכון גרסה
-function updateOrRefresh(){fetch("version.json").then(r=>r.json()).then(v=>{let current="1.0.2";if(v.version!==current){if(confirm("גרסה חדשה זמינה. לעדכן עכשיו?")) location.reload();else alert("אין צורך לעדכן")}else location.reload()})}
+function updateOrRefresh(){
+fetch("version.json")
+.then(r=>r.json())
+.then(v=>{
+let current="1.0.2";
+if(v.version!==current){
+if(confirm("גרסה חדשה זמינה. לעדכן עכשיו?")) location.reload();
+}else location.reload();
+});
+}
