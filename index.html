@@ -50,7 +50,7 @@
 <button onclick="openStats()">📊 סטטיסטיקות</button>
 <button onclick="resetGame()">♻️ איפוס</button>
 <button id="installBtn">📲 התקן</button>
-<button onclick="checkUpdate()">🔄 עדכון גרסה</button>
+<button onclick="updateOrRefresh()">🔄 עדכון גרסה</button>
 </div>
 </div>
 
@@ -58,6 +58,9 @@
 <div id="shopScreen" class="screen">
 <h2>🏪 חנות</h2>
 <div id="shopList" class="shop"></div>
+<div>
+<button onclick="toggleParentMode()">👨‍👩‍👧 מצב הורים</button>
+</div>
 <button onclick="backGame()">⬅ חזרה</button>
 </div>
 
@@ -79,6 +82,6 @@
 
 <script src="game.js"></script>
 <script src="sw.js"></script>
-<script>checkVersion()</script>
+<script src="version.js"></script>
 </body>
 </html>
