@@ -1,90 +1,83 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Math City</title>
-
-<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>משחק מתמטיקה לילדים</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#eef5ff;
+background:#f2f2f2;
 margin:0;
-display:flex;
-justify-content:center;
-}
-
-.app{
-max-width:420px;
-width:100%;
 text-align:center;
 }
 
 header{
-background:#4CAF50;
+background:#2ecc71;
 color:white;
+padding:15px;
+transition:0.3s;
+}
+
+header.small{
 padding:6px;
+font-size:14px;
 }
 
-.logo{
-width:140px;
+#logo{
+font-size:28px;
+margin-top:5px;
 }
 
-.screen{display:none;}
-.active{display:block;}
+.container{
+max-width:420px;
+margin:auto;
+padding:10px;
+}
 
-.city{
-display:grid;
-grid-template-columns:repeat(5,60px);
-gap:8px;
+.stats{
+margin:10px;
+font-size:18px;
+}
+
+.buttonsBar{
+display:flex;
 justify-content:center;
-margin:20px;
-font-size:30px;
+gap:6px;
+flex-wrap:wrap;
+margin-bottom:10px;
 }
 
 button{
 padding:10px;
-margin:4px;
 border:none;
 border-radius:8px;
-background:#2196F3;
-color:white;
+font-size:16px;
+cursor:pointer;
 }
 
-.controls{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
+.green{background:#2ecc71;color:white;}
+.red{background:#e74c3c;color:white;}
+.blue{background:#3498db;color:white;}
+.orange{background:#f39c12;color:white;}
+
+#exercise{
+font-size:28px;
+margin:20px;
 }
 
-.shopGrid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px;
+input{
+font-size:20px;
 padding:10px;
+width:120px;
+text-align:center;
 }
 
-.shopItem{
-background:white;
-border-radius:10px;
-padding:8px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-
-.correct{
-background:#b8f5b8;
-border:2px solid green;
-}
-
-.wrong{
-background:#ffb3b3;
-border:2px solid red;
-animation:shake .3s;
+.shake{
+animation:shake 0.4s;
 }
 
 @keyframes shake{
@@ -95,232 +88,195 @@ animation:shake .3s;
 100%{transform:translateX(0)}
 }
 
-.reward{
-background:linear-gradient(45deg,#ffeb3b,#ff9800);
+.shop{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:10px;
+}
+
+.gift{
+background:white;
 padding:10px;
 border-radius:10px;
-margin:10px;
+box-shadow:0 0 5px rgba(0,0,0,0.2);
 }
 
-.monster{
-font-size:35px;
+.gift span{
+font-size:30px;
+display:block;
 }
 
-footer{
-margin-top:20px;
-font-size:14px;
-}
+.hidden{display:none}
 
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
-<div id="startScreen" class="screen active">
-
-<h1>Math City</h1>
-
-<img src="logo.png" class="logo">
-
-<br><br>
-
-<button onclick="startGame()">🎮 התחל משחק</button>
-
-<br>
-
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-
-</div>
-
-<div id="gameScreen" class="screen">
-
-<header>
-
-Math City
-
-<br>
-
-<img src="logo.png" class="logo">
-
+<header id="topBar">
+<div id="logo">🎮 משחק חשבון</div>
 </header>
 
-<h3>
+<div class="container">
 
+<div class="stats">
 רמה: <span id="level">1</span>
-⭐ נקודות: <span id="score">0</span>
-🪙 מטבעות: <span id="coins">0</span>
+נקודות: <span id="points">0</span>
+</div>
 
-</h3>
+<div class="buttonsBar">
 
-<div class="controls">
-
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-<button onclick="addGift()">👨‍👩‍👧 הוסף מתנה</button>
-<button onclick="updateVersion()">🔄 עדכן גרסה</button>
-<button onclick="resetGame()">♻️ איפוס</button>
+<button class="blue" onclick="openShop()">🛍 חנות</button>
+<button class="orange" onclick="parentPanel()">👨‍👩‍👧 הורים</button>
+<button class="green" onclick="checkUpdate()">🔄 עדכון</button>
+<button class="blue" id="installBtn">📲 התקן</button>
 
 </div>
 
-<div id="monster" class="monster"></div>
-
-<div id="rewardBox"></div>
-
-<h2 id="question"></h2>
+<div id="exercise"></div>
 
 <input id="answer">
 
 <br><br>
 
-<button id="checkBtn" onclick="check()">בדוק</button>
+<button id="checkBtn" class="blue" onclick="checkAnswer()">בדיקה</button>
 
-<div id="city" class="city"></div>
-
-</div>
-
-<footer>
-
-© 2026 אלכסיי זבודיסקר
-
-</footer>
+<div id="shop" class="shop hidden"></div>
 
 </div>
 
 <script>
 
-let level=1
-let score=0
-let coins=0
-let attempts=0
-let correct=0
+const VERSION="1.0.0"
 
-let solved=0
-let mistakes=0
+let level=localStorage.getItem("level")||1
+let points=localStorage.getItem("points")||0
 
-let rewards=[]
+document.getElementById("level").innerText=level
+document.getElementById("points").innerText=points
 
-let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"]
+let num1,num2
 
-let shopItems=[
-{name:"🚗 מכונית",price:50,icon:"🚗"},
-{name:"🌳 עץ",price:40,icon:"🌳"},
-{name:"🏠 בית גדול",price:80,icon:"🏠"},
-{name:"🏪 קניון",price:120,icon:"🏪"},
-{name:"🏫 בית ספר",price:150,icon:"🏫"}
-]
+function newExercise(){
 
-function startGame(){
-showScreen("gameScreen")
-}
+num1=Math.floor(Math.random()*10)
+num2=Math.floor(Math.random()*10)
 
-function showScreen(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-document.getElementById(id).classList.add("active")
-}
-
-function newQuestion(){
-
-attempts=0
-
-let a=Math.floor(Math.random()*10)
-let b=Math.floor(Math.random()*10)
-
-correct=a+b
-
-question.innerText=a+" + "+b
+document.getElementById("exercise").innerText=num1+" + "+num2
+document.getElementById("answer").value=""
 
 }
 
-function check(){
+newExercise()
 
-let val=parseInt(answer.value)
+function checkAnswer(){
+
+let ans=document.getElementById("answer").value
+let correct=num1+num2
 
 let btn=document.getElementById("checkBtn")
 
-if(val==correct){
+if(ans==correct){
 
-btn.style.background="green"
+btn.className="green"
+points++
 
-score++
-coins+=5
-solved++
+if(points%5==0){
+level++
+}
 
-build()
+saveGame()
+
+setTimeout(()=>{
+btn.className="blue"
+newExercise()
+},500)
 
 }else{
 
-btn.style.background="red"
+btn.className="red"
 
-attempts++
-mistakes++
-
-answer.classList.add("wrong")
-
-}
-
-updateUI()
+let input=document.getElementById("answer")
+input.classList.add("shake")
 
 setTimeout(()=>{
-btn.style.background="#2196F3"
-answer.value=""
-answer.classList.remove("wrong")
-newQuestion()
-},600)
+input.classList.remove("shake")
+btn.className="blue"
+},500)
 
 }
 
-function build(){
-
-let el=document.createElement("div")
-
-el.innerText=buildings[Math.floor(Math.random()*buildings.length)]
-
-city.appendChild(el)
+updateStats()
 
 }
 
-function updateUI(){
+function updateStats(){
 
-score.innerText=score
-level.innerText=level
-coins.innerText=coins
-
-}
-
-function addGift(){
-
-let name=prompt("שם מתנה")
-let icon=prompt("אייקון")
-let price=parseInt(prompt("מחיר"))
-
-if(name){
-
-shopItems.push({name,icon,price})
+document.getElementById("level").innerText=level
+document.getElementById("points").innerText=points
 
 }
 
+function saveGame(){
+
+localStorage.setItem("level",level)
+localStorage.setItem("points",points)
+
 }
 
-function updateVersion(){
+function openShop(){
 
-location.reload(true)
+let shop=document.getElementById("shop")
+shop.classList.toggle("hidden")
+
+shop.innerHTML=""
+
+let gifts=[
+{icon:"🍫",price:10},
+{icon:"🎮",price:20},
+{icon:"🚗",price:30}
+]
+
+gifts.forEach(g=>{
+
+let div=document.createElement("div")
+div.className="gift"
+
+div.innerHTML="<span>"+g.icon+"</span>"+g.price+" נקודות"
+
+shop.appendChild(div)
+
+})
 
 }
 
-function resetGame(){
+function parentPanel(){
 
-localStorage.clear()
+let icon=prompt("אייקון מתנה")
+
+let price=prompt("מחיר")
+
+if(!icon||!price)return
+
+let shop=document.getElementById("shop")
+
+let div=document.createElement("div")
+div.className="gift"
+
+div.innerHTML="<span>"+icon+"</span>"+price+" נקודות"
+
+shop.appendChild(div)
+
+}
+
+function checkUpdate(){
+
+alert("אין גרסה חדשה כרגע")
 
 location.reload()
 
 }
-
-newQuestion()
 
 </script>
 
