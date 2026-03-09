@@ -69,12 +69,14 @@ load();newQuestion()
 
 // עדכון גרסה
 function updateOrRefresh(){
-fetch("version.json")
+fetch("version.json",{cache:"no-store"})
 .then(r=>r.json())
 .then(v=>{
-let current="1.0.2";
+const current="1.0.2";
 if(v.version!==current){
-if(confirm("גרסה חדשה זמינה. לעדכן עכשיו?")) location.reload();
+if(confirm("גרסה חדשה זמינה: "+v.version+"\nלעדכן עכשיו?")){
+location.href=location.pathname+"?v="+Date.now();
+}
 }else location.reload();
 });
 }
