@@ -8,7 +8,7 @@ margin:0;
 header{
 background:#4CAF50;
 color:white;
-padding:10px;
+padding:12px;
 }
 
 .logo{
@@ -28,7 +28,7 @@ margin:10px;
 font-size:18px;
 }
 
-.barButtons{
+.buttonBar{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
@@ -36,9 +36,13 @@ gap:6px;
 margin:10px;
 }
 
-.barButtons button{
-font-size:14px;
-padding:10px;
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#2196F3;
+color:white;
+font-size:16px;
 }
 
 .city{
@@ -66,19 +70,21 @@ box-shadow:0 2px 5px rgba(0,0,0,0.2);
 
 .correct{
 background:#b8f5b8;
+border:2px solid green;
 }
 
 .wrong{
 background:#ffb3b3;
-animation:shake .3s;
+border:2px solid red;
 }
 
-@keyframes shake{
+.monster{
+font-size:35px;
+}
 
-0%{transform:translateX(0)}
-25%{transform:translateX(-5px)}
-50%{transform:translateX(5px)}
-75%{transform:translateX(-5px)}
-100%{transform:translateX(0)}
-
+footer{
+margin-top:30px;
+padding:10px;
+font-size:14px;
+color:#555;
 }
