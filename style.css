@@ -1,80 +1,147 @@
 body{
+
 font-family:Arial;
 background:#eef5ff;
-text-align:center;
 margin:0;
+text-align:center;
+
 }
 
 .logo{
+
 width:180px;
+
 }
 
 .logoSmall{
-width:90px;
-}
 
-header{
-background:#4CAF50;
-color:white;
-padding:6px;
+width:120px;
+
 }
 
 .screen{
+
 display:none;
+
 }
 
 .active{
+
 display:block;
+
 }
 
-.statsBar{
-margin:10px;
-font-size:18px;
-}
+.greenBtn{
 
-.buttonsBar button{
-margin:4px;
-padding:10px;
+background:#4CAF50;
+color:white;
+border:none;
+padding:12px;
+margin:6px;
+border-radius:10px;
 font-size:16px;
+
+}
+
+.greenBtn:hover{
+
+background:#3e8e41;
+
+}
+
+.topBar{
+
+display:flex;
+justify-content:space-around;
+background:#4CAF50;
+color:white;
+padding:8px;
+
 }
 
 .city{
+
 display:grid;
 grid-template-columns:repeat(5,60px);
 gap:8px;
 justify-content:center;
-margin:20px;
+margin-top:20px;
 font-size:30px;
+
+}
+
+.shopGrid{
+
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:10px;
+
 }
 
 .shopItem{
+
 background:white;
-border-radius:10px;
 padding:10px;
-margin:8px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
+border-radius:10px;
+
 }
 
 .buyBtn{
+
 background:#4CAF50;
 color:white;
-padding:8px;
 border:none;
-border-radius:6px;
+padding:6px;
+border-radius:8px;
+
 }
 
-.buyBtn.red{
+.buyBtn.disabled{
+
 background:red;
+
 }
 
-.buildAnim{
-animation:buildPop 0.4s;
+.correct{
+
+background:#b8f5b8;
+
 }
 
-@keyframes buildPop{
+.wrong{
 
-0%{transform:scale(0.2)}
-70%{transform:scale(1.2)}
-100%{transform:scale(1)}
+background:#ffb3b3;
+
+animation:shake 0.3s;
+
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0)}
+25%{transform:translateX(-5px)}
+50%{transform:translateX(5px)}
+75%{transform:translateX(-5px)}
+100%{transform:translateX(0)}
+
+}
+
+.buttonBar{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:15px;
+
+}
+
+@media(max-width:600px){
+
+.shopGrid{
+
+grid-template-columns:repeat(3,1fr);
+
+}
 
 }
