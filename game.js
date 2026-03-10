@@ -1,18 +1,10 @@
-let level=1
-let score=0
-let coins=0
-let correctCount=0
-
-let correctAnswer
-
-let activeCharacter=null
-
-let buildings=["🏠","🏢","🏫","🏪","🏰"]
-
-let city=document.getElementById("city")
+let level=1, score=0, coins=0, correctCount=0, wheelUsed=false;
+let correctAnswer;
+let activeCharacter=null;
+let buildings=["🏠","🏢","🏫","🏪","🏰"];
+let city=document.getElementById("city");
 
 let characters=[
-
 {name:"אורי",icon:"👷",power:"build"},
 {name:"נועה",icon:"👩‍🚀",power:"coins"},
 {name:"דני",icon:"👮",power:"protect"},
@@ -23,345 +15,90 @@ let characters=[
 {name:"רון",icon:"👨‍🏫",power:"xp"},
 {name:"ליה",icon:"👩‍🎨",power:"city"},
 {name:"יואב",icon:"🧑‍🔧",power:"repair"}
-
-]
+];
 
 let shopItems=[
-
 {name:"בית",price:30,icon:"🏠"},
 {name:"עץ",price:20,icon:"🌳"},
 {name:"בניין",price:80,icon:"🏢"},
-{name:"בית ספר",price:120,icon:"🏫"}
+{name:"בית ספר",price:120,icon:"🏫"},
+{name:"לונה פארק",price:200,icon:"🎡"},
+{name:"טירה",price:300,icon:"🏰"},
+{name:"חללית",price:500,icon:"🚀"},
+{name:"רכבת הרים",price:400,icon:"🎢"},
+{name:"מגדל",price:450,icon:"🗼"},
+{name:"קניון",price:350,icon:"🏪"}
+];
 
-]
-
-function startGame(){
-
-showScreen("gameScreen")
-newQuestion()
-
-}
-
-function showScreen(id){
-
-document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("active"))
-
-document.getElementById(id).classList.add("active")
-
-}
+function startGame(){showScreen("gameScreen");newQuestion();}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function backGame(){showScreen("gameScreen");}
 
 function newQuestion(){
-
-let a=Math.floor(Math.random()*10)
-let b=Math.floor(Math.random()*10)
-
-correctAnswer=a+b
-
-document.getElementById("question").innerText=a+" + "+b
-
-document.getElementById("answer").value=""
-
+    let a=Math.floor(Math.random()*10), b=Math.floor(Math.random()*10);
+    correctAnswer=a+b;
+    let ansInput=document.getElementById("answer");
+    ansInput.value=""; ansInput.classList.remove("wrong","correct");
+    document.getElementById("question").innerText=a+" + "+b;
 }
 
 function checkAnswer(){
-
-let val=parseInt(document.getElementById("answer").value)
-
-if(val===correctAnswer){
-
-score++
-coins+=5
-correctCount++
-
-build()
-
-if(activeCharacter && activeCharacter.power==="coins"){
-coins+=5
+    let val=parseInt(document.getElementById("answer").value);
+    let ansInput=document.getElementById("answer");
+    if(isNaN(val)) return;
+    if(val===correctAnswer){
+        score++; coins+=5; correctCount++; wheelUsed=false;
+        build();
+        ansInput.classList.add("correct");
+        if(correctCount % 10 === 0) alert("מזל טוב! מגיע לך גלגל מזל.");
+    }else{
+        ansInput.classList.add("wrong"); shake(ansInput);
+    }
+    updateUI(); save();
+    setTimeout(newQuestion,500);
 }
 
-if(correctCount%10===0){
-spinWheel()
-}
+function shake(el){el.style.animation="shake 0.5s";el.addEventListener("animationend",()=>el.style.animation="");}
 
-}else{
-
-alert("תשובה לא נכונה")
-
-}
-
-updateUI()
-save()
-newQuestion()
-
-}
-
-function build(){
-
-let el=document.createElement("div")
-
-el.innerText=buildings[Math.floor(Math.random()*buildings.length)]
-
-city.appendChild(el)
-
-}
+function build(){let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; city.appendChild(el);}
 
 function spinWheel(){
-
-let prizes=["coins20","coins50","build","character"]
-
-let p=prizes[Math.floor(Math.random()*prizes.length)]
-
-if(p==="coins20") coins+=20
-
-if(p==="coins50") coins+=50
-
-if(p==="build") build()
-
-if(p==="character"){
-
-let c=characters[Math.floor(Math.random()*characters.length)]
-
-alert("קיבלת דמות "+c.icon+" "+c.name)
-
-}
-
-updateUI()
-
-}
-
-function openShop(){
-
-renderShop()
-
-showScreen("shopScreen")
-
-}
-
-function renderShop(){
-
-let list=document.getElementById("shopList")
-
-list.innerHTML=""
-
-shopItems.forEach((i,index)=>{
-
-let disabled=coins<i.price
-
-list.innerHTML+=`
-
-<div class="shopItem">
-
-${i.icon} ${i.name}
-
-<br>
-
-${i.price} מטבעות
-
-<br>
-
-<button style="background:${disabled?'red':'green'}"
-
-onclick="buyItem(${index})">
-
-קנה
-
-</button>
-
-</div>
-
-`
-
-})
-
-}
-
-function buyItem(i){
-
-let item=shopItems[i]
-
-if(coins<item.price) return
-
-coins-=item.price
-
-let el=document.createElement("div")
-
-el.innerText=item.icon
-
-city.appendChild(el)
-
-updateUI()
-
-}
-
-function addShopItem(){
-
-let pass=prompt("קוד הורים")
-
-if(pass!=="1234") return
-
-let name=prompt("שם פריט")
-
-let price=parseInt(prompt("מחיר"))
-
-let icons=["🏠","🌳","🏢","🏫","🏪","🎡","🏰","🗼","🎢","🚀"]
-
-let iconIndex=parseInt(prompt(
-
-"בחר אייקון:\n1🏠\n2🌳\n3🏢\n4🏫\n5🏪\n6🎡\n7🏰\n8🗼\n9🎢\n10🚀"
-
-))
-
-shopItems.push({
-
-name:name,
-price:price,
-icon:icons[iconIndex-1]
-
-})
-
-renderShop()
-
-}
-
-function openCharacters(){
-
-let box=document.getElementById("characterList")
-
-box.innerHTML=""
-
-characters.forEach(c=>{
-
-box.innerHTML+=`
-
-<button onclick="selectCharacter('${c.name}')">
-
-${c.icon} ${c.name}
-
-</button>
-
-<br>
-
-`
-
-})
-
-showScreen("charactersScreen")
-
-}
-
-function selectCharacter(name){
-
-activeCharacter=characters.find(c=>c.name===name)
-
-alert("בחרת דמות "+activeCharacter.icon)
-
-}
-
-function openStats(){
-
-document.getElementById("statsBox").innerHTML=
-
-`
-
-נקודות: ${score}
-
-<br>
-
-מטבעות: ${coins}
-
-<br>
-
-תרגילים נכונים: ${correctCount}
-
-`
-
-showScreen("statsScreen")
-
-}
-
-function updateUI(){
-
-document.getElementById("score").innerText=score
-document.getElementById("coins").innerText=coins
-document.getElementById("level").innerText=level
-
-}
-
-function save(){
-
-localStorage.setItem("mathCity",
-
-JSON.stringify({
-
-score,
-coins,
-city:city.innerHTML
-
-})
-
-)
-
-}
-
-function load(){
-
-let data=localStorage.getItem("mathCity")
-
-if(!data) return
-
-let d=JSON.parse(data)
-
-score=d.score
-coins=d.coins
-
-city.innerHTML=d.city
-
-updateUI()
-
-}
-
-function resetGame(){
-
-localStorage.clear()
-location.reload()
-
+    if(correctCount<10 || wheelUsed){alert("אפשר להשתמש בגלגל מזל פעם אחת כל 10 תרגילים נכונים");return;}
+    wheelUsed=true;
+    let prizes=["coins20","coins50","build","character"];
+    let p=prizes[Math.floor(Math.random()*prizes.length)];
+    if(p==="coins20"){coins+=20; alert("קיבלת 20 מטבעות!");}
+    if(p==="coins50"){coins+=50; alert("קיבלת 50 מטבעות!");}
+    if(p==="build"){build(); alert("בניין נוסף לעיר!");}
+    if(p==="character"){ let c=characters[Math.floor(Math.random()*characters.length)]; alert("קיבלת דמות: "+c.icon+" "+c.name);}
+    updateUI();
 }
 
 function checkUpdate(){
-
-fetch("version.json")
-.then(r=>r.json())
-.then(data=>{
-
-let current=document.getElementById("appVersion").innerText
-
-if(data.version!==current){
-
-if(confirm("יש גרסה חדשה לעדכן?")){
-location.reload(true)
+    fetch("version.json").then(r=>r.json()).then(data=>{
+        let current=document.getElementById("appVersion").innerText;
+        if(data.version!==current){if(confirm("יש גרסה חדשה, להוריד ולעדכן?")) location.reload(true);}
+        else location.reload();
+    });
 }
 
-}else{
+function resetGame(){localStorage.clear(); location.reload();}
 
-location.reload()
-
+function updateUI(){
+    document.getElementById("score").innerText=score;
+    document.getElementById("level").innerText=level;
+    document.getElementById("coins").innerText=coins;
 }
 
-})
-
+function save(){
+    localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,correctCount}));
 }
 
-function installApp(){
-
-alert("להתקנה השתמש בתפריט הדפדפן")
-
+function load(){
+    let data=localStorage.getItem("mathCity");
+    if(data){let d=JSON.parse(data);
+    score=d.score||0; level=d.level||1; coins=d.coins||0; correctCount=d.correctCount||0; city.innerHTML=d.city||"";}
+    updateUI();
 }
-
-function backGame(){
-
-showScreen("gameScreen")
-
-}
-
-load()
+load();
+newQuestion();
