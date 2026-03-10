@@ -2,18 +2,13 @@ let level=1
 let score=0
 let coins=0
 
-let solved=0
-let mistakes=0
-
 let correctAnswer
+
+let rewards=[]
 
 let city=document.getElementById("city")
 
-let buildings=[
-"🏠","🏡","🏢","🏫","🏪","🎡","🏬","🏭"
-]
-
-let rewards=[]
+let buildings=["🏠","🏢","🏬","🏫","🏪","🏰"]
 
 let characters=[
 
@@ -22,25 +17,24 @@ let characters=[
 {name:"דני",icon:"👦"},
 {name:"מאיה",icon:"👩"},
 {name:"תום",icon:"🧑‍🚀"},
-{name:"ליאן",icon:"👩‍🎓"},
-{name:"רון",icon:"🧑‍🔧"},
-{name:"אדם",icon:"🧑‍🚀"},
 {name:"רותם",icon:"👨‍🚒"},
-{name:"יואב",icon:"🧑‍🚀"}
+{name:"עדי",icon:"👮"},
+{name:"רון",icon:"🧙"},
+{name:"ליה",icon:"👩‍🔬"},
+{name:"יואב",icon:"🧑‍🌾"}
 
 ]
 
 let shopItems=[
 
-{name:"🏠 בית",price:30,icon:"🏠"},
-{name:"🌳 עץ",price:20,icon:"🌳"},
-{name:"🏪 חנות",price:60,icon:"🏪"},
-{name:"🏫 בית ספר",price:80,icon:"🏫"},
-{name:"🎡 לונה פארק",price:120,icon:"🎡"},
-{name:"🏢 בניין",price:150,icon:"🏢"}
+{name:"בית",price:40,icon:"🏠"},
+{name:"עץ",price:20,icon:"🌳"},
+{name:"בניין",price:80,icon:"🏢"},
+{name:"בית ספר",price:120,icon:"🏫"},
+{name:"חנות",price:90,icon:"🏪"},
+{name:"טירה",price:200,icon:"🏰"}
 
 ]
-
 
 function showScreen(id){
 
@@ -50,7 +44,6 @@ document.getElementById(id).classList.add("active")
 
 }
 
-
 function startGame(){
 
 showScreen("gameScreen")
@@ -59,13 +52,11 @@ newQuestion()
 
 }
 
-
 function backGame(){
 
 showScreen("gameScreen")
 
 }
-
 
 function newQuestion(){
 
@@ -78,17 +69,12 @@ correctAnswer=a+b
 question.innerText=a+" + "+b
 
 answer.value=""
-answer.className=""
 
 }
-
 
 function checkAnswer(){
 
 let val=parseInt(answer.value)
-
-if(isNaN(val)) return
-
 
 if(val==correctAnswer){
 
@@ -96,21 +82,16 @@ answer.className="correct"
 
 score++
 coins+=5
-solved++
 
 build()
 
 if(score%10==0){
 
-giveReward()
+spinWheel()
 
 }
 
-setTimeout(newQuestion,500)
-
 }else{
-
-mistakes++
 
 answer.className="wrong"
 
@@ -120,8 +101,9 @@ updateUI()
 
 save()
 
-}
+setTimeout(newQuestion,500)
 
+}
 
 function build(){
 
@@ -129,25 +111,41 @@ let el=document.createElement("div")
 
 el.innerText=buildings[Math.floor(Math.random()*buildings.length)]
 
-el.className="buildAnim"
-
 city.appendChild(el)
 
 }
 
+function spinWheel(){
 
-function giveReward(){
+let prizes=[
 
-let icons=["🚗","🎁","🎡","🏰"]
+"+20 מטבעות",
+"+50 מטבעות",
+"בית חדש",
+"דמות"
 
-let r=icons[Math.floor(Math.random()*icons.length)]
+]
 
-rewards.push(r)
+let p=prizes[Math.floor(Math.random()*prizes.length)]
 
-alert("קיבלת פרס "+r)
+alert("גלגל המזל נתן: "+p)
+
+if(p=="+20 מטבעות") coins+=20
+if(p=="+50 מטבעות") coins+=50
+
+if(p=="בית חדש") build()
+
+if(p=="דמות"){
+
+let c=characters[Math.floor(Math.random()*characters.length)]
+
+rewards.push(c.icon)
 
 }
 
+updateUI()
+
+}
 
 function openShop(){
 
@@ -157,27 +155,33 @@ showScreen("shopScreen")
 
 }
 
-
 function renderShop(){
 
 shopList.innerHTML=""
 
-shopItems.forEach(item=>{
+shopItems.forEach(i=>{
 
-let disabled=coins<item.price
+let disabled=coins<i.price
 
 shopList.innerHTML+=`
 
 <div class="shopItem">
 
-<h3>${item.icon} ${item.name}</h3>
-
-${item.price} 🪙
+${i.icon}
 
 <br>
 
-<button class="buyBtn ${disabled?'disabled':''}" 
-onclick="buyItem('${item.icon}',${item.price})">
+${i.name}
+
+<br>
+
+${i.price} 🪙
+
+<br>
+
+<button style="background:${disabled?'red':'green'}"
+
+onclick="buyItem('${i.icon}',${i.price})">
 
 קנה
 
@@ -191,16 +195,9 @@ onclick="buyItem('${item.icon}',${item.price})">
 
 }
 
-
 function buyItem(icon,price){
 
-if(coins<price){
-
-alert("אין מספיק מטבעות")
-
-return
-
-}
+if(coins<price) return
 
 coins-=price
 
@@ -216,7 +213,6 @@ save()
 
 }
 
-
 function openRewards(){
 
 rewardList.innerHTML=rewards.join(" ")
@@ -225,22 +221,13 @@ showScreen("rewardsScreen")
 
 }
 
-
 function openCharacters(){
 
 characterList.innerHTML=""
 
 characters.forEach(c=>{
 
-characterList.innerHTML+=`
-
-<div>
-
-${c.icon} ${c.name}
-
-</div>
-
-`
+characterList.innerHTML+=c.icon+" "+c.name+"<br>"
 
 })
 
@@ -248,22 +235,15 @@ showScreen("charactersScreen")
 
 }
 
-
 function openStats(){
-
-let accuracy=solved==0?0:
-
-Math.round((solved/(solved+mistakes))*100)
 
 statsBox.innerHTML=
 
 `
 
-תרגילים שנפתרו: ${solved}<br>
+נקודות: ${score}
 
-טעויות: ${mistakes}<br>
-
-אחוז הצלחה: ${accuracy}%<br>
+<br>
 
 מטבעות: ${coins}
 
@@ -273,71 +253,53 @@ showScreen("statsScreen")
 
 }
 
-
 function parentMode(){
 
 let pass=prompt("קוד הורים")
 
-if(pass!="1234"){
-
-alert("קוד שגוי")
-
-return
-
-}
+if(pass!="1234") return
 
 let name=prompt("שם פריט")
 
-let icon=prompt("אייקון")
-
 let price=parseInt(prompt("מחיר"))
+
+let icons=["🏠","🌳","🏢","🏫","🏪","🎡","🏰","🗼","🎢","🚀"]
+
+let pick=parseInt(prompt("בחר אייקון 1-10"))
 
 shopItems.push({
 
 name:name,
-icon:icon,
-price:price
+price:price,
+icon:icons[pick-1]
 
 })
 
-alert("נוסף לחנות")
+renderShop()
 
 }
-
 
 function updateUI(){
 
 score.innerText=score
-
 coins.innerText=coins
-
 level.innerText=level
 
 }
 
-
 function save(){
 
-localStorage.setItem(
-
-"mathCity",
+localStorage.setItem("mathCity",
 
 JSON.stringify({
 
 score,
 coins,
-level,
-city:city.innerHTML,
-rewards,
-solved,
-mistakes
+city:city.innerHTML
 
-})
-
-)
+}))
 
 }
-
 
 function load(){
 
@@ -347,32 +309,22 @@ if(!data) return
 
 let d=JSON.parse(data)
 
-score=d.score||0
-coins=d.coins||0
-level=d.level||1
+score=d.score
+coins=d.coins
 
-rewards=d.rewards||[]
-
-solved=d.solved||0
-mistakes=d.mistakes||0
-
-city.innerHTML=d.city||""
+city.innerHTML=d.city
 
 updateUI()
 
 }
 
-
 function resetGame(){
-
-if(!confirm("לאפס משחק?")) return
 
 localStorage.clear()
 
 location.reload()
 
 }
-
 
 function checkUpdate(){
 
@@ -394,6 +346,8 @@ location.reload(true)
 
 }else{
 
+alert("האפליקציה מעודכנת")
+
 location.reload()
 
 }
@@ -402,7 +356,10 @@ location.reload()
 
 }
 
+function installApp(){
+
+alert("להתקנה השתמש בתפריט הדפדפן")
+
+}
 
 load()
-
-newQuestion()
