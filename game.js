@@ -12,12 +12,9 @@ let shopItems=[
 {name:"🎢 רכבת הרים",price:500,icon:"🎢"},
 {name:"🚀 חללית",price:700,icon:"🚀"}
 ];
-
-// גרסת המשחק המקומית
-const localVersion = "4.0";
+const localVersion = "5.0";
 let correctAnswer=0;
 
-// פונקציות מסך
 function showScreen(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
 function startGame(){ showScreen("gameScreen"); newQuestion(); }
 function backGame(){ showScreen("gameScreen"); }
@@ -25,7 +22,6 @@ function openShop(){ renderShop(); showScreen("shopScreen"); }
 function openRewards(){ updateRewardList(); showScreen("rewardsScreen"); }
 function openStats(){ renderStats(); showScreen("statsScreen"); }
 
-// משחק
 function newQuestion(){
     attempts=0;
     let a=Math.floor(Math.random()*10), b=Math.floor(Math.random()*10);
@@ -58,7 +54,6 @@ function giveReward(){ let icons=["🚗","🎡","🏰","🗼","🎢"]; let r=ico
 function spawnMonster(){ document.getElementById("monster").innerText=monsters[Math.floor(Math.random()*monsters.length)]; monsterActive=true; }
 function destroyBuilding(){ let c=city.children; if(c.length>0){ city.removeChild(c[Math.floor(Math.random()*c.length)]); } }
 
-// חנות
 function renderShop(){
     let shopList=document.getElementById("shopList"); shopList.innerHTML="";
     shopItems.forEach(item=>{
@@ -78,12 +73,10 @@ function updateRewardList(){ document.getElementById("rewardList").innerHTML=rew
 function renderStats(){ let accuracy=solved==0?0:Math.round((solved/(solved+mistakes))*100); document.getElementById("statsBox").innerHTML=`תרגילים שנפתרו: ${solved}<br>טעויות: ${mistakes}<br>אחוז הצלחה: ${accuracy}%<br>מטבעות: ${coins}`; }
 function updateUI(){ document.getElementById("score").innerText=score; document.getElementById("level").innerText=level; document.getElementById("coins").innerText=coins; }
 
-// שמירה וטעינה
 function save(){ localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,rewards,solved,mistakes})); }
 function load(){ let data=localStorage.getItem("mathCity"); if(data){ let d=JSON.parse(data); score=d.score||0; level=d.level||1; coins=d.coins||0; rewards=d.rewards||[]; solved=d.solved||0; mistakes=d.mistakes||0; city.innerHTML=d.city||""; } updateUI(); }
 load(); newQuestion();
 
-// פונקציות עזר
 function resetGame(){ localStorage.clear(); location.reload(); }
 async function checkUpdate(){
     try {
