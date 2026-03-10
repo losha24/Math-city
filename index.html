@@ -2,86 +2,87 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Math City v4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math City – גרסה 4</title>
 <link rel="stylesheet" href="style.css">
-<script defer src="game.js"></script>
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-<!-- מסך פתיחה -->
+<!-- START SCREEN -->
 <div id="startScreen" class="screen active">
-    <h1>Math City</h1>
-    <img src="logo.png" class="logo">
-    <br><br>
-    <button class="green-btn" onclick="startGame()">🎮 התחל משחק</button>
-    <button class="green-btn" onclick="resetGame()">♻️ איפוס</button>
-    <button class="green-btn" onclick="checkUpdate()">⬆️ עדכון גרסה</button>
+<h1>Math City</h1>
+<img src="logo.png" class="logo"><br><br>
+<div class="bar-buttons">
+<button onclick="startGame()">🎮 התחל משחק</button>
+<button onclick="resetGame()">♻️ איפוס</button>
+<button onclick="checkUpdate()">⬆ עדכון גרסא</button>
+</div>
+<br>
+<button onclick="openRewards()">🏆 פרסים</button>
+<button onclick="openShop()">🏪 חנות</button>
+<button onclick="openStats()">📊 סטטיסטיקות</button>
 </div>
 
-<!-- מסך משחק -->
+<!-- GAME SCREEN -->
 <div id="gameScreen" class="screen">
-    <header>
-        <h2>Math City</h2>
-        <img src="logo.png" class="logo">
-    </header>
+<header>
+<h2>Math City</h2>
+<img src="logo.png" class="logo">
+</header>
+<h3>
+רמה: <span id="level">1</span> ⭐ נקודות: <span id="score">0</span> 🪙 מטבעות: <span id="coins">0</span>
+</h3>
 
-    <div class="status-bar">
-        רמה: <span id="level">1</span>  
-        ⭐ נקודות: <span id="score">0</span>  
-        🪙 מטבעות: <span id="coins">0</span>
-        <button class="green-btn" onclick="resetGame()">♻️ איפוס</button>
-        <button class="green-btn" onclick="checkUpdate()">⬆️ עדכון גרסה</button>
-        <button class="green-btn" onclick="installApp()">📲 התקנת אפליקציה</button>
-    </div>
+<div id="monster" class="monster"></div>
+<div id="rewardBox"></div>
+<h2 id="question"></h2>
+<input id="answer"><br>
+<button onclick="check()">בדוק</button>
 
-    <h2 id="question"></h2>
-    <input id="answer" placeholder="כתוב את התשובה כאן">
-    <br>
-    <button class="green-btn" onclick="checkAnswer()">בדוק</button>
+<div class="city" id="city"></div>
 
-    <div id="city" class="city"></div>
-
-    <div class="game-buttons">
-        <button class="green-btn" onclick="openShop()">🏪 חנות</button>
-        <button class="green-btn" onclick="openRewards()">🏆 פרסים</button>
-        <button class="green-btn" onclick="openStats()">📊 סטטיסטיקות</button>
-        <button class="green-btn" onclick="spinWheel()">🎡 גלגל מזל</button>
-    </div>
+<div class="bar-buttons">
+<button onclick="openRewards()">🏆 פרסים</button>
+<button onclick="openShop()">🏪 חנות</button>
+<button onclick="openStats()">📊 סטטיסטיקות</button>
+<button onclick="checkUpdate()">⬆ עדכון גרסא</button>
+<button onclick="installApp()">📲 התקנת אפליקציה</button>
+</div>
 </div>
 
-<!-- חנות -->
+<!-- SHOP SCREEN -->
 <div id="shopScreen" class="screen">
-    <h2>🏪 חנות</h2>
-    <div id="shopList"></div>
-    <div id="parentControls">
-        <h3>🔧 בקרת הורים</h3>
-        <input id="newItemName" placeholder="שם פריט">
-        <input id="newItemPrice" placeholder="מחיר">
-        <input id="newItemIcon" placeholder="אייקון">
-        <button class="green-btn" onclick="addShopItem()">➕ הוסף פריט</button>
-    </div>
-    <button class="green-btn" onclick="backGame()">⬅ חזרה</button>
+<h2>🏪 חנות</h2>
+<div id="shopList"></div>
+<div class="bar-buttons">
+<button onclick="backGame()">⬅ חזרה</button>
+</div>
 </div>
 
-<!-- פרסים -->
+<!-- REWARDS SCREEN -->
 <div id="rewardsScreen" class="screen">
-    <h2>🏆 הפרסים</h2>
-    <div id="rewardList"></div>
-    <button class="green-btn" onclick="backGame()">⬅ חזרה</button>
+<h2>🏆 הפרסים</h2>
+<div id="rewardList"></div>
+<div class="bar-buttons">
+<button onclick="backGame()">⬅ חזרה</button>
+</div>
 </div>
 
-<!-- סטטיסטיקות -->
+<!-- STATS SCREEN -->
 <div id="statsScreen" class="screen">
-    <h2>📊 סטטיסטיקות</h2>
-    <div id="statsBox"></div>
-    <button class="green-btn" onclick="backGame()">⬅ חזרה</button>
+<h2>📊 סטטיסטיקות</h2>
+<div id="statsBox"></div>
+<div class="bar-buttons">
+<button onclick="backGame()">⬅ חזרה</button>
+</div>
 </div>
 
 <footer>
-© 2026 אלכסיי זבודיסקר<br>
-גרסה נוכחית: <span id="appVersion">4.0</span>
+© 2026 אלכסיי זבודיסקר <br>
+גרסה נוכחית: 4
 </footer>
 
+<script src="game.js"></script>
 </body>
 </html>
