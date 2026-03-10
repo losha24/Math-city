@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,8 +8,8 @@
 
 <title>Math City</title>
 
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 
 </head>
 
@@ -17,9 +18,12 @@
 <div id="startScreen" class="screen active">
 
 <h1>Math City</h1>
+
 <img src="logo.png" class="logo">
 
-<button onclick="startGame()">🎮 התחל משחק</button>
+<button onclick="startGame()">🎮 התחל לשחק</button>
+<button onclick="updateVersion()">🔄 עדכון גרסה</button>
+<button onclick="resetGame()">♻️ איפוס</button>
 
 </div>
 
@@ -30,37 +34,40 @@
 
 <h2>Math City</h2>
 
-</header>
+<div class="stats">
 
-<h3>
+רמה: <span id="level">1</span>
 
-רמה: <span id="level">1</span>  
-⭐ נקודות: <span id="score">0</span>  
+⭐ נקודות: <span id="score">0</span>
+
 🪙 מטבעות: <span id="coins">0</span>
 
-</h3>
+</div>
+
+</header>
 
 
 <div class="buttonBar">
 
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-<button onclick="spinWheel()">🎡 גלגל מזל</button>
-<button onclick="parentMode()">👨‍👩‍👧 הורים</button>
-<button onclick="updateVersion()">🔄 עדכון</button>
-<button onclick="resetGame()">♻️ איפוס</button>
+<button onclick="openShop()">🏪</button>
+<button onclick="openRewards()">🏆</button>
+<button onclick="openStats()">📊</button>
+<button onclick="openMap()">🗺</button>
+<button onclick="openCharacters()">🧙</button>
+<button onclick="spinWheel()">🎡</button>
+<button onclick="parentMode()">👨‍👩‍👧</button>
+<button onclick="updateVersion()">🔄</button>
 
 </div>
 
 
-<div id="monster" class="monster"></div>
+<div id="monster"></div>
 
 <h2 id="question"></h2>
 
 <input id="answer">
 
-<button onclick="check()">בדוק</button>
+<button id="checkBtn" onclick="check()">בדוק</button>
 
 <div id="rewardBox"></div>
 
@@ -69,35 +76,12 @@
 </div>
 
 
-<div id="shopScreen" class="screen">
-
-<h2>🏪 חנות</h2>
-
-<div id="shopList" class="shopGrid"></div>
-
-<button onclick="backGame()">⬅ חזרה</button>
-
-</div>
-
-
-<div id="statsScreen" class="screen">
-
-<h2>📊 סטטיסטיקות</h2>
-
-<div id="statsBox"></div>
-
-<button onclick="backGame()">⬅ חזרה</button>
-
-</div>
-
-
 <footer>
 
 © 2026 אלכסיי זבודיסקר  
-גרסה: <span id="appVersion">4.0</span>
+גרסה: <span id="appVersion"></span>
 
 </footer>
-
 
 <script src="game.js"></script>
 
