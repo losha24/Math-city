@@ -9,79 +9,113 @@
 </head>
 <body>
 
-<!-- מסך פתיחה -->
+<!-- START SCREEN -->
 <div id="startScreen" class="screen active">
-<h1>Math City</h1>
-<img src="logo.png" class="logo">
-<br><br>
-<button onclick="startGame()">🎮 התחל משחק</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
+    <h1>Math City</h1>
+    <img src="logo.png" class="logo">
+    <br><br>
+    <button onclick="startGame()">🎮 התחל משחק</button>
+    <button onclick="openMap()">🗺 מפה</button>
+    <button onclick="openShop()">🏪 חנות</button>
+    <button onclick="openCharacters()">🧑 דמויות</button>
+    <button onclick="openWheel()">🎡 גלגל מזל</button>
+    <button onclick="openRewards()">🏆 פרסים</button>
+    <button onclick="openStats()">📊 סטטיסטיקות</button>
+    <button onclick="openDailyTasks()">📅 משימות יומיות</button>
 </div>
 
-<!-- מסך משחק -->
+<!-- GAME SCREEN -->
 <div id="gameScreen" class="screen">
-<header>
-<h2>Math City</h2>
-<img src="logo.png" class="logo">
-</header>
+    <header id="gameHeader">
+        <h2>Math City</h2>
+        <img src="logo.png" class="logo">
+        <div class="topBar">
+            רמה: <span id="level">1</span>
+            ⭐ נקודות: <span id="score">0</span>
+            🪙 מטבעות: <span id="coins">0</span>
+        </div>
+    </header>
 
-<h3>
-רמה: <span id="level">1</span>
-⭐ נקודות: <span id="score">0</span>
-🪙 מטבעות: <span id="coins">0</span>
-</h3>
+    <div id="monster" class="monster"></div>
+    <div id="rewardBox"></div>
 
-<div id="monster" class="monster"></div>
-<div id="rewardBox"></div>
+    <h2 id="question"></h2>
+    <input id="answer">
+    <br><br>
+    <button id="checkBtn" onclick="check()">בדוק</button>
 
-<h2 id="question"></h2>
-<input id="answer">
-<br><br>
-<button id="checkBtn" onclick="check()">בדוק</button>
+    <div class="city" id="city"></div>
+    <br>
 
-<div class="city" id="city"></div>
-
-<br>
-<div class="buttonsBar">
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-<button onclick="resetGame()">♻️ איפוס</button>
-<button id="installBtn">📲 התקן</button>
-<button onclick="updateOrRefresh()">🔄 עדכון גרסה</button>
-<button onclick="toggleParentMode()">👨‍👩‍👧 מצב הורים</button>
-</div>
+    <div class="buttonRow">
+        <button onclick="openRewards()">🏆 פרסים</button>
+        <button onclick="openShop()">🏪 חנות</button>
+        <button onclick="openStats()">📊 סטטיסטיקות</button>
+        <button onclick="resetGame()">♻️ איפוס</button>
+        <button onclick="updateVersion()">🔄 עדכון גרסה</button>
+    </div>
 </div>
 
-<!-- חנות -->
+<!-- SHOP SCREEN -->
 <div id="shopScreen" class="screen">
-<h2>🏪 חנות</h2>
-<div id="shopList" class="shop"></div>
-<button onclick="backGame()">⬅ חזרה</button>
+    <h2>🏪 חנות</h2>
+    <div id="shopList" class="shopGrid"></div>
+    <div class="buttonRow">
+        <button onclick="backGame()">⬅ חזרה</button>
+        <button onclick="parentMode()">👨‍👩‍👧‍👦 מצב הורים</button>
+    </div>
 </div>
 
-<!-- פרסים -->
+<!-- REWARDS SCREEN -->
 <div id="rewardsScreen" class="screen">
-<h2>🏆 הפרסים</h2>
-<div id="rewardList"></div>
-<button onclick="backGame()">⬅ חזרה</button>
+    <h2>🏆 הפרסים</h2>
+    <div id="rewardList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
 </div>
 
-<!-- סטטיסטיקות -->
+<!-- STATS SCREEN -->
 <div id="statsScreen" class="screen">
-<h2>📊 סטטיסטיקות</h2>
-<div id="statsBox"></div>
-<button onclick="backGame()">⬅ חזרה</button>
+    <h2>📊 סטטיסטיקות</h2>
+    <div id="statsBox"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
+</div>
+
+<!-- DAILY TASKS SCREEN -->
+<div id="dailyTasksScreen" class="screen">
+    <h2>📅 משימות יומיות</h2>
+    <div id="tasksList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
+</div>
+
+<!-- MAP SCREEN -->
+<div id="mapScreen" class="screen">
+    <h2>🗺 מפה</h2>
+    <div id="mapContainer"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
+</div>
+
+<!-- CHARACTERS SCREEN -->
+<div id="charactersScreen" class="screen">
+    <h2>🧑 דמויות</h2>
+    <div id="charactersList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
+</div>
+
+<!-- WHEEL SCREEN -->
+<div id="wheelScreen" class="screen">
+    <h2>🎡 גלגל מזל</h2>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    <button onclick="spinWheel()">סובב גלגל</button>
+    <button onclick="backGame()">⬅ חזרה</button>
 </div>
 
 <footer>
-© 2026 אלכסיי זבודיסקר<br>
-גרסה נוכחית: 1.0.2
+© 2026 אלכסיי זבודיסקר
+<br>
+גרסה נוכחית: <span id="currentVersion">4.0</span>
 </footer>
 
 <script src="game.js"></script>
-<script src="version.js"></script>
+<script src="sw.js"></script>
 </body>
 </html>
