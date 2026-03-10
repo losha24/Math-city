@@ -2,20 +2,21 @@ body{
 
 font-family:Arial;
 background:#eef5ff;
-margin:0;
 text-align:center;
+margin:0;
 
 }
 
 .logo{
 
 width:180px;
+margin:10px;
 
 }
 
 .logoSmall{
 
-width:120px;
+width:90px;
 
 }
 
@@ -31,31 +32,38 @@ display:block;
 
 }
 
-.greenBtn{
+button{
 
+padding:10px;
+margin:5px;
+border:none;
+border-radius:8px;
 background:#4CAF50;
 color:white;
-border:none;
-padding:12px;
-margin:6px;
-border-radius:10px;
 font-size:16px;
 
 }
 
-.greenBtn:hover{
+button:hover{
 
-background:#3e8e41;
+opacity:0.9;
 
 }
 
-.topBar{
+.statsBar{
 
-display:flex;
-justify-content:space-around;
 background:#4CAF50;
 color:white;
 padding:8px;
+font-size:18px;
+
+}
+
+.buttonBar{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
 
 }
 
@@ -66,7 +74,7 @@ grid-template-columns:repeat(5,60px);
 gap:8px;
 justify-content:center;
 margin-top:20px;
-font-size:30px;
+font-size:32px;
 
 }
 
@@ -84,22 +92,7 @@ padding:10px;
 background:white;
 padding:10px;
 border-radius:10px;
-
-}
-
-.buyBtn{
-
-background:#4CAF50;
-color:white;
-border:none;
-padding:6px;
-border-radius:8px;
-
-}
-
-.buyBtn.disabled{
-
-background:red;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
 
 }
 
@@ -124,24 +117,5 @@ animation:shake 0.3s;
 50%{transform:translateX(5px)}
 75%{transform:translateX(-5px)}
 100%{transform:translateX(0)}
-
-}
-
-.buttonBar{
-
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-margin-top:15px;
-
-}
-
-@media(max-width:600px){
-
-.shopGrid{
-
-grid-template-columns:repeat(3,1fr);
-
-}
 
 }
