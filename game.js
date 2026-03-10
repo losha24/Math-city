@@ -1,98 +1,106 @@
-let level=1, score=0, coins=0, correctCount=0, wheelUsed=false;
-let correctAnswer;
-let buildings=["🏠","🏢","🏫","🏪","🏰"];
-let city=document.getElementById("city");
-
+let level=1, score=0, coins=0, attempts=0, solved=0, mistakes=0;
+let rewards=[], buildings=["🏠","🌳","🏪","🏫","🎡","🏢"], monsters=["👾","👻","🤖","🦖"], monsterActive=false;
 let shopItems=[
-{name:"בית",price:30,icon:"🏠"},
-{name:"עץ",price:20,icon:"🌳"},
-{name:"בניין",price:80,icon:"🏢"},
-{name:"בית ספר",price:120,icon:"🏫"},
-{name:"לונה פארק",price:200,icon:"🎡"},
-{name:"טירה",price:300,icon:"🏰"},
-{name:"חללית",price:500,icon:"🚀"},
-{name:"רכבת הרים",price:400,icon:"🎢"},
-{name:"מגדל",price:450,icon:"🗼"},
-{name:"קניון",price:350,icon:"🏪"}
+{name:"🚗 מכונית",price:50,icon:"🚗"},
+{name:"🌳 עץ מיוחד",price:40,icon:"🌳"},
+{name:"🏠 בית גדול",price:80,icon:"🏠"},
+{name:"🏪 קניון",price:120,icon:"🏪"},
+{name:"🏫 בית ספר",price:150,icon:"🏫"},
+{name:"🎡 לונה פארק",price:200,icon:"🎡"},
+{name:"🏰 טירה",price:300,icon:"🏰"},
+{name:"🗼 מגדל",price:400,icon:"🗼"},
+{name:"🎢 רכבת הרים",price:500,icon:"🎢"},
+{name:"🚀 חללית",price:700,icon:"🚀"}
 ];
 
-function startGame(){ showScreen("gameScreen"); newQuestion(); }
-function showScreen(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
-function backGame(){ showScreen("gameScreen"); }
+// גרסת המשחק המקומית
+const localVersion = "4.0";
+let correctAnswer=0;
 
+// פונקציות מסך
+function showScreen(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+function startGame(){ showScreen("gameScreen"); newQuestion(); }
+function backGame(){ showScreen("gameScreen"); }
+function openShop(){ renderShop(); showScreen("shopScreen"); }
+function openRewards(){ updateRewardList(); showScreen("rewardsScreen"); }
+function openStats(){ renderStats(); showScreen("statsScreen"); }
+
+// משחק
 function newQuestion(){
+    attempts=0;
     let a=Math.floor(Math.random()*10), b=Math.floor(Math.random()*10);
     correctAnswer=a+b;
-    let ansInput=document.getElementById("answer");
-    ansInput.value=""; ansInput.classList.remove("wrong","correct");
     document.getElementById("question").innerText=a+" + "+b;
+    document.getElementById("answer").value="";
 }
 
-function checkAnswer(){
+function check(){
     let val=parseInt(document.getElementById("answer").value);
     let ansInput=document.getElementById("answer");
     if(isNaN(val)) return;
-    if(val===correctAnswer){
-        score++; coins+=5; correctCount++; wheelUsed=false;
-        build();
+    if(val==correctAnswer){
         ansInput.classList.add("correct");
-        if(correctCount % 10 === 0) alert("מזל טוב! מגיע לך גלגל מזל.");
-    }else{
-        ansInput.classList.add("wrong"); shake(ansInput);
+        score++; solved++; coins+=5;
+        build();
+        if(score%10==0){ coins+=20; giveReward(); }
+        if(score%5==0){ level++; spawnMonster(); destroyBuilding(); }
+        updateUI(); save();
+        setTimeout(newQuestion,500);
+    } else {
+        attempts++; mistakes++;
+        ansInput.classList.add("wrong");
+        if(attempts>=2){ setTimeout(()=>{ ansInput.value=""; ansInput.classList.remove("wrong"); newQuestion(); },700); }
     }
-    updateUI(); save();
-    setTimeout(newQuestion,500);
 }
 
-function shake(el){ el.style.animation="shake 0.5s"; el.addEventListener("animationend",()=>el.style.animation=""); }
 function build(){ let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; city.appendChild(el); }
+function giveReward(){ let icons=["🚗","🎡","🏰","🗼","🎢"]; let r=icons[Math.floor(Math.random()*icons.length)]; rewards.push(r); document.getElementById("rewardBox").innerHTML='<div class="reward">🎁 פרס חדש '+r+'</div>'; setTimeout(()=>{ document.getElementById("rewardBox").innerHTML=""; },3000); }
+function spawnMonster(){ document.getElementById("monster").innerText=monsters[Math.floor(Math.random()*monsters.length)]; monsterActive=true; }
+function destroyBuilding(){ let c=city.children; if(c.length>0){ city.removeChild(c[Math.floor(Math.random()*c.length)]); } }
 
-function resetGame(){ localStorage.clear(); location.reload(); }
-function updateUI(){
-    document.getElementById("score").innerText=score;
-    document.getElementById("level").innerText=level;
-    document.getElementById("coins").innerText=coins;
-}
-function save(){ localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,correctCount})); }
-function load(){ let data=localStorage.getItem("mathCity"); if(data){ let d=JSON.parse(data); score=d.score||0; level=d.level||1; coins=d.coins||0; correctCount=d.correctCount||0; city.innerHTML=d.city||""; } updateUI(); }
-load(); newQuestion();
-
-// --------- בקרת הורים ---------
-function addShopItem(){
-    let name=document.getElementById("newItemName").value;
-    let price=parseInt(document.getElementById("newItemPrice").value);
-    let icon=document.getElementById("newItemIcon").value;
-    if(!name || isNaN(price) || !icon) return alert("יש למלא את כל השדות");
-    shopItems.push({name,price,icon});
-    renderShop();
-}
-
+// חנות
 function renderShop(){
-    let shopList=document.getElementById("shopList");
-    shopList.innerHTML="";
-    shopItems.forEach((item,index)=>{
-        let btnBuy=coins>=item.price?`<button class="green-btn" onclick="buyItem(${index})">קנה</button>`:`<button disabled style="background:red;">קנה</button>`;
-        shopList.innerHTML+=`<div class="shopItem"><h3>${item.icon} ${item.name}</h3>מחיר: ${item.price} 🪙<br>${btnBuy} <button class="green-btn" onclick="removeItem(${index})">🗑️</button></div>`;
+    let shopList=document.getElementById("shopList"); shopList.innerHTML="";
+    shopItems.forEach(item=>{
+        let btnClass=coins>=item.price?"":"disabled";
+        shopList.innerHTML+=`<div class="shopItem"><h3>${item.icon} ${item.name}</h3>מחיר: ${item.price} 🪙<br><br>
+        <button class="${btnClass}" onclick="buyItem('${item.icon}',${item.price})">קנה</button></div>`;
     });
 }
 
-function buyItem(index){
-    let item=shopItems[index];
-    if(coins<item.price){ alert("אין מספיק מטבעות"); return; }
-    coins-=item.price;
-    let el=document.createElement("div"); el.innerText=item.icon; city.appendChild(el);
-    updateUI(); save();
+function buyItem(icon,price){
+    if(coins<price){ alert("אין מספיק מטבעות"); return; }
+    coins-=price;
+    let el=document.createElement("div"); el.innerText=icon; city.appendChild(el); updateUI(); save();
 }
 
-function removeItem(index){ if(confirm("למחוק פריט זה?")){ shopItems.splice(index,1); renderShop(); save(); } }
+function updateRewardList(){ document.getElementById("rewardList").innerHTML=rewards.join(" "); }
+function renderStats(){ let accuracy=solved==0?0:Math.round((solved/(solved+mistakes))*100); document.getElementById("statsBox").innerHTML=`תרגילים שנפתרו: ${solved}<br>טעויות: ${mistakes}<br>אחוז הצלחה: ${accuracy}%<br>מטבעות: ${coins}`; }
+function updateUI(){ document.getElementById("score").innerText=score; document.getElementById("level").innerText=level; document.getElementById("coins").innerText=coins; }
 
-function checkUpdate(){ alert("בדיקה לגרסה חדשה..."); location.reload(); }
-function installApp(){ alert("התקנת אפליקציה (מדמה פעולה)"); }
+// שמירה וטעינה
+function save(){ localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,rewards,solved,mistakes})); }
+function load(){ let data=localStorage.getItem("mathCity"); if(data){ let d=JSON.parse(data); score=d.score||0; level=d.level||1; coins=d.coins||0; rewards=d.rewards||[]; solved=d.solved||0; mistakes=d.mistakes||0; city.innerHTML=d.city||""; } updateUI(); }
+load(); newQuestion();
 
-function spinWheel(){
-    if(wheelUsed){ alert("גלגל מזל כבר שומש, חכה לעוד 10 פתרונות נכונים."); return; }
-    wheelUsed=true;
-    let prizes=["🏠 בית","🌳 עץ","🎡 לונה פארק","🏰 טירה","🚀 חללית"];
-    let prize=prizes[Math.floor(Math.random()*prizes.length)];
-    alert("גלגל מזל! זכית ב: "+prize);
+// פונקציות עזר
+function resetGame(){ localStorage.clear(); location.reload(); }
+async function checkUpdate(){
+    try {
+        let response = await fetch("version.json");
+        let data = await response.json();
+        if(data.currentVersion !== localVersion){
+            if(confirm(`יש גרסה חדשה: ${data.currentVersion}. האם לעדכן עכשיו?`)){
+                location.reload();
+            }
+        } else {
+            alert("אין גרסה חדשה. מבצעים רענון.");
+            location.reload();
+        }
+    } catch(e){
+        console.error("לא ניתן לבדוק גרסא:", e);
+        alert("שגיאה בבדיקת גרסא. מבצעים רענון.");
+        location.reload();
+    }
 }
+function installApp(){ alert("התקנת אפליקציה לא זמינה כרגע."); }
