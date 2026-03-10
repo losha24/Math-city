@@ -16,9 +16,9 @@ let shopItems=[
 {name:"קניון",price:350,icon:"🏪"}
 ];
 
-function startGame(){showScreen("gameScreen");newQuestion();}
-function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
-function backGame(){showScreen("gameScreen");}
+function startGame(){ showScreen("gameScreen"); newQuestion(); }
+function showScreen(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+function backGame(){ showScreen("gameScreen"); }
 
 function newQuestion(){
     let a=Math.floor(Math.random()*10), b=Math.floor(Math.random()*10);
@@ -44,18 +44,18 @@ function checkAnswer(){
     setTimeout(newQuestion,500);
 }
 
-function shake(el){el.style.animation="shake 0.5s";el.addEventListener("animationend",()=>el.style.animation="");}
-function build(){let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; city.appendChild(el);}
-function resetGame(){localStorage.clear(); location.reload();}
+function shake(el){ el.style.animation="shake 0.5s"; el.addEventListener("animationend",()=>el.style.animation=""); }
+function build(){ let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; city.appendChild(el); }
+
+function resetGame(){ localStorage.clear(); location.reload(); }
 function updateUI(){
     document.getElementById("score").innerText=score;
     document.getElementById("level").innerText=level;
     document.getElementById("coins").innerText=coins;
 }
-function save(){localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,correctCount}));}
-function load(){let data=localStorage.getItem("mathCity");if(data){let d=JSON.parse(data);score=d.score||0; level=d.level||1; coins=d.coins||0; correctCount=d.correctCount||0; city.innerHTML=d.city||"";} updateUI();}
-load();
-newQuestion();
+function save(){ localStorage.setItem("mathCity",JSON.stringify({score,level,coins,city:city.innerHTML,correctCount})); }
+function load(){ let data=localStorage.getItem("mathCity"); if(data){ let d=JSON.parse(data); score=d.score||0; level=d.level||1; coins=d.coins||0; correctCount=d.correctCount||0; city.innerHTML=d.city||""; } updateUI(); }
+load(); newQuestion();
 
 // --------- בקרת הורים ---------
 function addShopItem(){
@@ -78,13 +78,21 @@ function renderShop(){
 
 function buyItem(index){
     let item=shopItems[index];
-    if(coins<item.price){alert("אין מספיק מטבעות"); return;}
+    if(coins<item.price){ alert("אין מספיק מטבעות"); return; }
     coins-=item.price;
     let el=document.createElement("div"); el.innerText=item.icon; city.appendChild(el);
     updateUI(); save();
 }
 
-function removeItem(index){if(confirm("למחוק פריט זה?")){shopItems.splice(index,1); renderShop(); save();}}
+function removeItem(index){ if(confirm("למחוק פריט זה?")){ shopItems.splice(index,1); renderShop(); save(); } }
 
-function checkUpdate(){alert("בדיקה לגרסה חדשה..."); location.reload();}
-function installApp(){alert("התקנת אפליקציה (מדמה פעולה)");}
+function checkUpdate(){ alert("בדיקה לגרסה חדשה..."); location.reload(); }
+function installApp(){ alert("התקנת אפליקציה (מדמה פעולה)"); }
+
+function spinWheel(){
+    if(wheelUsed){ alert("גלגל מזל כבר שומש, חכה לעוד 10 פתרונות נכונים."); return; }
+    wheelUsed=true;
+    let prizes=["🏠 בית","🌳 עץ","🎡 לונה פארק","🏰 טירה","🚀 חללית"];
+    let prize=prizes[Math.floor(Math.random()*prizes.length)];
+    alert("גלגל מזל! זכית ב: "+prize);
+}
