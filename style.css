@@ -1,19 +1,16 @@
 body{font-family:Arial;background:#eef5ff;text-align:center;margin:0;}
 header{background:#4CAF50;color:white;padding:10px;}
-.logo{width:120px;}
+.logo{width:150px;}
 .screen{display:none;}
 .active{display:block;}
-.city{display:grid;grid-template-columns:repeat(5,60px);gap:8px;justify-content:center;margin:20px;}
-button{padding:12px;margin:6px;font-size:16px;border-radius:8px;border:none;}
-.green-btn{background:#4CAF50;color:white;}
-.shopItem,.rewardItem{background:white;border-radius:10px;padding:10px;margin:8px;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+.city{display:grid;grid-template-columns:repeat(5,60px);gap:8px;justify-content:center;margin:20px;font-size:30px;}
+button{padding:10px;margin:4px;font-size:14px;border-radius:8px;border:none;background:#4CAF50;color:white;}
+button.disabled{background:#f44336;color:white;}
+.shopItem{background:white;border-radius:10px;padding:10px;margin:8px;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
 .correct{background:#b8f5b8;border:2px solid green;}
-.wrong{background:#ffb3b3;border:2px solid red;}
+.wrong{animation:shake 0.3s; background:#ffb3b3;border:2px solid red;}
+@keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
 .reward{background:linear-gradient(45deg,#ffeb3b,#ff9800);padding:10px;border-radius:10px;margin:10px;}
-input.wrong{border:2px solid red;animation:shake 0.5s;}
-input.correct{border:2px solid green;}
-@keyframes shake{0%{transform:translateX(0px);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0px);}}
-.status-bar button{margin-left:5px;margin-right:5px;}
-#parentControls{background:#ffeedd;padding:10px;border-radius:8px;margin-top:10px;}
-#parentControls input{margin:3px;}
-.game-buttons button{margin:5px;}
+.monster{font-size:35px;}
+footer{margin-top:30px;padding:10px;font-size:14px;color:#555;}
+.bar-buttons{display:flex;justify-content:center;gap:6px;margin-top:10px;}
