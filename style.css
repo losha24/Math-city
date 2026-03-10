@@ -1,21 +1,100 @@
-body{font-family:Arial,sans-serif;background:#eef5ff;text-align:center;margin:0;}
-header{background:#4CAF50;color:white;padding:10px;}
-.topBar{font-size:16px;margin-top:5px;}
-.logo{width:150px;margin:10px auto;}
-.screen{display:none;}
-.active{display:block;}
-.city{display:grid;grid-template-columns:repeat(auto-fit,minmax(50px,1fr));gap:5px;justify-items:center;margin:10px;font-size:30px;}
-button{padding:10px;margin:4px;font-size:16px;border-radius:8px;border:none;background:#2196F3;color:white;cursor:pointer;}
-button:hover{background:#1976D2;}
-button.disabled{background:#f44336;color:#fff;cursor:not-allowed;}
-.shopGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;justify-items:center;margin:10px auto;}
-.shopItem{background:white;border-radius:10px;padding:10px;box-shadow:0 2px 5px rgba(0,0,0,0.2);text-align:center;width:90%;}
-.correct{background:#b8f5b8;border:2px solid green;}
-.wrong{background:#ffb3b3;border:2px solid red;animation:shake 0.3s;}
-@keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
-.reward{background:linear-gradient(45deg,#ffeb3b,#ff9800);padding:10px;border-radius:10px;margin:10px;}
-.monster{font-size:35px;margin:10px;}
-.buttonRow{display:flex;flex-wrap:wrap;justify-content:center;margin:10px;gap:5px;}
-#tasksList,#mapContainer,#charactersList,#rewardList,#statsBox{margin:10px auto;width:90%;text-align:center;}
-canvas#wheelCanvas{border:2px solid #2196F3;border-radius:50%;background:#fff;}
-footer{margin-top:20px;padding:10px;font-size:14px;color:#555;}
+body{
+font-family:Arial;
+background:#eef5ff;
+text-align:center;
+margin:0;
+}
+
+header{
+background:#4CAF50;
+color:white;
+padding:10px;
+}
+
+.logo{
+width:180px;
+}
+
+.screen{
+display:none;
+}
+
+.active{
+display:block;
+}
+
+.city{
+display:grid;
+grid-template-columns:repeat(5,60px);
+gap:8px;
+justify-content:center;
+margin:20px;
+font-size:30px;
+}
+
+button{
+padding:12px;
+margin:6px;
+font-size:16px;
+border-radius:8px;
+border:none;
+background:#2196F3;
+color:white;
+}
+
+.buttonBar{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+
+}
+
+.shopGrid{
+
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+
+}
+
+.shopItem{
+
+background:white;
+border-radius:10px;
+padding:10px;
+
+}
+
+.correct{
+background:#b8f5b8;
+border:2px solid green;
+}
+
+.wrong{
+background:#ffb3b3;
+border:2px solid red;
+animation:shake .3s;
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0)}
+25%{transform:translateX(-5px)}
+50%{transform:translateX(5px)}
+75%{transform:translateX(-5px)}
+100%{transform:translateX(0)}
+
+}
+
+.reward{
+
+background:linear-gradient(45deg,#ffeb3b,#ff9800);
+padding:10px;
+border-radius:10px;
+
+}
+
+.monster{
+font-size:35px;
+}
