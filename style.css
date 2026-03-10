@@ -8,28 +8,37 @@ margin:0;
 header{
 background:#4CAF50;
 color:white;
-padding:8px;
+padding:10px;
 }
 
 .logo{
 width:180px;
 }
 
+.screen{
+display:none;
+}
+
+.active{
+display:block;
+}
+
 .stats{
-font-size:16px;
+margin:10px;
+font-size:18px;
 }
 
-.buttonBar{
+.barButtons{
 display:flex;
-overflow-x:auto;
-gap:6px;
-padding:8px;
+flex-wrap:wrap;
 justify-content:center;
+gap:6px;
+margin:10px;
 }
 
-.buttonBar button{
-min-width:60px;
-font-size:20px;
+.barButtons button{
+font-size:14px;
+padding:10px;
 }
 
 .city{
@@ -38,24 +47,29 @@ grid-template-columns:repeat(5,60px);
 gap:8px;
 justify-content:center;
 margin:20px;
-font-size:32px;
+font-size:30px;
 }
 
-button{
+.shopGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
 padding:10px;
-border:none;
-border-radius:8px;
-background:#2196F3;
-color:white;
-font-size:16px;
+}
+
+.shopItem{
+background:white;
+border-radius:10px;
+padding:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
 
 .correct{
-background:#4CAF50;
+background:#b8f5b8;
 }
 
 .wrong{
-background:#ff4d4d;
+background:#ffb3b3;
 animation:shake .3s;
 }
 
