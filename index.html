@@ -8,12 +8,15 @@
 
 <title>Math City</title>
 
-<link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
+
+<!-- פתיח -->
 
 <div id="startScreen" class="screen active">
 
@@ -21,18 +24,26 @@
 
 <img src="logo.png" class="logo">
 
+<br>
+
 <button onclick="startGame()">🎮 התחל לשחק</button>
+
 <button onclick="updateVersion()">🔄 עדכון גרסה</button>
+
 <button onclick="resetGame()">♻️ איפוס</button>
 
 </div>
 
+
+<!-- משחק -->
 
 <div id="gameScreen" class="screen">
 
 <header>
 
 <h2>Math City</h2>
+
+</header>
 
 <div class="stats">
 
@@ -44,28 +55,33 @@
 
 </div>
 
-</header>
 
+<!-- בר כפתורים -->
 
-<div class="buttonBar">
+<div class="barButtons">
 
-<button onclick="openShop()">🏪</button>
-<button onclick="openRewards()">🏆</button>
-<button onclick="openStats()">📊</button>
-<button onclick="openMap()">🗺</button>
-<button onclick="openCharacters()">🧙</button>
-<button onclick="spinWheel()">🎡</button>
-<button onclick="parentMode()">👨‍👩‍👧</button>
-<button onclick="updateVersion()">🔄</button>
+<button onclick="openShop()">🏪 חנות</button>
+
+<button onclick="openRewards()">🏆 פרסים</button>
+
+<button onclick="openStats()">📊 סטטיסטיקות</button>
+
+<button onclick="spinWheel()">🎡 גלגל</button>
+
+<button onclick="parentMode()">👨‍👩‍👧 הורים</button>
+
+<button onclick="updateVersion()">🔄 עדכון</button>
 
 </div>
 
 
-<div id="monster"></div>
+<div id="monster" class="monster"></div>
 
 <h2 id="question"></h2>
 
 <input id="answer">
+
+<br>
 
 <button id="checkBtn" onclick="check()">בדוק</button>
 
@@ -76,12 +92,55 @@
 </div>
 
 
+<!-- חנות -->
+
+<div id="shopScreen" class="screen">
+
+<h2>🏪 חנות</h2>
+
+<div id="shopList" class="shopGrid"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+
+<!-- פרסים -->
+
+<div id="rewardsScreen" class="screen">
+
+<h2>🏆 פרסים</h2>
+
+<div id="rewardList"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+
+<!-- סטטיסטיקות -->
+
+<div id="statsScreen" class="screen">
+
+<h2>📊 סטטיסטיקות</h2>
+
+<div id="statsBox"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+
 <footer>
 
-© 2026 אלכסיי זבודיסקר  
-גרסה: <span id="appVersion"></span>
+© 2026 אלכסיי זבודיסקר
+
+<br>
+
+גרסה: <span id="appVersion">4.2</span>
 
 </footer>
+
 
 <script src="game.js"></script>
 
