@@ -9,14 +9,13 @@
 <title>Math City</title>
 
 <link rel="manifest" href="manifest.json">
-
 <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<!-- פתיח -->
+<!-- START -->
 
 <div id="startScreen" class="screen active">
 
@@ -24,9 +23,9 @@
 
 <img src="logo.png" class="logo">
 
-<br>
+<br><br>
 
-<button onclick="startGame()">🎮 התחל לשחק</button>
+<button onclick="startGame()">🎮 התחל משחק</button>
 
 <button onclick="updateVersion()">🔄 עדכון גרסה</button>
 
@@ -35,7 +34,7 @@
 </div>
 
 
-<!-- משחק -->
+<!-- GAME -->
 
 <div id="gameScreen" class="screen">
 
@@ -47,52 +46,42 @@
 
 <div class="stats">
 
-רמה: <span id="level">1</span>
-
-⭐ נקודות: <span id="score">0</span>
-
+רמה: <span id="level">1</span>  
+⭐ נקודות: <span id="score">0</span>  
 🪙 מטבעות: <span id="coins">0</span>
 
 </div>
 
 
-<!-- בר כפתורים -->
-
-<div class="barButtons">
+<div class="buttonBar">
 
 <button onclick="openShop()">🏪 חנות</button>
-
 <button onclick="openRewards()">🏆 פרסים</button>
-
 <button onclick="openStats()">📊 סטטיסטיקות</button>
-
-<button onclick="spinWheel()">🎡 גלגל</button>
-
+<button onclick="spinWheel()">🎡 גלגל מזל</button>
 <button onclick="parentMode()">👨‍👩‍👧 הורים</button>
-
-<button onclick="updateVersion()">🔄 עדכון</button>
 
 </div>
 
 
 <div id="monster" class="monster"></div>
 
+<div id="rewardBox"></div>
+
 <h2 id="question"></h2>
 
 <input id="answer">
 
-<br>
+<br><br>
 
-<button id="checkBtn" onclick="check()">בדוק</button>
-
-<div id="rewardBox"></div>
+<button onclick="check()">בדוק</button>
 
 <div class="city" id="city"></div>
 
 </div>
 
 
-<!-- חנות -->
+<!-- SHOP -->
 
 <div id="shopScreen" class="screen">
 
@@ -105,11 +94,11 @@
 </div>
 
 
-<!-- פרסים -->
+<!-- REWARDS -->
 
 <div id="rewardsScreen" class="screen">
 
-<h2>🏆 פרסים</h2>
+<h2>🏆 הפרסים</h2>
 
 <div id="rewardList"></div>
 
@@ -118,7 +107,7 @@
 </div>
 
 
-<!-- סטטיסטיקות -->
+<!-- STATS -->
 
 <div id="statsScreen" class="screen">
 
@@ -137,10 +126,9 @@
 
 <br>
 
-גרסה: <span id="appVersion">4.2</span>
+גרסה: <span id="appVersion"></span>
 
 </footer>
-
 
 <script src="game.js"></script>
 
