@@ -1,115 +1,73 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math City</title>
-
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
-
+<script defer src="game.js"></script>
 </head>
-
 <body>
 
 <div id="startScreen" class="screen active">
-
-<h1>Math City</h1>
-
-<img src="logo.png" class="logo">
-
-<button onclick="startGame()">🎮 התחל משחק</button>
-<button onclick="checkUpdate()">🔄 עדכון גרסה</button>
-<button onclick="resetGame()">♻️ איפוס</button>
-
+    <h1>Math City</h1>
+    <img src="logo.png" class="logo">
+    <br><br>
+    <button onclick="startGame()">🎮 התחל משחק</button>
+    <button onclick="resetGame()">♻️ איפוס</button>
+    <button onclick="checkUpdate()">⬆️ עדכון גרסה</button>
 </div>
 
 <div id="gameScreen" class="screen">
+    <header>
+        <h2>Math City</h2>
+        <img src="logo.png" class="logo">
+    </header>
 
-<header>
+    <div class="status-bar">
+        רמה: <span id="level">1</span>  
+        ⭐ נקודות: <span id="score">0</span>  
+        🪙 מטבעות: <span id="coins">0</span>
+        <button onclick="checkUpdate()">⬆️ עדכון גרסה</button>
+        <button onclick="resetGame()">♻️ איפוס</button>
+        <button onclick="installApp()">📲 התקנת אפליקציה</button>
+    </div>
 
-<h2>Math City</h2>
+    <h2 id="question"></h2>
+    <input id="answer">
+    <br>
+    <button onclick="checkAnswer()">בדוק</button>
 
-<img src="logo.png" class="logoSmall">
+    <div id="city" class="city"></div>
 
-</header>
-
-<div class="statsBar">
-
-רמה <span id="level">1</span>
-
-⭐ נקודות <span id="score">0</span>
-
-🪙 מטבעות <span id="coins">0</span>
-
-</div>
-
-<div class="buttonBar">
-
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="spinWheel()">🎡 גלגל מזל</button>
-<button onclick="openCharacters()">🧑 דמויות</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
-<button onclick="checkUpdate()">🔄 עדכון</button>
-<button onclick="installApp()">📲 התקן</button>
-<button onclick="resetGame()">♻️ איפוס</button>
-
-</div>
-
-<h2 id="question"></h2>
-
-<input id="answer">
-
-<button onclick="checkAnswer()">בדוק</button>
-
-<div id="city" class="city"></div>
-
+    <button onclick="openShop()">🏪 חנות</button>
+    <button onclick="openRewards()">🏆 פרסים</button>
+    <button onclick="openCharacters()">🧑‍🤝‍🧑 דמויות</button>
+    <button onclick="spinWheel()">🎡 גלגל מזל</button>
 </div>
 
 <div id="shopScreen" class="screen">
+    <h2>🏪 חנות</h2>
+    <div id="shopList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
+</div>
 
-<h2>🏪 חנות</h2>
-
-<div id="shopList"></div>
-
-<button onclick="addShopItem()">➕ הוסף פרס</button>
-
-<button onclick="backGame()">⬅ חזרה</button>
-
+<div id="rewardsScreen" class="screen">
+    <h2>🏆 הפרסים</h2>
+    <div id="rewardList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
 </div>
 
 <div id="charactersScreen" class="screen">
-
-<h2>🧑 דמויות</h2>
-
-<div id="characterList"></div>
-
-<button onclick="backGame()">⬅ חזרה</button>
-
-</div>
-
-<div id="statsScreen" class="screen">
-
-<h2>📊 סטטיסטיקות</h2>
-
-<div id="statsBox"></div>
-
-<button onclick="backGame()">⬅ חזרה</button>
-
+    <h2>🧑‍🤝‍🧑 דמויות</h2>
+    <div id="characterList"></div>
+    <button onclick="backGame()">⬅ חזרה</button>
 </div>
 
 <footer>
-
-© 2026 אלכסיי זבודיסקר
-
-גרסה <span id="appVersion">4.6</span>
-
+© 2026 אלכסיי זבודיסקר<br>
+גרסה נוכחית: <span id="appVersion">4.1</span>
 </footer>
-
-<script src="game.js"></script>
 
 </body>
 </html>
