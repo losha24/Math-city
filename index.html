@@ -2,99 +2,111 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City – גרסה 5.1</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Math City</title>
+
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
-<!-- START SCREEN -->
-<div id="startScreen" class="screen active">
-<h1>Math City</h1>
-<img src="logo.png" class="logo"><br><br>
-<div class="bar-buttons">
+<div id="startScreen">
+
+<h1>🏙 Math City</h1>
+
 <button onclick="startGame()">🎮 התחל משחק</button>
-<button onclick="resetGame()">♻️ איפוס</button>
-<button onclick="checkUpdate()">⬆ עדכון גרסא</button>
-</div>
+<button onclick="resetGame()">♻ איפוס</button>
+<button onclick="checkUpdate()">⬆ עדכון גרסה</button>
+
 </div>
 
-<!-- GAME SCREEN -->
-<div id="gameScreen" class="screen">
+
+<div id="gameScreen">
+
 <header>
 <h2>Math City</h2>
-<img src="logo.png" class="logo">
 </header>
 
-<div class="level-bar">
-<span>רמה: <span id="level">1</span></span>
-<span>⭐ נקודות: <span id="score">0</span></span>
-<span>🪙 מטבעות: <span id="coins">0</span></span>
+<div class="topBar">
+
+<div>רמה: <span id="level">1</span></div>
+<div>⭐ נקודות: <span id="score">0</span></div>
+<div>🪙 מטבעות: <span id="coins">0</span></div>
+
 </div>
 
-<!-- שאלות -->
-<div class="questions">
-<div class="question-box">
-<input id="answer1"><button onclick="checkQuestion(1)">בדוק</button>
-</div>
-<div class="question-box">
-<input id="answer2"><button onclick="checkQuestion(2)">בדוק</button>
-</div>
-<div class="question-box">
-<input id="answer3"><button onclick="checkQuestion(3)">בדוק</button>
-</div>
-</div>
+<div class="buttonBar">
 
-<div id="monster" class="monster"></div>
-<div id="rewardBox"></div>
-<div class="city" id="city"></div>
-
-<div class="bar-buttons">
-<button onclick="openRewards()">🏆 פרסים</button>
 <button onclick="openShop()">🏪 חנות</button>
+<button onclick="openRewards()">🏆 פרסים</button>
 <button onclick="openStats()">📊 סטטיסטיקות</button>
-<button onclick="checkUpdate()">⬆ עדכון גרסא</button>
-<button onclick="resetGame()">♻️ איפוס</button>
-<button onclick="installApp()">📲 התקנת אפליקציה</button>
-</div>
+<button onclick="checkUpdate()">⬆ עדכון</button>
+<button onclick="resetGame()">♻ איפוס</button>
+
 </div>
 
-<!-- SHOP SCREEN -->
-<div id="shopScreen" class="screen">
+
+<div class="questionBox">
+
+<div class="qRow">
+<span id="q1"></span>
+<input id="a1">
+<button onclick="checkAnswer(1)">בדוק</button>
+</div>
+
+<div class="qRow">
+<span id="q2"></span>
+<input id="a2">
+<button onclick="checkAnswer(2)">בדוק</button>
+</div>
+
+</div>
+
+
+<div id="city" class="city"></div>
+
+</div>
+
+
+
+<div id="shopScreen">
+
 <h2>🏪 חנות</h2>
-<button onclick="toggleParentMode()">👨‍👩‍👧‍👦 מצב הורים</button>
-<div id="parentControls" class="hidden">
-<h3>הוסף פריט חדש</h3>
-שם: <input id="newItemName">
-מחיר: <input id="newItemPrice">
-אייקון: <select id="newItemIcon"></select>
-<button onclick="addParentItem()">הוסף</button>
-</div>
-<div id="shopList" class="shop-grid"></div>
-<div class="bar-buttons">
+
+<button onclick="openParent()">🔒 הורים</button>
+
+<div id="shopList" class="shopGrid"></div>
+
 <button onclick="backGame()">⬅ חזרה</button>
-</div>
+
 </div>
 
-<!-- REWARDS SCREEN -->
-<div id="rewardsScreen" class="screen">
-<h2>🏆 הפרסים</h2>
-<div id="rewardList"></div>
-<div class="bar-buttons"><button onclick="backGame()">⬅ חזרה</button></div>
+
+
+<div id="parentPanel" class="parentPanel">
+
+<h3>הוספת פריט</h3>
+
+<input id="pName" placeholder="שם">
+<input id="pPrice" placeholder="מחיר">
+
+<select id="pIcon"></select>
+
+<button onclick="addItem()">➕ הוסף</button>
+
 </div>
 
-<!-- STATS SCREEN -->
-<div id="statsScreen" class="screen">
-<h2>📊 סטטיסטיקות</h2>
-<div id="statsBox"></div>
-<div class="bar-buttons"><button onclick="backGame()">⬅ חזרה</button></div>
-</div>
+
 
 <footer>
-© 2026 אלכסיי זבודיסקר <br>גרסה נוכחית: 5.1
+
+גרסה <span id="versionText">5.0</span>
+
 </footer>
 
 <script src="game.js"></script>
+
 </body>
 </html>
