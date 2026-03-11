@@ -1,148 +1,249 @@
-// ======== Game State ========
-let level=1, score=0, coins=0;
-let solved=0, mistakes=0;
-let rewards=[], trophies=[];
-let monsterActive=false;
+let level=1
+let score=0
+let coins=0
 
-let buildings=["🏠","🌳","🏪","🏫","🎡","🏢"];
-let monsters=["👾","👻","🤖","🦖"];
-let characters=["ילד1","ילד2","ילד3","ילדה1","ילדה2","ילדה3","ילד4","ילדה4","ילד5","ילדה5"];
+let correct1
+let correct2
+
+let icons=["🚗","🏠","🏪","🏫","🌳","🎡","🏰","🗼","🎢","🚀","🛸","🚲","🛵","🚁","⛲"]
 
 let shopItems=[
 {name:"🚗 מכונית",price:50,icon:"🚗"},
-{name:"🌳 עץ מיוחד",price:40,icon:"🌳"},
-{name:"🏠 בית גדול",price:80,icon:"🏠"},
-{name:"🏪 קניון",price:120,icon:"🏪"},
-{name:"🏫 בית ספר",price:150,icon:"🏫"},
-{name:"🎡 לונה פארק",price:200,icon:"🎡"},
-{name:"🏰 טירה",price:300,icon:"🏰"},
-{name:"🗼 מגדל",price:400,icon:"🗼"},
-{name:"🎢 רכבת הרים",price:500,icon:"🎢"},
-{name:"🚀 חללית",price:700,icon:"🚀"}
-];
+{name:"🌳 עץ",price:30,icon:"🌳"},
+{name:"🏠 בית",price:70,icon:"🏠"}
+]
 
-// ======== Screens ========
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-function startGame(){ showScreen("gameScreen"); newQuestionAll(); }
-function backGame(){ showScreen("gameScreen"); }
-function openShop(){ renderShop(); showScreen("shopScreen"); }
-function openRewards(){ updateRewardList(); showScreen("rewardsScreen"); }
-function openStats(){ renderStats(); showScreen("statsScreen"); }
 
-// ======== Questions ========
-let currentAnswers=[0,0,0];
-function newQuestionAll(){
-  for(let i=0;i<3;i++){ newQuestion(i); }
-}
-function newQuestion(index){
-  let a=Math.floor(Math.random()*10), b=Math.floor(Math.random()*10);
-  let correct=a+b;
-  document.getElementById("answer"+(index+1)).value="";
-  document.getElementById("answer"+(index+1)).dataset.correct=correct;
-  document.getElementById("answer"+(index+1)).classList.remove("correct","wrong");
+function startGame(){
+
+document.getElementById("startScreen").style.display="none"
+document.getElementById("gameScreen").style.display="block"
+
+newQuestions()
+
+renderShop()
+
 }
 
-// ======== Check Answer ========
-function checkQuestion(index){
-  let input=document.getElementById("answer"+index);
-  let val=parseInt(input.value);
-  let correct=parseInt(input.dataset.correct);
-  if(val===correct){
-    input.classList.add("correct");
-    score++; solved++; coins+=5;
-    if(score%10===0){ giveReward(); } // גלגל מזל כל 10
-    if(score%5===0){ level++; spawnMonster(); destroyBuilding(); }
-    build();
-    updateUI();
-    setTimeout(()=>newQuestion(index),500);
-    save();
-  } else{
-    mistakes++;
-    input.classList.add("wrong");
-    setTimeout(()=>{ input.classList.remove("wrong"); input.value=""; },500);
-  }
+
+function newQuestions(){
+
+let a=Math.floor(Math.random()*10)
+let b=Math.floor(Math.random()*10)
+
+correct1=a+b
+
+document.getElementById("q1").innerText=a+" + "+b
+
+let c=Math.floor(Math.random()*10)
+let d=Math.floor(Math.random()*10)
+
+correct2=c+d
+
+document.getElementById("q2").innerText=c+" + "+d
+
 }
 
-// ======== UI Updates ========
+
+
+function checkAnswer(n){
+
+let input=document.getElementById("a"+n)
+
+let val=parseInt(input.value)
+
+let correct=n==1?correct1:correct2
+
+if(val==correct){
+
+score++
+coins+=5
+
+input.style.background="#b8f5b8"
+
+build()
+
+}else{
+
+input.classList.add("shake")
+
+setTimeout(()=>{
+
+input.classList.remove("shake")
+
+input.style.background=""
+
+},500)
+
+}
+
+updateUI()
+
+newQuestions()
+
+}
+
+
+
+function build(){
+
+let el=document.createElement("div")
+
+el.innerText="🏠"
+
+document.getElementById("city").appendChild(el)
+
+}
+
+
+
 function updateUI(){
-  document.getElementById("score").innerText=score;
-  document.getElementById("level").innerText=level;
-  document.getElementById("coins").innerText=coins;
+
+document.getElementById("score").innerText=score
+document.getElementById("coins").innerText=coins
+document.getElementById("level").innerText=level
+
 }
 
-// ======== Build / Monster ========
-function spawnMonster(){ document.getElementById("monster").innerText=monsters[Math.floor(Math.random()*monsters.length)]; monsterActive=true; }
-function destroyBuilding(){ let c=document.getElementById("city").children; if(c.length>0) document.getElementById("city").removeChild(c[Math.floor(Math.random()*c.length)]); }
-function build(){ let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; document.getElementById("city").appendChild(el); }
 
-// ======== Rewards / Wheel ========
-function giveReward(){
-  let icons=["🚗","🎡","🏰","🗼","🎢"];
-  let r=icons[Math.floor(Math.random()*icons.length)];
-  rewards.push(r);
-  document.getElementById("rewardBox").innerHTML='<div class="reward">🎁 פרס חדש '+r+'</div>';
-  setTimeout(()=>{ document.getElementById("rewardBox").innerHTML=""; },3000);
-}
 
-// ======== Shop ========
 function renderShop(){
-  let shopList=document.getElementById("shopList");
-  shopList.innerHTML="";
-  shopItems.forEach(item=>{
-    let btn=coins>=item.price?`<button onclick="buyItem('${item.icon}',${item.price})">קנה</button>`:`<button class="disabled">קנה</button>`;
-    shopList.innerHTML+=`<div class="shopItem"><h3>${item.icon} ${item.name}</h3>מחיר: ${item.price} 🪙<br>${btn}</div>`;
-  });
+
+let box=document.getElementById("shopList")
+
+box.innerHTML=""
+
+shopItems.forEach(item=>{
+
+let red=coins<item.price?"red":""
+
+box.innerHTML+=`
+
+<div class="shopItem">
+
+<h3>${item.icon} ${item.name}</h3>
+
+${item.price} 🪙
+
+<br><br>
+
+<button class="buyBtn ${red}" onclick="buy('${item.icon}',${item.price})">קנה</button>
+
+</div>
+
+`
+
+})
+
 }
 
-// ======== Buy Item ========
-function buyItem(icon,price){
-  if(coins<price) return;
-  coins-=price;
-  let el=document.createElement("div"); el.innerText=icon;
-  document.getElementById("city").appendChild(el);
-  updateUI(); save();
+
+
+function buy(icon,price){
+
+if(coins<price)return
+
+coins-=price
+
+let el=document.createElement("div")
+el.innerText=icon
+
+document.getElementById("city").appendChild(el)
+
+updateUI()
+
+renderShop()
+
 }
 
-// ======== Parent Controls ========
-function toggleParentMode(){ document.getElementById("parentControls").classList.toggle("hidden"); }
-function addParentItem(){
-  let name=document.getElementById("newItemName").value;
-  let price=parseInt(document.getElementById("newItemPrice").value);
-  let icon=document.getElementById("newItemIcon").value;
-  if(name && !isNaN(price) && icon) shopItems.push({name,price,icon});
-  renderShop();
+
+
+function openShop(){
+
+document.getElementById("shopScreen").style.display="block"
+document.getElementById("gameScreen").style.display="none"
+
 }
 
-// ======== Rewards / Stats ========
-function updateRewardList(){ document.getElementById("rewardList").innerHTML=rewards.join(" "); }
-function renderStats(){
-  let accuracy=solved==0?0:Math.round((solved/(solved+mistakes))*100);
-  document.getElementById("statsBox").innerHTML=`תרגילים שנפתרו: ${solved}<br>טעויות: ${mistakes}<br>אחוז הצלחה: ${accuracy}%<br>מטבעות: ${coins}`;
+
+
+function backGame(){
+
+document.getElementById("shopScreen").style.display="none"
+document.getElementById("gameScreen").style.display="block"
+
 }
 
-// ======== Save / Load ========
-function save(){ localStorage.setItem("mathCity",JSON.stringify({score,level,coins,rewards,solved,mistakes,city:document.getElementById("city").innerHTML})); }
-function load(){
-  let d=JSON.parse(localStorage.getItem("mathCity")||"{}");
-  score=d.score||0; level=d.level||1; coins=d.coins||0;
-  rewards=d.rewards||[]; solved=d.solved||0; mistakes=d.mistakes||0;
-  document.getElementById("city").innerHTML=d.city||"";
-  updateUI();
+
+
+function openParent(){
+
+document.getElementById("parentPanel").style.display="block"
+
+let select=document.getElementById("pIcon")
+
+select.innerHTML=""
+
+icons.forEach(i=>{
+
+select.innerHTML+=`<option>${i}</option>`
+
+})
+
 }
 
-// ======== Reset / Update / Install ========
-function resetGame(){ localStorage.clear(); location.reload(); }
-function checkUpdate(){
-  fetch('version.json').then(r=>r.json()).then(v=>{
-    if(v.version!=="5.1"){ alert("גרסא חדשה קיימת! מעדכן..."); location.reload(); }
-    else{ location.reload(); }
-  });
-}
-function installApp(){ alert("התקנה (PWA) זמינה במכשירים תואמים"); }
 
-// ======== Init ========
-load();
-newQuestionAll();
+
+function addItem(){
+
+let name=document.getElementById("pName").value
+let price=parseInt(document.getElementById("pPrice").value)
+let icon=document.getElementById("pIcon").value
+
+shopItems.push({name,price,icon})
+
+renderShop()
+
+}
+
+
+
+function resetGame(){
+
+localStorage.clear()
+
+location.reload()
+
+}
+
+
+
+async function checkUpdate(){
+
+try{
+
+let res=await fetch("version.json?"+Date.now())
+
+let data=await res.json()
+
+let current=document.getElementById("versionText").innerText
+
+if(data.version!==current){
+
+alert("יש גרסה חדשה "+data.version)
+
+location.reload(true)
+
+}else{
+
+location.reload()
+
+}
+
+}catch{
+
+location.reload()
+
+}
+
+}
