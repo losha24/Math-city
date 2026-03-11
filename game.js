@@ -109,10 +109,7 @@ function spinWheel(){
 }
 
 // VERSION UPDATE
-function updateVersion(){
-    // כאן ניתן לבדוק מול קובץ גרסה אמיתי בשרת, לפשט פה רק רענון
-    location.reload();
-}
+function updateVersion(){ location.reload(); }
 
 // INSTALL APP
 function installApp(){ alert("התקנת האפליקציה (PWA)"); }
