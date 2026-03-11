@@ -1,38 +1,36 @@
 body{
 font-family:Arial;
 margin:0;
-text-align:center;
 background:#eef5ff;
+text-align:center;
+}
+
+.titleBox{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
 }
 
 .logo{
-width:160px;
-margin-top:5px;
+width:80px;
 }
 
 .logoSmall{
-width:110px;
-}
-
-.screen{
-display:none;
-}
-
-.active{
-display:block;
+width:60px;
 }
 
 header{
 background:#4CAF50;
 color:white;
-padding:6px;
+padding:4px;
 }
 
 .topBar{
 display:flex;
 justify-content:space-around;
 background:#d6ecff;
-padding:8px;
+padding:6px;
 font-weight:bold;
 }
 
@@ -61,8 +59,8 @@ padding:10px;
 
 .qBox{
 background:white;
-padding:10px;
 border-radius:8px;
+padding:10px;
 border:1px solid #ccc;
 }
 
@@ -95,26 +93,13 @@ gap:10px;
 }
 
 .buyBtn{
-padding:8px;
-border:none;
-border-radius:8px;
 background:#4CAF50;
+border:none;
 color:white;
+padding:8px;
+border-radius:8px;
 }
 
 .buyBtn.red{
 background:#e53935;
-}
-
-.shake{
-animation:shake 0.3s;
-background:#ffb3b3;
-}
-
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-4px)}
-50%{transform:translateX(4px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
 }
