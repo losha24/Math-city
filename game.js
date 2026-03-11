@@ -2,11 +2,11 @@ let level=1
 let score=0
 let coins=0
 
-let correct1=0
-let correct2=0
-
+let answers=[]
 let solved=0
 let wheelReady=false
+
+let coinReward=5
 
 let shopItems=[
 
@@ -22,6 +22,18 @@ let shopItems=[
 
 ]
 
+
+function startGame(){
+
+showScreen("gameScreen")
+
+generateQuestions()
+
+updateUI()
+
+}
+
+
 function showScreen(id){
 
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
@@ -30,56 +42,42 @@ document.getElementById(id).classList.add("active")
 
 }
 
-function startGame(){
 
-showScreen("gameScreen")
+function generateQuestions(){
 
-newQuestions()
+answers=[]
 
-renderShop()
-
-updateUI()
-
-}
-
-function newQuestions(){
+for(let i=1;i<=4;i++){
 
 let a=Math.floor(Math.random()*10)
 let b=Math.floor(Math.random()*10)
 
-correct1=a+b
-q1.innerText=a+" + "+b
+answers[i]=a+b
 
-let c=Math.floor(Math.random()*10)
-let d=Math.floor(Math.random()*10)
-
-correct2=c+d
-q2.innerText=c+" + "+d
+document.getElementById("q"+i).innerText=a+" + "+b
 
 }
 
-function checkAnswer(n){
+}
 
-let input=document.getElementById("a"+n)
+
+function checkAll(){
+
+for(let i=1;i<=4;i++){
+
+let input=document.getElementById("a"+i)
 
 let val=parseInt(input.value)
 
-let correct=n==1?correct1:correct2
-
-if(val==correct){
+if(val==answers[i]){
 
 score++
-coins+=5
+coins+=coinReward
 solved++
 
 input.style.background="#b8f5b8"
 
 build()
-
-if(solved%10===0){
-wheelReady=true
-showReward("🎰 גלגל מזל זמין!")
-}
 
 }else{
 
@@ -87,45 +85,61 @@ input.classList.add("shake")
 
 setTimeout(()=>{
 input.classList.remove("shake")
-input.style.background=""
 },400)
+
+return
+
+}
 
 }
 
 updateUI()
 
-newQuestions()
-
-input.value=""
+generateQuestions()
 
 }
+
 
 function build(){
 
 let el=document.createElement("div")
+
 el.innerText="🏠"
 
-city.appendChild(el)
+document.getElementById("city").appendChild(el)
 
 }
+
 
 function updateUI(){
 
-score.innerText=score
-coins.innerText=coins
-level.innerText=level
+document.getElementById("scoreText").innerText=score
+document.getElementById("coinsText").innerText=coins
+document.getElementById("levelText").innerText=level
 
 }
 
+
+function openShop(){
+
+showScreen("shopScreen")
+
+renderShop()
+
+}
+
+
 function renderShop(){
 
-shopList.innerHTML=""
+let box=document.getElementById("shopList")
+
+box.innerHTML=""
 
 shopItems.forEach(item=>{
 
 let red=coins<item.price?"red":""
 
-shopList.innerHTML+=`
+box.innerHTML+=`
 
 <div class="shopItem">
 
@@ -133,7 +147,7 @@ shopList.innerHTML+=`
 
 ${item.price} 🪙
 
-<br><br>
+<br>
 
 <button class="buyBtn ${red}" onclick="buy('${item.icon}',${item.price})">קנה</button>
 
@@ -145,6 +159,7 @@ ${item.price} 🪙
 
 }
 
+
 function buy(icon,price){
 
 if(coins<price)return
@@ -154,91 +169,82 @@ coins-=price
 let el=document.createElement("div")
 el.innerText=icon
 
-city.appendChild(el)
+document.getElementById("city").appendChild(el)
 
 updateUI()
+
 renderShop()
 
 }
 
-function openShop(){
+
+function openParent(){
+
+showScreen("parentPanel")
+
+}
+
+
+function backShop(){
 
 showScreen("shopScreen")
-renderShop()
 
 }
 
-function backGame(){
 
-showScreen("gameScreen")
+function addItem(){
+
+let name=document.getElementById("itemName").value
+let price=parseInt(document.getElementById("itemPrice").value)
+let icon=document.getElementById("itemIcon").value
+
+shopItems.push({name,price,icon})
+
+alert("נוסף לחנות")
 
 }
+
 
 function spinWheel(){
 
-if(!wheelReady){
-showReward("❗ גלגל מזל כל 10 תרגילים")
+if(solved<10){
+alert("גלגל מזל כל 10 תרגילים")
 return
 }
 
-wheelReady=false
+solved=0
 
-let prizes=[
+let prize=Math.floor(Math.random()*3)
 
-{msg:"🪙 זכית ב-50 מטבעות!",coins:50},
-{msg:"🪙 זכית ב-100 מטבעות!",coins:100},
-{msg:"⭐ קיבלת 20 נקודות!",score:20},
-{msg:"🏠 בניין מתנה!",build:true}
+if(prize==0){
+coins+=50
+alert("🎉 זכית ב50 מטבעות")
+}
 
-]
+if(prize==1){
+score+=20
+alert("⭐ זכית ב20 נקודות")
+}
 
-let prize=prizes[Math.floor(Math.random()*prizes.length)]
-
-if(prize.coins) coins+=prize.coins
-if(prize.score) score+=prize.score
-if(prize.build) build()
+if(prize==2){
+build()
+alert("🏠 בניין מתנה")
+}
 
 updateUI()
 
-showReward(prize.msg)
-
 }
 
-function showReward(text){
 
-rewardPopup.innerText=text
-rewardPopup.style.display="block"
+function checkUpdate(){
 
-setTimeout(()=>{
-rewardPopup.style.display="none"
-},2500)
-
-}
-
-async function checkUpdate(){
-
-try{
-
-let res=await fetch("version.json?"+Date.now())
-let data=await res.json()
-
-let current=versionText.innerText
-
-if(data.version!==current){
-location.reload(true)
-}else{
 location.reload()
-}
-
-}catch{
-location.reload()
-}
 
 }
+
 
 function resetGame(){
 
-localStorage.clear()
 location.reload()
 
 }
