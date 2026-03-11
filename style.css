@@ -1,143 +1,74 @@
 body{
-
-font-family:Arial;
-margin:0;
-background:#eef5ff;
-text-align:center;
-
-}
-
-.screen{
-
-display:none;
-
-}
-
-.titleBox{
-
-display:flex;
-justify-content:center;
-align-items:center;
-gap:10px;
-
-}
-
-.logo{
-
-width:80px;
-
-}
-
-.logoSmall{
-
-width:60px;
-
+    font-family: Arial;
+    background:#eef5ff;
+    text-align:center;
+    margin:0;
 }
 
 header{
-
-background:#4CAF50;
-color:white;
-padding:6px;
-
+    background:#4CAF50;
+    color:white;
+    padding:10px;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
 }
 
-.topBar{
+.logo{ width:180px; }
+.logo-small{ width:100px; }
 
-display:flex;
-justify-content:space-around;
-background:#d6ecff;
-padding:6px;
-font-weight:bold;
-
+.status-bar{
+    background:#b3e5fc;
+    padding:5px;
+    width:90%;
+    margin-top:5px;
+    border-radius:5px;
 }
 
-.buttonBar{
-
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:8px;
-margin:10px;
-
-}
-
-.buttonBar button{
-
-background:#4CAF50;
-color:white;
-border:none;
-padding:10px;
-border-radius:8px;
-
-}
-
-.questionGrid{
-
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-padding:10px;
-
-}
-
-.qBox{
-
-background:white;
-border-radius:8px;
-padding:10px;
-border:1px solid #ccc;
-
-}
-
-.qBox input{
-
-width:60px;
-text-align:center;
-
-}
-
-.checkBtn{
-
-background:#2196F3;
-color:white;
-border:none;
-padding:12px;
-border-radius:10px;
-
-}
+.screen{ display:none; }
+.active{ display:block; }
 
 .city{
-
-display:grid;
-grid-template-columns:repeat(5,60px);
-gap:8px;
-justify-content:center;
-margin:20px;
-font-size:28px;
-
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(60px,1fr));
+    gap:8px;
+    justify-content:center;
+    margin:10px;
+    font-size:30px;
 }
 
-.shopGrid{
-
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-
+.exercise{
+    display:inline-block;
+    margin:10px;
 }
 
-.buyBtn{
-
-background:#4CAF50;
-color:white;
-border:none;
-padding:8px;
-border-radius:8px;
-
+.answer{
+    width:60px;
+    padding:5px;
+    text-align:center;
 }
 
-.buyBtn.red{
-
-background:#e53935;
-
+button{
+    padding:10px;
+    margin:5px;
+    font-size:16px;
+    border-radius:8px;
+    border:none;
+    background:#4CAF50;
+    color:white;
 }
+
+button.red{ background:#f44336; }
+
+.gameButtons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
+    gap:5px;
+    margin:10px 0;
+}
+
+.parentControls.hidden{ display:none; }
+
+.reward{ background:linear-gradient(45deg,#ffeb3b,#ff9800); padding:10px; border-radius:10px; margin:10px; }
+
+footer{ margin-top:20px; padding:10px; font-size:14px; color:#555; }
