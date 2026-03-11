@@ -16,12 +16,11 @@
 <body>
 
 
-<div id="startScreen" class="screen active">
+<div id="startScreen" class="screen">
 
 <div class="titleBox">
 
 <img src="logo.png" class="logo">
-
 <h1>Math City</h1>
 
 </div>
@@ -31,7 +30,6 @@
 <button onclick="checkUpdate()">⬆ עדכון</button>
 
 </div>
-
 
 
 <div id="gameScreen" class="screen">
@@ -50,20 +48,18 @@
 
 <div class="topBar">
 
-<div>רמה <span id="levelValue">1</span></div>
+<div>🏆 רמה <span id="levelValue">1</span></div>
 <div>⭐ נקודות <span id="scoreValue">0</span></div>
 <div>🪙 כסף <span id="coinsValue">0</span></div>
 
 </div>
 
 
-
 <div class="buttonBar">
 
 <button onclick="openShop()">🏪 חנות</button>
 <button onclick="spinWheel()">🎰 גלגל מזל</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
+<button onclick="dailyReward()">🎁 מתנה יומית</button>
 <button onclick="installApp()">📱 התקנה</button>
 <button onclick="checkUpdate()">⬆ עדכון</button>
 <button onclick="resetGame()">♻ איפוס</button>
@@ -71,23 +67,36 @@
 </div>
 
 
-
 <div class="questionGrid">
 
-<div class="qBox"><span id="q1"></span><input id="a1"></div>
-<div class="qBox"><span id="q2"></span><input id="a2"></div>
-<div class="qBox"><span id="q3"></span><input id="a3"></div>
-<div class="qBox"><span id="q4"></span><input id="a4"></div>
+<div class="qBox">
+<span id="q1"></span>
+<input id="a1">
+</div>
+
+<div class="qBox">
+<span id="q2"></span>
+<input id="a2">
+</div>
+
+<div class="qBox">
+<span id="q3"></span>
+<input id="a3">
+</div>
+
+<div class="qBox">
+<span id="q4"></span>
+<input id="a4">
+</div>
 
 </div>
 
 
-<button class="checkBtn" onclick="checkAll()">בדוק</button>
+<button class="checkBtn" onclick="checkAll()">בדוק תשובות</button>
 
 <div id="city" class="city"></div>
 
 </div>
-
 
 
 <div id="shopScreen" class="screen">
@@ -101,7 +110,6 @@
 <button onclick="backGame()">⬅ חזרה</button>
 
 </div>
-
 
 
 <div id="parentsScreen" class="screen">
@@ -133,12 +141,12 @@
 </div>
 
 
-
 <footer>
 
-© 2026 אלכסיי זבודיסקר | גרסה 6.1
+© 2026 Alexsei Zavodisker | Math City
 
 </footer>
+
 
 <script src="game.js"></script>
 
