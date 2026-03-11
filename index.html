@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
 
 <meta charset="UTF-8">
@@ -8,6 +7,7 @@
 
 <title>Math City</title>
 
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 
 </head>
@@ -40,9 +40,9 @@
 
 <div class="topBar">
 
-<div>רמה <span id="levelText">1</span></div>
-<div>⭐ נקודות <span id="scoreText">0</span></div>
-<div>🪙 כסף <span id="coinsText">0</span></div>
+<div>רמה <span id="level">1</span></div>
+<div>⭐ נקודות <span id="score">0</span></div>
+<div>🪙 כסף <span id="coins">0</span></div>
 
 </div>
 
@@ -51,6 +51,9 @@
 
 <button onclick="openShop()">🏪 חנות</button>
 <button onclick="spinWheel()">🎰 גלגל מזל</button>
+<button onclick="openRewards()">🏆 פרסים</button>
+<button onclick="openStats()">📊 סטטיסטיקות</button>
+<button onclick="installApp()">📱 התקנה</button>
 <button onclick="checkUpdate()">⬆ עדכון</button>
 <button onclick="resetGame()">♻ איפוס</button>
 
@@ -66,12 +69,10 @@
 
 </div>
 
-<button onclick="checkAll()">בדוק הכל</button>
+<button class="checkBtn" onclick="checkAll()">בדוק</button>
 
 
 <div id="city" class="city"></div>
-
-<div id="rewardPopup"></div>
 
 </div>
 
@@ -80,7 +81,7 @@
 
 <h2>🏪 חנות</h2>
 
-<button onclick="openParent()">🔒 מצב הורים</button>
+<button onclick="openParents()">👨‍👩‍👧 מצב הורים</button>
 
 <div id="shopList" class="shopGrid"></div>
 
@@ -89,22 +90,18 @@
 </div>
 
 
-<div id="parentPanel" class="screen">
+<div id="parentsScreen" class="screen">
 
 <h2>ניהול חנות</h2>
 
-שם פריט
-<input id="itemName">
+<input id="itemName" placeholder="שם פריט">
+<input id="itemPrice" placeholder="מחיר">
 
-מחיר
-<input id="itemPrice">
-
-אייקון
 <select id="itemIcon">
 
+<option>🏠</option>
 <option>🚗</option>
 <option>🌳</option>
-<option>🏠</option>
 <option>🏪</option>
 <option>🏫</option>
 <option>🎡</option>
@@ -115,16 +112,38 @@
 
 </select>
 
-<button onclick="addItem()">➕ הוסף פריט</button>
+<button onclick="addItem()">➕ הוסף</button>
 
 <button onclick="backShop()">⬅ חזרה</button>
 
 </div>
 
 
+<div id="rewardsScreen" class="screen">
+
+<h2>🏆 פרסים</h2>
+
+<div id="rewardList"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+
+<div id="statsScreen" class="screen">
+
+<h2>📊 סטטיסטיקות</h2>
+
+<div id="statsBox"></div>
+
+<button onclick="backGame()">⬅ חזרה</button>
+
+</div>
+
+
 <footer>
 
-© 2026 אלכסיי זבודיסקר | גרסה 5.3
+© 2026 אלכסיי זבודיסקר | גרסה 6.0
 
 </footer>
 
