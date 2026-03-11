@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Math City</title>
 
 <link rel="manifest" href="manifest.json">
@@ -12,9 +14,11 @@
 
 <body>
 
-<div id="startScreen">
+<div id="startScreen" class="screen active">
 
-<h1>🏙 Math City</h1>
+<img src="logo.png" class="logo">
+
+<h1>Math City</h1>
 
 <button onclick="startGame()">🎮 התחל משחק</button>
 <button onclick="resetGame()">♻ איפוס</button>
@@ -23,25 +27,30 @@
 </div>
 
 
-<div id="gameScreen">
+<div id="gameScreen" class="screen">
 
 <header>
+
+<img src="logo.png" class="logoSmall">
+
 <h2>Math City</h2>
+
 </header>
+
 
 <div class="topBar">
 
-<div>רמה: <span id="level">1</span></div>
-<div>⭐ נקודות: <span id="score">0</span></div>
-<div>🪙 מטבעות: <span id="coins">0</span></div>
+<div>רמה <span id="level">1</span></div>
+<div>⭐ נקודות <span id="score">0</span></div>
+<div>🪙 מטבעות <span id="coins">0</span></div>
 
 </div>
+
 
 <div class="buttonBar">
 
 <button onclick="openShop()">🏪 חנות</button>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
+<button onclick="spinWheel()">🎰 גלגל מזל</button>
 <button onclick="checkUpdate()">⬆ עדכון</button>
 <button onclick="resetGame()">♻ איפוס</button>
 
@@ -51,15 +60,24 @@
 <div class="questionBox">
 
 <div class="qRow">
+
 <span id="q1"></span>
+
 <input id="a1">
+
 <button onclick="checkAnswer(1)">בדוק</button>
+
 </div>
 
+
 <div class="qRow">
+
 <span id="q2"></span>
+
 <input id="a2">
+
 <button onclick="checkAnswer(2)">בדוק</button>
+
 </div>
 
 </div>
@@ -67,15 +85,15 @@
 
 <div id="city" class="city"></div>
 
+<div id="rewardPopup"></div>
+
 </div>
 
 
 
-<div id="shopScreen">
+<div id="shopScreen" class="screen">
 
 <h2>🏪 חנות</h2>
-
-<button onclick="openParent()">🔒 הורים</button>
 
 <div id="shopList" class="shopGrid"></div>
 
@@ -84,25 +102,9 @@
 </div>
 
 
-
-<div id="parentPanel" class="parentPanel">
-
-<h3>הוספת פריט</h3>
-
-<input id="pName" placeholder="שם">
-<input id="pPrice" placeholder="מחיר">
-
-<select id="pIcon"></select>
-
-<button onclick="addItem()">➕ הוסף</button>
-
-</div>
-
-
-
 <footer>
 
-גרסה <span id="versionText">5.0</span>
+© 2026 אלכסיי זבודיסקר | גרסה <span id="versionText">5.2</span>
 
 </footer>
 
