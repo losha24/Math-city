@@ -1,9 +1,11 @@
 let level=1
 let score=0
 let coins=0
+let solved=0
 
 let answers=[]
-let solved=0
+
+const city=document.getElementById("city")
 
 let shopItems=JSON.parse(localStorage.getItem("shopItems"))||[
 {name:"🚗 מכונית",price:50,icon:"🚗"},
@@ -17,11 +19,10 @@ let shopItems=JSON.parse(localStorage.getItem("shopItems"))||[
 {name:"🎢 רכבת הרים",price:300,icon:"🎢"}
 ]
 
-function updateUI(){
+function show(id){
 
-document.getElementById("levelValue").textContent=level
-document.getElementById("scoreValue").textContent=score
-document.getElementById("coinsValue").textContent=coins
+document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
+document.getElementById(id).style.display="block"
 
 }
 
@@ -33,10 +34,11 @@ updateUI()
 
 }
 
-function show(id){
+function updateUI(){
 
-document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
-document.getElementById(id).style.display="block"
+document.getElementById("levelValue").textContent=level
+document.getElementById("scoreValue").textContent=score
+document.getElementById("coinsValue").textContent=coins
 
 }
 
@@ -59,8 +61,6 @@ document.getElementById("q"+i).textContent=a+" + "+b
 
 function checkAll(){
 
-let correct=true
-
 for(let i=1;i<=4;i++){
 
 let input=document.getElementById("a"+i)
@@ -75,16 +75,13 @@ build()
 
 }else{
 
-input.style.background="#ffb3b3"
-correct=false
+input.style.background="red"
 
 }
 
 input.value=""
 
 }
-
-if(correct)generateQuestions()
 
 if(score>=level*20){
 
@@ -94,6 +91,7 @@ alert("עלית רמה!")
 
 }
 
+generateQuestions()
 updateUI()
 
 }
@@ -102,6 +100,7 @@ function build(){
 
 let el=document.createElement("div")
 el.textContent="🏠"
+
 city.appendChild(el)
 
 }
@@ -125,7 +124,8 @@ shopList.innerHTML+=`
 
 <div>
 
-${item.icon} ${item.name}<br>
+${item.icon}<br>
+${item.name}<br>
 ${item.price} 🪙
 
 <button class="buyBtn ${red}" onclick="buy('${item.icon}',${item.price})">קנה</button>
@@ -170,8 +170,6 @@ shopItems.push({name,price,icon})
 
 localStorage.setItem("shopItems",JSON.stringify(shopItems))
 
-renderShop()
-
 alert("נוסף לחנות")
 
 }
@@ -179,6 +177,13 @@ alert("נוסף לחנות")
 function backShop(){
 
 show("shopScreen")
+renderShop()
+
+}
+
+function backGame(){
+
+show("gameScreen")
 
 }
 
@@ -186,8 +191,7 @@ function spinWheel(){
 
 if(solved<10){
 
-alert("גלגל מזל כל 10 פתרונות")
-
+alert("גלגל מזל כל 10 תרגילים")
 return
 
 }
@@ -204,9 +208,43 @@ updateUI()
 
 }
 
-function backGame(){
+function dailyReward(){
 
-show("gameScreen")
+let today=new Date().toDateString()
+
+if(localStorage.getItem("dailyReward")==today){
+
+alert("כבר קיבלת מתנה היום")
+return
+
+}
+
+localStorage.setItem("dailyReward",today)
+
+let r=Math.floor(Math.random()*3)
+
+if(r==0){
+
+coins+=100
+alert("קיבלת 100 מטבעות!")
+
+}
+
+if(r==1){
+
+score+=30
+alert("קיבלת 30 נקודות!")
+
+}
+
+if(r==2){
+
+build()
+alert("קיבלת בניין מתנה!")
+
+}
+
+updateUI()
 
 }
 
