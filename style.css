@@ -1,105 +1,143 @@
 body{
+
 font-family:Arial;
 margin:0;
 background:#eef5ff;
 text-align:center;
+
+}
+
+.screen{
+
+display:none;
+
 }
 
 .titleBox{
+
 display:flex;
-align-items:center;
 justify-content:center;
-gap:8px;
+align-items:center;
+gap:10px;
+
 }
 
 .logo{
+
 width:80px;
+
 }
 
 .logoSmall{
+
 width:60px;
+
 }
 
 header{
+
 background:#4CAF50;
 color:white;
-padding:4px;
+padding:6px;
+
 }
 
 .topBar{
+
 display:flex;
 justify-content:space-around;
 background:#d6ecff;
 padding:6px;
 font-weight:bold;
+
 }
 
 .buttonBar{
+
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:6px;
+gap:8px;
 margin:10px;
+
 }
 
 .buttonBar button{
+
 background:#4CAF50;
 color:white;
 border:none;
 padding:10px;
 border-radius:8px;
+
 }
 
 .questionGrid{
+
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 padding:10px;
+
 }
 
 .qBox{
+
 background:white;
 border-radius:8px;
 padding:10px;
 border:1px solid #ccc;
+
 }
 
 .qBox input{
+
 width:60px;
 text-align:center;
+
 }
 
 .checkBtn{
+
 background:#2196F3;
 color:white;
 border:none;
 padding:12px;
 border-radius:10px;
+
 }
 
 .city{
+
 display:grid;
 grid-template-columns:repeat(5,60px);
 gap:8px;
 justify-content:center;
 margin:20px;
 font-size:28px;
+
 }
 
 .shopGrid{
+
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
+
 }
 
 .buyBtn{
+
 background:#4CAF50;
-border:none;
 color:white;
+border:none;
 padding:8px;
 border-radius:8px;
+
 }
 
 .buyBtn.red{
+
 background:#e53935;
+
 }
