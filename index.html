@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City – גרסה 5</title>
+<title>Math City – גרסה 5.1</title>
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 </head>
@@ -18,10 +18,6 @@
 <button onclick="resetGame()">♻️ איפוס</button>
 <button onclick="checkUpdate()">⬆ עדכון גרסא</button>
 </div>
-<br>
-<button onclick="openRewards()">🏆 פרסים</button>
-<button onclick="openShop()">🏪 חנות</button>
-<button onclick="openStats()">📊 סטטיסטיקות</button>
 </div>
 
 <!-- GAME SCREEN -->
@@ -30,16 +26,28 @@
 <h2>Math City</h2>
 <img src="logo.png" class="logo">
 </header>
-<h3>
-רמה: <span id="level">1</span> ⭐ נקודות: <span id="score">0</span> 🪙 מטבעות: <span id="coins">0</span>
-</h3>
+
+<div class="level-bar">
+<span>רמה: <span id="level">1</span></span>
+<span>⭐ נקודות: <span id="score">0</span></span>
+<span>🪙 מטבעות: <span id="coins">0</span></span>
+</div>
+
+<!-- שאלות -->
+<div class="questions">
+<div class="question-box">
+<input id="answer1"><button onclick="checkQuestion(1)">בדוק</button>
+</div>
+<div class="question-box">
+<input id="answer2"><button onclick="checkQuestion(2)">בדוק</button>
+</div>
+<div class="question-box">
+<input id="answer3"><button onclick="checkQuestion(3)">בדוק</button>
+</div>
+</div>
 
 <div id="monster" class="monster"></div>
 <div id="rewardBox"></div>
-<h2 id="question"></h2>
-<input id="answer"><br>
-<button onclick="check()">בדוק</button>
-
 <div class="city" id="city"></div>
 
 <div class="bar-buttons">
@@ -47,6 +55,7 @@
 <button onclick="openShop()">🏪 חנות</button>
 <button onclick="openStats()">📊 סטטיסטיקות</button>
 <button onclick="checkUpdate()">⬆ עדכון גרסא</button>
+<button onclick="resetGame()">♻️ איפוס</button>
 <button onclick="installApp()">📲 התקנת אפליקציה</button>
 </div>
 </div>
@@ -54,7 +63,15 @@
 <!-- SHOP SCREEN -->
 <div id="shopScreen" class="screen">
 <h2>🏪 חנות</h2>
-<div id="shopList"></div>
+<button onclick="toggleParentMode()">👨‍👩‍👧‍👦 מצב הורים</button>
+<div id="parentControls" class="hidden">
+<h3>הוסף פריט חדש</h3>
+שם: <input id="newItemName">
+מחיר: <input id="newItemPrice">
+אייקון: <select id="newItemIcon"></select>
+<button onclick="addParentItem()">הוסף</button>
+</div>
+<div id="shopList" class="shop-grid"></div>
 <div class="bar-buttons">
 <button onclick="backGame()">⬅ חזרה</button>
 </div>
@@ -64,23 +81,18 @@
 <div id="rewardsScreen" class="screen">
 <h2>🏆 הפרסים</h2>
 <div id="rewardList"></div>
-<div class="bar-buttons">
-<button onclick="backGame()">⬅ חזרה</button>
-</div>
+<div class="bar-buttons"><button onclick="backGame()">⬅ חזרה</button></div>
 </div>
 
 <!-- STATS SCREEN -->
 <div id="statsScreen" class="screen">
 <h2>📊 סטטיסטיקות</h2>
 <div id="statsBox"></div>
-<div class="bar-buttons">
-<button onclick="backGame()">⬅ חזרה</button>
-</div>
+<div class="bar-buttons"><button onclick="backGame()">⬅ חזרה</button></div>
 </div>
 
 <footer>
-© 2026 אלכסיי זבודיסקר <br>
-גרסה נוכחית: 5
+© 2026 אלכסיי זבודיסקר <br>גרסה נוכחית: 5.1
 </footer>
 
 <script src="game.js"></script>
