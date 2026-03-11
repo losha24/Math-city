@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,7 +8,6 @@
 
 <title>Math City</title>
 
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 
 </head>
@@ -22,7 +22,7 @@
 
 <button onclick="startGame()">🎮 התחל משחק</button>
 <button onclick="resetGame()">♻ איפוס</button>
-<button onclick="checkUpdate()">⬆ עדכון גרסה</button>
+<button onclick="checkUpdate()">⬆ עדכון</button>
 
 </div>
 
@@ -40,9 +40,9 @@
 
 <div class="topBar">
 
-<div>רמה <span id="level">1</span></div>
-<div>⭐ נקודות <span id="score">0</span></div>
-<div>🪙 מטבעות <span id="coins">0</span></div>
+<div>רמה <span id="levelText">1</span></div>
+<div>⭐ נקודות <span id="scoreText">0</span></div>
+<div>🪙 כסף <span id="coinsText">0</span></div>
 
 </div>
 
@@ -57,30 +57,16 @@
 </div>
 
 
-<div class="questionBox">
+<div class="questionGrid">
 
-<div class="qRow">
-
-<span id="q1"></span>
-
-<input id="a1">
-
-<button onclick="checkAnswer(1)">בדוק</button>
+<div class="qBox"><span id="q1"></span><input id="a1"></div>
+<div class="qBox"><span id="q2"></span><input id="a2"></div>
+<div class="qBox"><span id="q3"></span><input id="a3"></div>
+<div class="qBox"><span id="q4"></span><input id="a4"></div>
 
 </div>
 
-
-<div class="qRow">
-
-<span id="q2"></span>
-
-<input id="a2">
-
-<button onclick="checkAnswer(2)">בדוק</button>
-
-</div>
-
-</div>
+<button onclick="checkAll()">בדוק הכל</button>
 
 
 <div id="city" class="city"></div>
@@ -90,10 +76,11 @@
 </div>
 
 
-
 <div id="shopScreen" class="screen">
 
 <h2>🏪 חנות</h2>
+
+<button onclick="openParent()">🔒 מצב הורים</button>
 
 <div id="shopList" class="shopGrid"></div>
 
@@ -102,9 +89,42 @@
 </div>
 
 
+<div id="parentPanel" class="screen">
+
+<h2>ניהול חנות</h2>
+
+שם פריט
+<input id="itemName">
+
+מחיר
+<input id="itemPrice">
+
+אייקון
+<select id="itemIcon">
+
+<option>🚗</option>
+<option>🌳</option>
+<option>🏠</option>
+<option>🏪</option>
+<option>🏫</option>
+<option>🎡</option>
+<option>🏰</option>
+<option>🗼</option>
+<option>🎢</option>
+<option>🚀</option>
+
+</select>
+
+<button onclick="addItem()">➕ הוסף פריט</button>
+
+<button onclick="backShop()">⬅ חזרה</button>
+
+</div>
+
+
 <footer>
 
-© 2026 אלכסיי זבודיסקר | גרסה <span id="versionText">5.2</span>
+© 2026 אלכסיי זבודיסקר | גרסה 5.3
 
 </footer>
 
