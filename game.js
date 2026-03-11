@@ -5,9 +5,6 @@ let coins=0
 let answers=[]
 let solved=0
 
-let rewards=[]
-let mistakes=0
-
 let shopItems=JSON.parse(localStorage.getItem("shopItems"))||[
 {name:"🚗 מכונית",price:50,icon:"🚗"},
 {name:"🌳 עץ",price:30,icon:"🌳"},
@@ -20,6 +17,14 @@ let shopItems=JSON.parse(localStorage.getItem("shopItems"))||[
 {name:"🎢 רכבת הרים",price:300,icon:"🎢"}
 ]
 
+function updateUI(){
+
+document.getElementById("levelValue").textContent=level
+document.getElementById("scoreValue").textContent=score
+document.getElementById("coinsValue").textContent=coins
+
+}
+
 function startGame(){
 
 show("gameScreen")
@@ -30,8 +35,8 @@ updateUI()
 
 function show(id){
 
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-document.getElementById(id).classList.add("active")
+document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
+document.getElementById(id).style.display="block"
 
 }
 
@@ -46,7 +51,7 @@ let b=Math.floor(Math.random()*10)
 
 answers[i]=a+b
 
-document.getElementById("q"+i).innerText=a+" + "+b
+document.getElementById("q"+i).textContent=a+" + "+b
 
 }
 
@@ -70,11 +75,8 @@ build()
 
 }else{
 
-mistakes++
-input.classList.add("shake")
+input.style.background="#ffb3b3"
 correct=false
-
-setTimeout(()=>input.classList.remove("shake"),400)
 
 }
 
@@ -82,42 +84,25 @@ input.value=""
 
 }
 
-if(correct){
-
-generateQuestions()
-
-}
+if(correct)generateQuestions()
 
 if(score>=level*20){
 
 level++
-
 coins+=50
-
-rewards.push("🎁 פרס רמה "+level)
-
 alert("עלית רמה!")
 
 }
 
 updateUI()
-save()
 
 }
 
 function build(){
 
 let el=document.createElement("div")
-el.innerText="🏠"
+el.textContent="🏠"
 city.appendChild(el)
-
-}
-
-function updateUI(){
-
-score.innerText=score
-coins.innerText=coins
-level.innerText=level
 
 }
 
@@ -160,7 +145,7 @@ if(coins<price)return
 coins-=price
 
 let el=document.createElement("div")
-el.innerText=icon
+el.textContent=icon
 
 city.appendChild(el)
 
@@ -185,38 +170,15 @@ shopItems.push({name,price,icon})
 
 localStorage.setItem("shopItems",JSON.stringify(shopItems))
 
-alert("נוסף")
+renderShop()
+
+alert("נוסף לחנות")
 
 }
 
 function backShop(){
 
 show("shopScreen")
-
-}
-
-function openRewards(){
-
-show("rewardsScreen")
-
-rewardList.innerHTML=rewards.join("<br>")
-
-}
-
-function openStats(){
-
-show("statsScreen")
-
-let accuracy=Math.round((score/(score+mistakes))*100)||0
-
-statsBox.innerHTML=`
-
-נקודות: ${score}<br>
-טעויות: ${mistakes}<br>
-אחוז הצלחה: ${accuracy}%<br>
-כסף: ${coins}
-
-`
 
 }
 
@@ -234,9 +196,9 @@ solved=0
 
 let r=Math.floor(Math.random()*3)
 
-if(r==0){coins+=50;alert("50 מטבעות")}
-if(r==1){score+=20;alert("20 נקודות")}
-if(r==2){build();alert("בניין מתנה")}
+if(r==0){coins+=50}
+if(r==1){score+=20}
+if(r==2){build()}
 
 updateUI()
 
@@ -245,12 +207,6 @@ updateUI()
 function backGame(){
 
 show("gameScreen")
-
-}
-
-function save(){
-
-localStorage.setItem("mathCity",JSON.stringify({level,score,coins,rewards}))
 
 }
 
