@@ -32,7 +32,7 @@ padding:6px;
 display:flex;
 justify-content:space-around;
 background:#d6ecff;
-padding:6px;
+padding:8px;
 font-weight:bold;
 }
 
@@ -50,7 +50,6 @@ color:white;
 border:none;
 padding:10px;
 border-radius:8px;
-width:120px;
 }
 
 .questionGrid{
@@ -72,6 +71,14 @@ width:60px;
 text-align:center;
 }
 
+.checkBtn{
+background:#2196F3;
+color:white;
+border:none;
+padding:12px;
+border-radius:10px;
+}
+
 .city{
 display:grid;
 grid-template-columns:repeat(5,60px);
@@ -85,21 +92,14 @@ font-size:28px;
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
-padding:10px;
-}
-
-.shopItem{
-background:white;
-padding:10px;
-border-radius:10px;
 }
 
 .buyBtn{
+padding:8px;
+border:none;
+border-radius:8px;
 background:#4CAF50;
 color:white;
-border:none;
-padding:8px;
-border-radius:8px;
 }
 
 .buyBtn.red{
