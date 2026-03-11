@@ -5,6 +5,23 @@ text-align:center;
 background:#eef5ff;
 }
 
+.logo{
+width:180px;
+margin-top:20px;
+}
+
+.logoSmall{
+width:120px;
+}
+
+.screen{
+display:none;
+}
+
+.active{
+display:block;
+}
+
 header{
 background:#4CAF50;
 color:white;
@@ -14,7 +31,7 @@ padding:10px;
 .topBar{
 display:flex;
 justify-content:space-around;
-background:#cce8ff;
+background:#d6ecff;
 padding:8px;
 font-weight:bold;
 }
@@ -45,7 +62,7 @@ background:white;
 }
 
 .qRow{
-margin:6px;
+margin:8px;
 }
 
 .qRow input{
@@ -88,12 +105,6 @@ border-radius:8px;
 background:#e53935;
 }
 
-.parentPanel{
-display:none;
-padding:10px;
-background:#fff8e1;
-}
-
 input.shake{
 animation:shake 0.3s;
 background:#ffb3b3;
@@ -105,4 +116,19 @@ background:#ffb3b3;
 50%{transform:translateX(4px)}
 75%{transform:translateX(-4px)}
 100%{transform:translateX(0)}
+}
+
+#rewardPopup{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:linear-gradient(45deg,#ffeb3b,#ff9800);
+padding:15px;
+border-radius:12px;
+font-size:20px;
+font-weight:bold;
+display:none;
+z-index:999;
+box-shadow:0 5px 10px rgba(0,0,0,0.3);
 }
