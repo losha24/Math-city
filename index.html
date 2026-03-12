@@ -9,12 +9,15 @@
 <script src="js/main.js" defer></script>
 </head>
 <body>
+
 <div id="startScreen">
     <img src="logo.png" alt="Math City" id="logo">
     <h1>Math City</h1>
-    <button onclick="startGame()" class="btn start">התחל משחק</button>
-    <button onclick="resetGame()" class="btn reset">איפוס</button>
-    <button onclick="checkUpdate()" class="btn update">עדכון גרסה</button>
+    <div class="startButtons">
+        <button onclick="startGame()" class="btn start">התחל משחק</button>
+        <button onclick="resetGame()" class="btn reset">איפוס</button>
+        <button onclick="checkUpdate()" class="btn update">עדכון גרסה</button>
+    </div>
 </div>
 
 <div id="gameScreen" style="display:none;">
@@ -39,5 +42,6 @@
 </div>
 
 <footer>© 2026 אלכסיי זבודיסקר</footer>
+
 </body>
 </html>
