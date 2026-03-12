@@ -1,114 +1,57 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math City</title>
-
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
-
 </head>
-
 <body>
 
 <header>
-
 <div class="logoTitle">
-
 <img src="logo.png" class="logo">
-
 <h1>Math City</h1>
-
 </div>
-
 </header>
 
 <div id="startScreen">
-
 <button onclick="startGame()">התחל משחק</button>
-
 <button onclick="checkUpdate()">עדכון גרסה</button>
-
 <button onclick="resetGame()">איפוס</button>
-
 </div>
 
 <div id="game" style="display:none">
 
 <div class="stats">
-
 <div>רמה <span id="level">1</span></div>
-
 <div>נקודות <span id="points">0</span></div>
-
 <div>מטבעות <span id="coins">0</span></div>
-
 </div>
 
 <div class="exerciseGrid">
-
-<div class="exercise" id="ex1">
-
-<div class="q"></div>
-
-<input>
-
-</div>
-
-<div class="exercise" id="ex2">
-
-<div class="q"></div>
-
-<input>
-
-</div>
-
-<div class="exercise" id="ex3">
-
-<div class="q"></div>
-
-<input>
-
-</div>
-
-<div class="exercise" id="ex4">
-
-<div class="q"></div>
-
-<input>
-
-</div>
-
+<div class="exercise" id="ex1"><div class="q"></div><input></div>
+<div class="exercise" id="ex2"><div class="q"></div><input></div>
+<div class="exercise" id="ex3"><div class="q"></div><input></div>
+<div class="exercise" id="ex4"><div class="q"></div><input></div>
 </div>
 
 <button class="checkBtn" onclick="checkAnswers()">בדיקה</button>
 
 <div class="bar">
-
 <button onclick="openShop()">🛒 חנות</button>
-
 <button onclick="dailyGift()">🎁 פרס יומי</button>
-
 <button onclick="spinReward()">🎯 גלגל מזל</button>
-
 <button onclick="checkUpdate()">⬆ עדכון</button>
-
 </div>
 
 <div id="shop"></div>
 
-</div>
-
 <footer>
-
 Math City © אלכסיי זבודיסקר
-
 </footer>
 
 <script src="game.js"></script>
-
 </body>
 </html>
