@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City - גרסא 4</title>
+<title>Math City - גרסא 5</title>
 <link rel="stylesheet" href="style.css">
 <script src="game.js" defer></script>
 </head>
@@ -17,9 +17,10 @@
 </header>
 
 <div id="startScreen">
-<button class="greenBtn" onclick="startGame()">התחל משחק</button>
-<button class="greenBtn" onclick="checkUpdate()">עדכון גרסה</button>
-<button class="greenBtn" onclick="resetGame()">איפוס</button>
+<button class="blueBtn" onclick="startGame()">התחל משחק</button>
+<button class="blueBtn" onclick="checkUpdate()">עדכון גרסה</button>
+<button class="blueBtn" onclick="resetGame()">איפוס</button>
+<button class="blueBtn" onclick="installApp()">התקנת אפליקציה</button>
 </div>
 
 <div id="game" style="display:none">
@@ -30,18 +31,28 @@
 <div>מטבעות <span id="coins">0</span> 💰</div>
 </div>
 
-<div id="exercise">
-<div class="exercise"><span class="q"></span><input></div>
+<div id="exercises" class="exercisesContainer">
+<div class="exerciseRow">
+<div class="exercise" data-answer=""><span class="q"></span><input></div>
+<div class="exercise" data-answer=""><span class="q"></span><input></div>
+</div>
+<div class="exerciseRow">
+<div class="exercise" data-answer=""><span class="q"></span><input></div>
+<div class="exercise" data-answer=""><span class="q"></span><input></div>
 </div>
 <button class="checkBtn" onclick="checkAnswers()">בדיקה</button>
+<div id="rewardText" class="rewardText"></div>
+</div>
 
 <div class="bar">
 <button onclick="toggleShop()">🛒 חנות</button>
 <button onclick="dailyGift()">🎁 מתנה יומית</button>
 <button onclick="spinReward()">🎯 גלגל מזל</button>
+<button onclick="showStats()">📊 סטטיסטיקה</button>
 </div>
 
 <div id="shop" style="display:none;"></div>
+<div id="statsModal" style="display:none;"></div>
 
 <footer>
 Math City © אלכסיי זבודיסקר
