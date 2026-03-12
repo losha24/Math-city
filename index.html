@@ -23,11 +23,11 @@
 
 </header>
 
-<div id="menu">
+<div id="startScreen">
 
-<button onclick="startGame()">🎮 התחל משחק</button>
+<button onclick="startGame()">▶️ התחל משחק</button>
 
-<button onclick="resetGame()">♻️ איפוס</button>
+<button onclick="resetGame()">🔄 איפוס</button>
 
 <button onclick="checkUpdate()">⬆️ עדכון גרסה</button>
 
@@ -37,67 +37,45 @@
 
 <div id="game" class="hidden">
 
-<div id="stats">
+<div class="stats">
 
-רמה: <span id="level">1</span>
+<span>רמה: <b id="level">1</b></span>
 
-נקודות: <span id="points">0</span>
+<span>נקודות: <b id="points">0</b></span>
 
-מטבעות: <span id="coins">0</span>
-
-</div>
-
-<div id="mathBox">
-
-<div class="row">
-
-<input id="q1" readonly>
-
-<input id="a1">
-
-<input id="q2" readonly>
-
-<input id="a2">
+<span>מטבעות: <b id="coins">0</b></span>
 
 </div>
 
-<div class="row">
+<div class="tasks">
 
-<input id="q3" readonly>
+<div class="task"><span id="q1"></span><input id="a1"></div>
 
-<input id="a3">
+<div class="task"><span id="q2"></span><input id="a2"></div>
 
-<input id="q4" readonly>
+<div class="task"><span id="q3"></span><input id="a3"></div>
 
-<input id="a4">
-
-</div>
-
-<button onclick="checkAnswers()">בדוק תשובות</button>
+<div class="task"><span id="q4"></span><input id="a4"></div>
 
 </div>
 
-<div class="buttons">
+<button class="checkBtn" onclick="checkAnswers()">בדוק תשובות</button>
+
+<div class="bar">
 
 <button onclick="openShop()">🛒 חנות</button>
 
-<button onclick="dailyGift()">🎁 מתנה יומית</button>
+<button onclick="dailyReward()">🎁 מתנה</button>
 
-<button onclick="spinWheel()">🎯 גלגל מזל</button>
+<button onclick="spinReward()">🎯 פרס</button>
 
 <button onclick="showStats()">📊 סטטיסטיקה</button>
 
-<button onclick="checkUpdate()">⬆️ עדכון</button>
-
-<button onclick="resetGame()">♻️ איפוס</button>
+</div>
 
 </div>
 
 <div id="shop" class="hidden"></div>
-
-<div id="statsBox" class="hidden"></div>
-
-</div>
 
 <footer>
 
@@ -108,4 +86,5 @@
 <script src="game.js"></script>
 
 </body>
+
 </html>
