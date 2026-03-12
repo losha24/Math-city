@@ -1,124 +1,304 @@
-let level=1, score=0, coins=0, solved=0, mistakes=0;
-let rewards=[], shopItems=[], monsterActive=false;
+let score=0
+let coins=0
+let level=1
+let solved=0
 
-// DOM Elements
-const scoreEl=document.getElementById("score");
-const levelEl=document.getElementById("level");
-const coinsEl=document.getElementById("coins");
-const city=document.getElementById("city");
+let questions=[]
 
-// SHOP icons
-const iconOptions=["🚗","🌳","🏠","🏪","🏫","🎡","🏰","🗼","🎢","🚀","🛸","🛹","🛶","🎁","🎨"];
-const shopIconSelect=document.getElementById("newItemIcon");
-iconOptions.forEach(ic=>{ let opt=document.createElement("option"); opt.value=ic; opt.text=ic; shopIconSelect.add(opt); });
+const city=document.getElementById("city")
 
-// Screen Control
-function showScreen(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
-function startGame(){ showScreen("gameScreen"); newAllQuestions(); updateUI(); }
-function backGame(){ showScreen("gameScreen"); updateUI(); }
-function openShop(){ renderShop(); showScreen("shopScreen"); }
-function openRewards(){ updateRewardList(); showScreen("rewardsScreen"); }
-function openStats(){ renderStats(); showScreen("statsScreen"); }
+loadGame()
 
-// Questions
-let questions=[];
-function newQuestion(){ return {a: Math.floor(Math.random()*10), b: Math.floor(Math.random()*10), correct: 0 }; }
-function newAllQuestions(){
-    questions=[newQuestion(),newQuestion(),newQuestion(),newQuestion()];
-    questions.forEach((q,i)=>{ 
-        q.correct = q.a + q.b; 
-        document.getElementById("question"+(i+1)).innerText=`${q.a} + ${q.b}`;
-        document.getElementById("answer"+(i+1)).value="";
-    });
+function saveGame(){
+
+localStorage.setItem("mathCity",JSON.stringify({
+
+score,
+coins,
+level,
+solved,
+city:city.innerHTML
+
+}))
+
 }
 
-function checkAllAnswers(){
-    let allCorrect=true;
-    questions.forEach((q,i)=>{
-        let val=parseInt(document.getElementById("answer"+(i+1)).value);
-        let inputEl=document.getElementById("answer"+(i+1));
-        inputEl.classList.remove("red","green");
-        if(val===q.correct){
-            score++; coins+=5; solved++;
-            inputEl.classList.add("green");
-        } else {
-            mistakes++; allCorrect=false;
-            inputEl.classList.add("red");
-            inputEl.classList.add("shake");
-            setTimeout(()=>inputEl.classList.remove("shake"),500);
-        }
-    });
-    if(score%10===0) spinWheel();
-    if(score%5===0) level++;
-    build();
-    updateUI();
-    if(!allCorrect) return;
-    setTimeout(newAllQuestions,500);
+function loadGame(){
+
+let data=localStorage.getItem("mathCity")
+
+if(data){
+
+let game=JSON.parse(data)
+
+score=game.score
+coins=game.coins
+level=game.level
+solved=game.solved
+city.innerHTML=game.city
+
 }
 
-// CITY / Build
-const buildings=["🏠","🌳","🏪","🏫","🎡","🏢"];
-function build(){ let el=document.createElement("div"); el.innerText=buildings[Math.floor(Math.random()*buildings.length)]; city.appendChild(el); }
+updateStats()
 
-// SHOP
-function renderShop(){
-    const list=document.getElementById("shopList");
-    list.innerHTML="";
-    shopItems.forEach((item,i)=>{
-        let btnClass=coins>=item.price?"":"red";
-        list.innerHTML+=`<div class="shopItem">${item.icon} ${item.name} - ${item.price} 🪙<br><button class="${btnClass}" onclick="buyItem(${i})">קנה</button></div>`;
-    });
-}
-function buyItem(index){
-    let item=shopItems[index];
-    if(coins<item.price){ alert("אין מספיק מטבעות"); return; }
-    coins-=item.price;
-    let el=document.createElement("div"); el.innerText=item.icon; city.appendChild(el);
-    updateUI();
 }
 
-// Parent Controls
-let parentMode=false;
-function toggleParentMode(){ parentMode=!parentMode; document.getElementById("parentControls").classList.toggle("hidden",!parentMode); }
-function addShopItem(){
-    let name=document.getElementById("newItemName").value;
-    let price=parseInt(document.getElementById("newItemPrice").value);
-    let icon=document.getElementById("newItemIcon").value;
-    if(!name || isNaN(price)) return alert("שם ומחיר חובה");
-    shopItems.push({name,price,icon});
-    renderShop();
+function newQuestion(){
+
+let a=Math.floor(Math.random()*10)
+let b=Math.floor(Math.random()*10)
+
+return{
+a:a,
+b:b,
+c:a+b
 }
 
-// REWARDS
-function updateRewardList(){ document.getElementById("rewardList").innerHTML=rewards.join(" "); }
-
-// STATS
-function renderStats(){
-    let accuracy=solved===0?0:Math.round(solved/(solved+mistakes)*100);
-    document.getElementById("statsBox").innerHTML=`תרגילים: ${solved}<br>טעויות: ${mistakes}<br>אחוז הצלחה: ${accuracy}%<br>מטבעות: ${coins}`;
 }
 
-// SPIN WHEEL
+function generateQuestions(){
+
+questions=[
+
+newQuestion(),
+newQuestion(),
+newQuestion(),
+newQuestion()
+
+]
+
+document.getElementById("q1").innerText=
+questions[0].a+" + "+questions[0].b
+
+document.getElementById("q2").innerText=
+questions[1].a+" + "+questions[1].b
+
+document.getElementById("q3").innerText=
+questions[2].a+" + "+questions[2].b
+
+document.getElementById("q4").innerText=
+questions[3].a+" + "+questions[3].b
+
+document.getElementById("a1").value=""
+document.getElementById("a2").value=""
+document.getElementById("a3").value=""
+document.getElementById("a4").value=""
+
+}
+
+function checkAnswers(){
+
+for(let i=1;i<=4;i++){
+
+let val=parseInt(
+document.getElementById("a"+i).value)
+
+let box=document.getElementById("a"+i)
+
+if(val===questions[i-1].c){
+
+box.classList.remove("red")
+box.classList.add("green")
+
+score++
+coins+=2
+solved++
+
+}else{
+
+box.classList.add("red")
+box.classList.add("shake")
+
+setTimeout(()=>{
+
+box.classList.remove("shake")
+
+},300)
+
+}
+
+}
+
+progressCity()
+
+updateStats()
+
+saveGame()
+
+generateQuestions()
+
+}
+
+function progressCity(){
+
+if(solved===3)build("🌳")
+if(solved===6)build("🏠")
+if(solved===10)build("🏪")
+if(solved===15)build("🏫")
+if(solved===20)build("🏢")
+if(solved===30)build("🎡")
+
+}
+
+function build(icon){
+
+let el=document.createElement("span")
+
+el.innerText=icon
+
+city.appendChild(el)
+
+}
+
+function updateStats(){
+
+document.getElementById("score").innerText=score
+document.getElementById("coins").innerText=coins
+
+level=Math.floor(score/10)+1
+
+document.getElementById("level").innerText=level
+
+renderShop()
+
+}
+
 function spinWheel(){
-    alert("🎁 זכית בפרס!");
-    let r=["🚗","🎡","🏰","🗼","🎢"];
-    let reward=r[Math.floor(Math.random()*r.length)];
-    rewards.push(reward);
-    document.getElementById("rewardBox").innerHTML=`<div class="reward">🎁 ${reward}</div>`;
-    setTimeout(()=>document.getElementById("rewardBox").innerHTML="",3000);
+
+let rewards=[
+
+{type:"coins",value:20},
+{type:"coins",value:50},
+{type:"build",value:"🏠"},
+{type:"build",value:"🌳"},
+{type:"score",value:10}
+
+]
+
+let r=rewards[Math.floor(Math.random()*rewards.length)]
+
+if(r.type==="coins"){
+
+coins+=r.value
+alert("זכית ב "+r.value+" מטבעות")
+
 }
 
-// VERSION UPDATE
-function updateVersion(){ location.reload(); }
+if(r.type==="build"){
 
-// INSTALL APP
-function installApp(){ alert("התקנת האפליקציה (PWA)"); }
+build(r.value)
+alert("זכית בבניין")
 
-// RESET
-function resetGame(){ localStorage.clear(); location.reload(); }
+}
 
-// UI
-function updateUI(){ scoreEl.innerText=score; levelEl.innerText=level; coinsEl.innerText=coins; }
+if(r.type==="score"){
 
-// INIT
-startGame();
+score+=r.value
+alert("זכית ב "+r.value+" נקודות")
+
+}
+
+updateStats()
+
+saveGame()
+
+}
+
+function dailyReward(){
+
+let today=new Date().toDateString()
+
+let last=localStorage.getItem("dailyReward")
+
+if(last===today){
+
+alert("כבר קיבלת מתנה היום")
+
+return
+
+}
+
+coins+=30
+
+alert("קיבלת 30 מטבעות 🎁")
+
+localStorage.setItem("dailyReward",today)
+
+updateStats()
+
+saveGame()
+
+}
+
+const shop=[
+
+{n:"עץ",p:10,i:"🌳"},
+{n:"בית",p:20,i:"🏠"},
+{n:"חנות",p:30,i:"🏪"},
+{n:"בית ספר",p:40,i:"🏫"},
+{n:"בניין",p:50,i:"🏢"},
+{n:"פארק",p:20,i:"🌲"},
+{n:"גלגל ענק",p:60,i:"🎡"},
+{n:"טירה",p:70,i:"🏰"},
+{n:"מגדל",p:80,i:"🗼"}
+
+]
+
+function renderShop(){
+
+let html=""
+
+shop.forEach((item,i)=>{
+
+let color=coins>=item.p?"green":"red"
+
+html+=`
+
+<div class="shopItem">
+
+${item.i}
+
+<br>
+
+${item.n}
+
+<br>
+
+${item.p}
+
+<br>
+
+<button class="${color}"
+onclick="buy(${i})">
+
+קנה
+
+</button>
+
+</div>
+
+`
+
+})
+
+document.getElementById("shopItems").innerHTML=html
+
+}
+
+function buy(i){
+
+if(coins<shop[i].p)return
+
+coins-=shop[i].p
+
+build(shop[i].i)
+
+updateStats()
+
+saveGame()
+
+}
+
+generateQuestions()
+
+renderShop()
