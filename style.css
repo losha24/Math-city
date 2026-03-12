@@ -1,74 +1,145 @@
 body{
-    font-family: Arial;
-    background:#eef5ff;
-    text-align:center;
-    margin:0;
+font-family:Arial;
+margin:0;
+background:#f2f9ff;
+text-align:center;
 }
 
 header{
-    background:#4CAF50;
-    color:white;
-    padding:10px;
-    display:flex;
-    flex-direction: column;
-    align-items:center;
+background:#3fa34d;
+padding:10px;
+color:white;
 }
 
-.logo{ width:180px; }
-.logo-small{ width:100px; }
-
-.status-bar{
-    background:#b3e5fc;
-    padding:5px;
-    width:90%;
-    margin-top:5px;
-    border-radius:5px;
+.logoBox{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
 }
 
-.screen{ display:none; }
-.active{ display:block; }
+.logo{
+height:45px;
+}
+
+.statusBar{
+
+background:#8fd3ff;
+padding:8px;
+font-size:18px;
+
+}
+
+.buttons{
+
+margin:10px;
+
+}
+
+.buttons button{
+
+padding:8px 14px;
+margin:5px;
+border:none;
+border-radius:10px;
+background:#3fa34d;
+color:white;
+
+}
 
 .city{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(60px,1fr));
-    gap:8px;
-    justify-content:center;
-    margin:10px;
-    font-size:30px;
+
+font-size:34px;
+margin:10px;
+
 }
 
-.exercise{
-    display:inline-block;
-    margin:10px;
+.questions{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
+
 }
 
-.answer{
-    width:60px;
-    padding:5px;
-    text-align:center;
+.qBox{
+
+background:white;
+padding:10px;
+border-radius:10px;
+box-shadow:0 2px 4px rgba(0,0,0,0.2);
+
 }
 
-button{
-    padding:10px;
-    margin:5px;
-    font-size:16px;
-    border-radius:8px;
-    border:none;
-    background:#4CAF50;
-    color:white;
+.qBox input{
+
+width:50px;
+font-size:18px;
+text-align:center;
+
 }
 
-button.red{ background:#f44336; }
+.checkBtn{
 
-.gameButtons{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
-    gap:5px;
-    margin:10px 0;
+margin:10px;
+padding:10px 20px;
+font-size:18px;
+background:#3fa34d;
+color:white;
+border:none;
+border-radius:10px;
+
 }
 
-.parentControls.hidden{ display:none; }
+#shopItems{
 
-.reward{ background:linear-gradient(45deg,#ffeb3b,#ff9800); padding:10px; border-radius:10px; margin:10px; }
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:10px;
 
-footer{ margin-top:20px; padding:10px; font-size:14px; color:#555; }
+}
+
+.shopItem{
+
+background:white;
+border-radius:10px;
+padding:10px;
+box-shadow:0 2px 4px rgba(0,0,0,0.2);
+
+}
+
+.red{
+background:#ff6b6b;
+color:white;
+}
+
+.green{
+background:#3fa34d;
+color:white;
+}
+
+.shake{
+
+animation:shake .3s;
+
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0)}
+25%{transform:translateX(-5px)}
+50%{transform:translateX(5px)}
+75%{transform:translateX(-5px)}
+100%{transform:translateX(0)}
+
+}
+
+footer{
+
+margin-top:20px;
+padding:10px;
+color:#777;
+
+}
