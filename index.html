@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math City</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<script src="js/main.js" defer></script>
+</head>
+<body>
+<div id="startScreen">
+    <img src="logo.png" alt="Math City" id="logo">
+    <h1>Math City</h1>
+    <button onclick="startGame()" class="btn start">התחל משחק</button>
+    <button onclick="resetGame()" class="btn reset">איפוס</button>
+    <button onclick="checkUpdate()" class="btn update">עדכון גרסה</button>
+</div>
+
+<div id="gameScreen" style="display:none;">
+    <div id="statsBar">
+        <span>רמה: <span id="level">1</span></span>
+        <span>נקודות: <span id="points">0</span></span>
+        <span>מטבעות: <span id="coins">0</span></span>
+    </div>
+
+    <div id="mathArea"></div>
+    <button onclick="checkAnswers()" class="btn checkAll">בדוק את כולם</button>
+    <div id="rewardText"></div>
+    <button onclick="spinReward()" class="btn reward">גלגל מזל</button>
+    <button onclick="dailyReward()" class="btn reward">מתנה יומית</button>
+
+    <div id="shop">
+        <h2>חנות</h2>
+        <div id="shopItems"></div>
+        <button onclick="toggleParentMode()" class="btn parentMode">ניהול הורים</button>
+    </div>
+
+</div>
+
+<footer>© 2026 אלכסיי זבודיסקר</footer>
+</body>
+</html>
