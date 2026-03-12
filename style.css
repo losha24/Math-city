@@ -19,8 +19,8 @@ gap:10px;
 }
 
 .logo{
-width:32px;
-height:32px;
+width:36px;
+height:36px;
 }
 
 .stats{
@@ -28,6 +28,7 @@ display:flex;
 justify-content:space-around;
 background:#b2ebf2;
 padding:10px;
+border-bottom:4px solid #00bcd4;
 }
 
 .exerciseGrid{
@@ -60,7 +61,7 @@ font-size:18px;
 
 .bar{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(5, 1fr);
 gap:10px;
 padding:10px;
 }
@@ -79,7 +80,17 @@ font-size:16px;
 font-weight:bold;
 }
 
-.bar button:active{transform:scale(0.96);}
+.blueBtn{
+background:#1976d2;
+color:white;
+border:none;
+border-radius:8px;
+padding:10px 20px;
+font-size:16px;
+margin:5px;
+}
+
+.bar button:active, .blueBtn:active{transform:scale(0.96);}
 
 #shop{
 display:grid;
@@ -96,6 +107,13 @@ border-radius:8px;
 
 .noMoney{
 background:#ffcdd2;
+}
+
+#rewards{
+padding:10px;
+background:#fff3e0;
+border-radius:8px;
+margin:10px;
 }
 
 footer{
