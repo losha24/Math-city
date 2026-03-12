@@ -11,7 +11,7 @@ color:white;
 padding:10px;
 }
 
-.logoTitle{
+.titleRow{
 display:flex;
 align-items:center;
 justify-content:center;
@@ -19,122 +19,73 @@ gap:10px;
 }
 
 .logo{
-width:70px;
-height:70px;
+width:60px;
 }
 
-.stats{
+.statsBar{
 display:flex;
 justify-content:space-around;
 background:#b2ebf2;
 padding:10px;
-border-bottom:4px solid #00bcd4;
 }
 
-.exercisesContainer{
-margin:10px;
-}
-
-.exerciseRow{
-display:flex;
-justify-content:space-around;
-margin-bottom:10px;
+.exerciseGrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
 }
 
 .exercise{
 background:white;
 padding:10px;
 border-radius:8px;
-width:45%;
 }
 
 .exercise input{
 width:60px;
 font-size:20px;
-text-align:center;
 }
 
 .correct{background:#a5d6a7;}
 .wrong{background:#ef9a9a;}
 
 .checkBtn{
-margin:10px;
 padding:10px 20px;
 font-size:18px;
 }
 
-.rewardText{
-margin-top:10px;
-font-weight:bold;
-color:#ff5722;
-}
-
-.bar{
+.buttonBar{
 display:flex;
 flex-wrap:wrap;
-justify-content:space-around;
-padding:10px;
+gap:10px;
+justify-content:center;
+margin:10px;
 }
 
-.bar button{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:6px;
+.buttonBar button{
 background:#2e7d32;
 color:white;
 border:none;
+padding:10px;
 border-radius:10px;
-padding:12px;
-font-size:16px;
-font-weight:bold;
 }
 
-.bar button:active, .blueBtn:active{transform:scale(0.96);}
-
 #shop{
-padding:10px;
-background:white;
-border-radius:8px;
-margin:10px;
-display:grid;
+display:none;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
+padding:10px;
 }
 
 .shopItem{
-padding:10px;
 background:white;
+padding:10px;
 border-radius:8px;
-margin:5px;
 cursor:pointer;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-}
-
-.shopItem.noMoney{
-background:#ef9a9a;
-}
-
-.shopItem button{
-margin-top:4px;
-font-size:14px;
-padding:2px 5px;
 }
 
 footer{
 margin-top:20px;
 font-size:12px;
-}
-
-.blueBtn{
-background:#1976d2;
-color:white;
-border:none;
-border-radius:8px;
-padding:10px 20px;
-font-size:16px;
-margin:5px;
 }
