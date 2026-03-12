@@ -1,30 +1,26 @@
 body{
 
 font-family:Arial;
-
-text-align:center;
-
-background:#f2f7ff;
-
+background:#e8f5e9;
 margin:0;
+text-align:center;
 
 }
 
 header{
 
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-gap:10px;
-
-background:#2ecc71;
-
+background:#2e7d32;
 color:white;
-
 padding:10px;
+
+}
+
+.logoTitle{
+
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
 
 }
 
@@ -34,114 +30,105 @@ width:40px;
 
 }
 
-button{
-
-background:#27ae60;
-
-color:white;
-
-border:none;
-
-padding:12px;
-
-margin:6px;
-
-border-radius:10px;
-
-font-size:16px;
-
-}
-
 .stats{
 
 display:flex;
-
 justify-content:space-around;
-
-background:#cceeff;
-
+background:#b2ebf2;
 padding:10px;
 
 }
 
-.tasks{
+.exerciseGrid{
 
 display:grid;
-
 grid-template-columns:1fr 1fr;
-
 gap:10px;
-
 padding:10px;
 
 }
 
-.task{
+.exercise{
 
 background:white;
-
 padding:10px;
-
 border-radius:8px;
 
 }
 
-.task input{
+.exercise input{
 
 width:60px;
-
+font-size:20px;
 text-align:center;
 
 }
 
 .correct{
 
-background:#b9ffb9;
+background:#a5d6a7;
 
 }
 
 .wrong{
 
-background:#ffb3b3;
-
-animation:shake 0.3s;
+background:#ef9a9a;
 
 }
 
-@keyframes shake{
+.checkBtn{
 
-0%{transform:translateX(0)}
-
-25%{transform:translateX(-5px)}
-
-50%{transform:translateX(5px)}
-
-75%{transform:translateX(-5px)}
-
-100%{transform:translateX(0)}
+margin:10px;
+padding:10px 20px;
+font-size:18px;
 
 }
 
 .bar{
 
-display:flex;
-
-flex-wrap:wrap;
-
-justify-content:center;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
 
 }
 
-.hidden{
+.bar button{
 
-display:none;
+background:#43a047;
+color:white;
+border:none;
+padding:10px;
+border-radius:8px;
+
+}
+
+#shop{
+
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+padding:10px;
+
+}
+
+.shopItem{
+
+padding:10px;
+background:white;
+border-radius:8px;
+
+}
+
+.noMoney{
+
+background:#ffcdd2;
 
 }
 
 footer{
 
 margin-top:20px;
-
 font-size:12px;
 
 }
