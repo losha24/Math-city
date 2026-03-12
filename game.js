@@ -1,5 +1,5 @@
 let level=1, points=0, coins=0, correctStreak=0
-const LEVEL_STEP=10
+const LEVEL_STEP=10, REWARD_CYCLE=20
 
 const shopItems=[
 {name:"כדור",price:10,icon:"⚽"},
@@ -10,7 +10,13 @@ const shopItems=[
 {name:"כוכב",price:40,icon:"⭐"},
 {name:"רובוט",price:50,icon:"🤖"},
 {name:"קוביה",price:35,icon:"🎲"},
-{name:"בלון",price:12,icon:"🎈"}
+{name:"בלון",price:12,icon:"🎈"},
+{name:"דג",price:18,icon:"🐟"},
+{name:"תלתן",price:22,icon:"🍀"},
+{name:"מכונית",price:45,icon:"🚗"},
+{name:"פרח",price:20,icon:"🌸"},
+{name:"כובע",price:28,icon:"🎩"},
+{name:"קשת",price:33,icon:"🏹"}
 ]
 
 function startGame(){
@@ -18,6 +24,7 @@ document.getElementById("startScreen").style.display="none"
 document.getElementById("game").style.display="block"
 loadGame()
 generateAll()
+updateRewards()
 }
 
 function saveGame(){
@@ -77,7 +84,8 @@ if(!allCorrect){return}
 points+=4; coins+=8; correctStreak+=4
 if(points>=level*LEVEL_STEP){level++; alert("🎉 עלית רמה!")}
 updateStats(); saveGame(); generateAll()
-if(correctStreak>=10){correctStreak=0; spinReward()}
+if(correctStreak>=REWARD_CYCLE){correctStreak=0; spinReward()}
+updateRewards()
 }
 
 function spinReward(){
@@ -104,6 +112,7 @@ if(coins<item.price){btn.classList.add("noMoney")}
 btn.onclick=()=>buyItem(i)
 shop.appendChild(btn)
 })
+shopItemsManagement()
 }
 
 function buyItem(i){
@@ -123,4 +132,26 @@ if(current!==data.version){
 localStorage.setItem("appVersion",data.version)
 alert("יש גרסה חדשה"); location.reload(true)
 }else{location.reload()}
+}
+
+function updateRewards(){
+let rewards=document.getElementById("rewards")
+rewards.innerHTML="פרסים שנצברו: "+coins+" מטבעות, "+points+" נקודות"
+}
+
+// ניהול הורים
+function shopItemsManagement(){
+let management=document.createElement("div")
+management.innerHTML="<b>ניהול הורים:</b><br>"
+shop.appendChild(management)
+shopItems.forEach((item,i)=>{
+let btn=document.createElement("button")
+btn.innerText="עריכה/מחיקה "+item.name
+btn.onclick=()=>{
+let price=prompt("מחיר חדש:",item.price)
+if(price)item.price=parseInt(price)
+updateStats(); openShop()
+}
+management.appendChild(btn)
+})
 }
