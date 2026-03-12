@@ -10,21 +10,17 @@ const shopItems=[
 {name:"כוכב",price:40,icon:"⭐"},
 {name:"רובוט",price:50,icon:"🤖"},
 {name:"קוביה",price:35,icon:"🎲"},
-{name:"בלון",price:12,icon:"🎈"},
-{name:"דג",price:18,icon:"🐟"},
-{name:"תלתן",price:22,icon:"🍀"},
-{name:"מכונית",price:45,icon:"🚗"},
-{name:"פרח",price:20,icon:"🌸"},
-{name:"כובע",price:28,icon:"🎩"},
-{name:"קשת",price:33,icon:"🏹"}
+{name:"בלון",price:12,icon:"🎈"}
 ]
+
+let shopVisible=false, rewardsVisible=false
 
 function startGame(){
 document.getElementById("startScreen").style.display="none"
 document.getElementById("game").style.display="block"
 loadGame()
 generateAll()
-updateRewards()
+updateStats()
 }
 
 function saveGame(){
@@ -58,34 +54,28 @@ box.classList.remove("correct","wrong")
 }
 
 function generateAll(){
-generateOne("ex1")
-generateOne("ex2")
-generateOne("ex3")
-generateOne("ex4")
+for(let i=1;i<=4;i++) generateOne("ex"+i)
 }
 
 function checkAnswers(){
 let allCorrect=true
 for(let i=1;i<=4;i++){
 let box=document.getElementById("ex"+i)
-let input=box.querySelector("input")
-let val=parseInt(input.value)
+let val=parseInt(box.querySelector("input").value)
 let ans=parseInt(box.dataset.answer)
 box.classList.remove("correct","wrong")
-if(val===ans){
-box.classList.add("correct")
-}else{
+if(val===ans) box.classList.add("correct")
+else{
 allCorrect=false
 box.classList.add("wrong")
-box.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:300})
+box.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:300})
 }
 }
-if(!allCorrect){return}
+if(!allCorrect) return
 points+=4; coins+=8; correctStreak+=4
 if(points>=level*LEVEL_STEP){level++; alert("🎉 עלית רמה!")}
 updateStats(); saveGame(); generateAll()
 if(correctStreak>=REWARD_CYCLE){correctStreak=0; spinReward()}
-updateRewards()
 }
 
 function spinReward(){
@@ -102,13 +92,20 @@ alert("מתנה יומית "+reward)
 updateStats(); saveGame()
 }
 
+function toggleShop(){
+shopVisible=!shopVisible
+let shop=document.getElementById("shop")
+shop.style.display=shopVisible?"grid":"none"
+if(shopVisible) openShop()
+}
+
 function openShop(){
 let shop=document.getElementById("shop"); shop.innerHTML=""
 shopItems.forEach((item,i)=>{
 let btn=document.createElement("button")
 btn.className="shopItem"
 btn.innerHTML=item.icon+"<br>"+item.name+"<br>"+item.price
-if(coins<item.price){btn.classList.add("noMoney")}
+if(coins<item.price) btn.classList.add("noMoney")
 btn.onclick=()=>buyItem(i)
 shop.appendChild(btn)
 })
@@ -122,36 +119,33 @@ coins-=item.price; alert("קנית "+item.name)
 updateStats(); saveGame(); openShop()
 }
 
+function shopItemsManagement(){
+let management=document.createElement("div")
+management.innerHTML="<b>ניהול הורים:</b><br>"
+document.getElementById("shop").appendChild(management)
+shopItems.forEach((item,i)=>{
+let btn=document.createElement("button")
+btn.innerText="עריכה/מחיקה "+item.name
+btn.onclick=()=>{
+let price=prompt("מחיר חדש:",item.price)
+if(price) item.price=parseInt(price)
+updateStats(); openShop()
+}
+management.appendChild(btn)
+})
+}
+
+function toggleRewards(){
+rewardsVisible=!rewardsVisible
+document.getElementById("rewards").style.display=rewardsVisible?"block":"none"
+}
+
 function resetGame(){localStorage.clear(); location.reload()}
 
 async function checkUpdate(){
 let res=await fetch("version.json?"+Date.now())
 let data=await res.json()
 let current=localStorage.getItem("appVersion")
-if(current!==data.version){
-localStorage.setItem("appVersion",data.version)
-alert("יש גרסה חדשה"); location.reload(true)
-}else{location.reload()}
-}
-
-function updateRewards(){
-let rewards=document.getElementById("rewards")
-rewards.innerHTML="פרסים שנצברו: "+coins+" מטבעות, "+points+" נקודות"
-}
-
-// ניהול הורים
-function shopItemsManagement(){
-let management=document.createElement("div")
-management.innerHTML="<b>ניהול הורים:</b><br>"
-shop.appendChild(management)
-shopItems.forEach((item,i)=>{
-let btn=document.createElement("button")
-btn.innerText="עריכה/מחיקה "+item.name
-btn.onclick=()=>{
-let price=prompt("מחיר חדש:",item.price)
-if(price)item.price=parseInt(price)
-updateStats(); openShop()
-}
-management.appendChild(btn)
-})
+if(current!==data.version){localStorage.setItem("appVersion",data.version); alert("יש גרסה חדשה"); location.reload(true)}
+else location.reload()
 }
