@@ -1,91 +1,22 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f0f8ff;
-    margin: 0;
-    text-align: center;
-}
-
-#logo {
-    width: 100px;
-    display: block;
-    margin: 10px auto;
-}
-
-h1 {
-    font-size: 2em;
-    margin: 5px 0;
-}
-
-.btn {
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1em;
-    transition: 0.2s;
-}
-
-.start { background: #0099cc; color: white; }
-.reset { background: #ff6600; color: white; }
-.update { background: #33cc33; color: white; }
-.checkAll { background: #006600; color: white; }
-.reward { background: #ffcc00; color: black; }
-.parentMode { background: #cc33ff; color: white; }
-
-.startButtons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-
-#statsBar {
-    background: #00cc66;
-    padding: 5px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-around;
-    color: white;
-    border-radius: 5px;
-    align-items: center;
-}
-
-#mathArea {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    justify-items: center;
-    margin-bottom: 10px;
-}
-
-.mathBox {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 120px;
-    border-radius: 5px;
-}
-
-.mathBox.correct { background: #99ff99; }
-.mathBox.wrong { background: #ff9999; }
-.shake { animation: shake 0.5s; }
-
-@keyframes shake {
-    0% { transform: translate(1px,0); }
-    25% { transform: translate(-1px,0); }
-    50% { transform: translate(1px,0); }
-    75% { transform: translate(-1px,0); }
-    100% { transform: translate(0,0); }
-}
-
-#shopItems {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    justify-items: center;
-}
-
-.shopItem {
-    border: 1px solid #888;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100px;
-    text-align: center;
-}
-
-.shopItem.disabled { color: red; opacity: 0.6; }
+body { font-family: Arial, sans-serif; background: #f0f8ff; margin: 0; text-align: center; }
+#logo { width: 150px; display:block; margin:auto; }
+h1 { margin:0; font-size:2em; }
+.btn { padding:10px 20px; margin:5px; border:none; border-radius:5px; cursor:pointer; transition:0.2s; }
+.start{ background:#0099cc; color:white; }
+.reset{ background:#ff6600; color:white; }
+.update{ background:#33cc33; color:white; }
+.checkAll{ background:#006600; color:white; }
+.reward{ background:#ffcc00; color:black; }
+.parentMode{ background:#cc33ff; color:white; }
+.startButtons{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+#topBar{ background:#00cc66; padding:10px; display:flex; align-items:center; justify-content:center; gap:10px; color:white; }
+#statsBar{ background:#00cc66; padding:5px; margin-bottom:10px; display:flex; justify-content:space-around; color:white; border-radius:5px; }
+#mathArea{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; justify-items:center; margin-bottom:10px; }
+.mathBox{ border:1px solid #ccc; padding:10px; width:120px; border-radius:5px; }
+.mathBox.correct{ background:#99ff99; }
+.mathBox.wrong{ background:#ff9999; }
+.shake{ animation:shake 0.5s; }
+@keyframes shake{0%{transform:translate(1px,0);}25%{transform:translate(-1px,0);}50%{transform:translate(1px,0);}75%{transform:translate(-1px,0);}100%{transform:translate(0,0);}}
+#shopItems{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; justify-items:center; }
+.shopItem{ border:1px solid #888; padding:10px; border-radius:5px; width:100px; text-align:center; }
+.shopItem.disabled{ color:red; opacity:0.6; }
