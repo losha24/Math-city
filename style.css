@@ -1,91 +1,14 @@
-body{
-font-family:Arial;
-background:#e8f5e9;
-margin:0;
-text-align:center;
-}
+body { font-family: Arial, sans-serif; background:#f0f8ff; margin:0; text-align:center; }
+#logo { width:100px; margin:10px auto; display:block; }
+.btn { padding:10px 20px; margin:5px; border:none; cursor:pointer; border-radius:5px; }
+.start { background:#0099ff; color:white; }
+.reset { background:#ff6600; color:white; }
+.update { background:#33cc33; color:white; }
+.reward { background:#ffcc00; color:black; }
 
-header{
-background:#2e7d32;
-color:white;
-padding:10px;
-}
-
-.titleRow{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-}
-
-.logo{
-width:60px;
-}
-
-.statsBar{
-display:flex;
-justify-content:space-around;
-background:#b2ebf2;
-padding:10px;
-}
-
-.exerciseGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-padding:10px;
-}
-
-.exercise{
-background:white;
-padding:10px;
-border-radius:8px;
-}
-
-.exercise input{
-width:60px;
-font-size:20px;
-}
-
-.correct{background:#a5d6a7;}
-.wrong{background:#ef9a9a;}
-
-.checkBtn{
-padding:10px 20px;
-font-size:18px;
-}
-
-.buttonBar{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-justify-content:center;
-margin:10px;
-}
-
-.buttonBar button{
-background:#2e7d32;
-color:white;
-border:none;
-padding:10px;
-border-radius:10px;
-}
-
-#shop{
-display:none;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-padding:10px;
-}
-
-.shopItem{
-background:white;
-padding:10px;
-border-radius:8px;
-cursor:pointer;
-}
-
-footer{
-margin-top:20px;
-font-size:12px;
-}
+#statsBar { background:#00ccff; padding:5px; margin-bottom:10px; display:flex; justify-content:space-around; color:white; }
+.mathBox { border:1px solid #ccc; display:inline-block; width:120px; padding:10px; margin:5px; border-radius:5px; }
+.correct { background:#99ff99; }
+.wrong { background:#ff9999; }
+.shake { animation: shake 0.5s; }
+@keyframes shake { 0%{ transform: translate(1px,0) } 25%{ transform: translate(-1px,0) } 50%{ transform: translate(1px,0) } 75%{ transform: translate(-1px,0) } 100%{ transform: translate(0,0) } }
