@@ -1,7 +1,7 @@
 body { font-family: Arial, sans-serif; background:#f0f8ff; margin:0; text-align:center; }
 #logo { width:100px; margin:10px auto; display:block; }
 .btn { padding:10px 20px; margin:5px; border:none; cursor:pointer; border-radius:5px; font-size:1em; }
-.start { background:#0099ff; color:white; }
+.start { background:#009900; color:white; }
 .reset { background:#ff6600; color:white; }
 .update { background:#33cc33; color:white; }
 .reward { background:#ffcc00; color:black; }
