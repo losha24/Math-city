@@ -1,17 +1,189 @@
-let score=0
+let points=0
 let coins=0
 let level=1
 let solved=0
 
-let questions=[]
-
 function startGame(){
 
-document.getElementById("startScreen").style.display="none"
-document.getElementById("gameScreen").style.display="block"
+document.getElementById("menu").classList.add("hidden")
+document.getElementById("game").classList.remove("hidden")
 
-generateQuestions()
+generate()
+
+}
+
+function generate(){
+
+for(let i=1;i<=4;i++){
+
+let a=Math.floor(Math.random()*10)+1
+let b=Math.floor(Math.random()*10)+1
+
+document.getElementById("q"+i).value=a+"+"+b
+document.getElementById("q"+i).dataset.answer=a+b
+
+document.getElementById("a"+i).value=""
+
+}
+
+}
+
+function checkAnswers(){
+
+for(let i=1;i<=4;i++){
+
+let q=document.getElementById("q"+i)
+let a=document.getElementById("a"+i)
+
+if(Number(a.value)==Number(q.dataset.answer)){
+
+points++
+coins++
+solved++
+
+a.style.background="lightgreen"
+
+}else{
+
+a.style.background="salmon"
+a.classList.add("shake")
+
+}
+
+}
+
 updateStats()
+generate()
+
+}
+
+function updateStats(){
+
+if(points>=level*10) level++
+
+document.getElementById("points").innerText=points
+document.getElementById("coins").innerText=coins
+document.getElementById("level").innerText=level
+
+localStorage.setItem("points",points)
+localStorage.setItem("coins",coins)
+localStorage.setItem("level",level)
+
+}
+
+function openShop(){
+
+let shop=document.getElementById("shop")
+
+shop.classList.toggle("hidden")
+
+shop.innerHTML=""
+
+let items=[
+
+["🍫",5],
+["🎮",20],
+["📚",15],
+["🍭",3],
+["⭐",10],
+["🎁",25],
+["🚗",30],
+["⚽",12],
+["🧩",18]
+
+]
+
+items.forEach(i=>{
+
+let div=document.createElement("div")
+
+div.className="shopItem"
+
+let can=coins>=i[1]
+
+div.innerHTML=`
+<div>${i[0]}</div>
+<div>${i[1]} מטבעות</div>
+<button class="${can?'':'red'}"
+onclick="buy(${i[1]})">קנה</button>
+`
+
+shop.appendChild(div)
+
+})
+
+}
+
+function buy(price){
+
+if(coins>=price){
+
+coins-=price
+updateStats()
+
+}
+
+}
+
+function spinWheel(){
+
+if(solved<10){
+
+alert("צריך 10 פתרונות")
+
+return
+
+}
+
+solved=0
+
+let prize=Math.floor(Math.random()*10)+5
+
+coins+=prize
+
+alert("זכית ב "+prize+" מטבעות!")
+
+updateStats()
+
+}
+
+function dailyGift(){
+
+let last=localStorage.getItem("gift")
+
+let today=new Date().toDateString()
+
+if(last===today){
+
+alert("כבר קיבלת היום")
+
+return
+
+}
+
+let gift=10
+
+coins+=gift
+
+localStorage.setItem("gift",today)
+
+alert("קיבלת "+gift+" מטבעות")
+
+updateStats()
+
+}
+
+function showStats(){
+
+let box=document.getElementById("statsBox")
+
+box.classList.toggle("hidden")
+
+box.innerHTML=`
+רמה ${level}<br>
+נקודות ${points}<br>
+מטבעות ${coins}
+`
 
 }
 
@@ -22,96 +194,24 @@ location.reload()
 
 }
 
-function newQuestion(){
+function checkUpdate(){
 
-let a=Math.floor(Math.random()*10)
-let b=Math.floor(Math.random()*10)
+fetch("version.json")
 
-return {a:a,b:b,c:a+b}
+.then(r=>r.json())
 
-}
+.then(v=>{
 
-function generateQuestions(){
+if(v.version!="1.0"){
 
-questions=[
-newQuestion(),
-newQuestion(),
-newQuestion(),
-newQuestion()
-]
-
-document.getElementById("q1").innerText=questions[0].a+"+"+questions[0].b
-document.getElementById("q2").innerText=questions[1].a+"+"+questions[1].b
-document.getElementById("q3").innerText=questions[2].a+"+"+questions[2].b
-document.getElementById("q4").innerText=questions[3].a+"+"+questions[3].b
-
-}
-
-function checkAnswers(){
-
-for(let i=1;i<=4;i++){
-
-let val=parseInt(document.getElementById("a"+i).value)
-
-if(val===questions[i-1].c){
-
-score++
-coins+=2
-solved++
+location.reload()
 
 }else{
 
-document.getElementById("a"+i).classList.add("red")
+location.reload()
 
 }
 
-}
-
-generateQuestions()
-
-updateStats()
-
-}
-
-function updateStats(){
-
-document.getElementById("score").innerText=score
-document.getElementById("coins").innerText=coins
-
-level=Math.floor(score/10)+1
-
-document.getElementById("level").innerText=level
-
-}
-
-function spinWheel(){
-
-let r=Math.floor(Math.random()*3)
-
-if(r===0){coins+=20}
-if(r===1){score+=10}
-if(r===2){coins+=50}
-
-alert("קיבלת פרס!")
-
-updateStats()
-
-}
-
-function dailyReward(){
-
-coins+=30
-
-alert("קיבלת מתנה יומית")
-
-updateStats()
-
-}
-
-function toggleShop(){
-
-let s=document.getElementById("shop")
-
-s.style.display=s.style.display==="block"?"none":"block"
+})
 
 }
