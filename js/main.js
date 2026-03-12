@@ -1,5 +1,19 @@
-let level = 1, points = 0, coins = 0;
-let correctAnswersCount = 0, parentMode = false;
+// סטטיסטיקות
+let level = 1, points = 0, coins = 0, correctAnswersCount = 0;
+let parentMode = false;
+
+// הגדרת חנות
+let shopItems = [
+    {id:1, name:"פריט 1", price:10, icon:"⭐"},
+    {id:2, name:"פריט 2", price:15, icon:"🍎"},
+    {id:3, name:"פריט 3", price:20, icon:"🎁"},
+    {id:4, name:"פריט 4", price:25, icon:"💎"},
+    {id:5, name:"פריט 5", price:30, icon:"🍀"},
+    {id:6, name:"פריט 6", price:12, icon:"🔔"},
+    {id:7, name:"פריט 7", price:18, icon:"⚡"},
+    {id:8, name:"פריט 8", price:22, icon:"🎉"},
+    {id:9, name:"פריט 9", price:27, icon:"💡"}
+];
 
 function startGame() {
     document.getElementById('startScreen').style.display='none';
@@ -15,107 +29,73 @@ function generateExercises() {
     for(let i=0;i<4;i++){
         const div = document.createElement('div');
         div.className='mathBox';
-        div.innerHTML = `<span id="ex${i}">${Math.floor(Math.random()*10)}+${Math.floor(Math.random()*10)}</span>
+        div.innerHTML=`<span id="ex${i}">${Math.floor(Math.random()*10)}+${Math.floor(Math.random()*10)}</span>
         <input type="number" id="ans${i}" />`;
         area.appendChild(div);
     }
 }
 
 function checkAnswers() {
-    let allCorrect=true;
+    correctAnswersCount=0;
     for(let i=0;i<4;i++){
         const ex = document.getElementById(`ex${i}`);
         const ans = document.getElementById(`ans${i}`);
         const correct = eval(ex.textContent);
-        if(parseInt(ans.value)===correct){
+        if(Number(ans.value) === correct){
             ex.parentElement.classList.add('correct');
             ex.parentElement.classList.remove('wrong','shake');
-            points++; coins++; correctAnswersCount++;
+            correctAnswersCount++;
+            points++;
+            coins += 2;
         } else {
             ex.parentElement.classList.add('wrong','shake');
-            ex.parentElement.classList.remove('correct');
-            allCorrect=false;
+            setTimeout(()=>{ex.parentElement.classList.remove('shake');},500);
         }
-        ans.value='';
-    }
-    if(correctAnswersCount>=14){
-        spinReward();
-        correctAnswersCount=0;
     }
     updateStats();
+    if(correctAnswersCount===4){
+        // גלגל מזל כל 14 פתרונות נכונים
+        if(points % 14 === 0) rewardText("קיבלת מתנה מגלגל מזל!");
+    }
     generateExercises();
 }
 
-function updateStats() {
+function updateStats(){
     document.getElementById('level').textContent = level;
     document.getElementById('points').textContent = points;
     document.getElementById('coins').textContent = coins;
 }
 
-function spinReward(){
-    document.getElementById('rewardText').textContent = "קיבלת פרס! 🎁";
-}
-
-function dailyReward(){
-    document.getElementById('rewardText').textContent = "מתנה יומית! 🎁";
-}
-
-const shopItemsData=[
-    {name:"פריט 1",price:5,icon:"🎯"},
-    {name:"פריט 2",price:8,icon:"🛡️"},
-    {name:"פריט 3",price:3,icon:"💎"},
-    {name:"פריט 4",price:7,icon:"⚡"},
-    {name:"פריט 5",price:6,icon:"🔥"},
-    {name:"פריט 6",price:4,icon:"🍎"},
-    {name:"פריט 7",price:9,icon:"🎵"},
-    {name:"פריט 8",price:2,icon:"🌟"},
-    {name:"פריט 9",price:1,icon:"🪙"},
-];
-
 function loadShop(){
-    const div=document.getElementById('shopItems');
-    div.innerHTML='';
-    shopItemsData.forEach((item,i)=>{
-        const it = document.createElement('div');
-        it.className='shopItem';
-        if(coins<item.price) it.classList.add('disabled');
-        it.innerHTML=`<span>${item.icon}</span><br>${item.name}<br>${item.price} 💰`;
+    const container = document.getElementById('shopItems');
+    container.innerHTML='';
+    shopItems.forEach(item=>{
+        const div = document.createElement('div');
+        div.className='shopItem';
+        if(coins < item.price) div.classList.add('disabled');
+        div.innerHTML = `${item.icon}<br>${item.name}<br>${item.price}💰`;
         if(parentMode){
-            it.innerHTML+=`<br><button onclick="editItem(${i})">ערוך</button>
-            <button onclick="deleteItem(${i})">מחק</button>`;
+            const edit = document.createElement('button');
+            edit.textContent='ערוך';
+            edit.onclick = ()=>editItem(item.id);
+            div.appendChild(edit);
+            const del = document.createElement('button');
+            del.textContent='מחק';
+            del.onclick = ()=>deleteItem(item.id);
+            div.appendChild(del);
         }
-        div.appendChild(it);
+        container.appendChild(div);
     });
 }
 
-function toggleParentMode(){
-    parentMode=!parentMode;
-    loadShop();
-}
+function toggleParentMode(){ parentMode=!parentMode; loadShop(); }
 
-function editItem(index){
-    const name=prompt("שם פריט:",shopItemsData[index].name);
-    const price=prompt("מחיר:",shopItemsData[index].price);
-    if(name) shopItemsData[index].name=name;
-    if(price) shopItemsData[index].price=parseInt(price);
-    loadShop();
-}
+function spinReward(){ rewardText("קיבלת מתנה מגלגל מזל!"); }
+function dailyReward(){ rewardText("קיבלת מתנה יומית!"); }
+function rewardText(msg){ document.getElementById('rewardText').textContent=msg; }
 
-function deleteItem(index){
-    if(confirm("למחוק פריט?")) shopItemsData.splice(index,1);
-    loadShop();
-}
+function resetGame(){ level=1; points=0; coins=0; updateStats(); generateExercises(); }
+function checkUpdate(){ location.reload(); } // ניתן לשדרג בעתיד לעדכון מקצועי
 
-function resetGame(){
-    level=1; points=0; coins=0; correctAnswersCount=0;
-    updateStats();
-    generateExercises();
-}
-
-function checkUpdate(){
-    fetch('version.json').then(r=>r.json()).then(v=>{
-        const current="1.0.2";
-        if(v.version!==current){alert("גרסה חדשה מותקנת"); location.reload();} 
-        else location.reload();
-    });
-}
+function editItem(id){ alert("ערוך פריט "+id); }
+function deleteItem(id){ alert("מחק פריט "+id); }
