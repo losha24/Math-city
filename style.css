@@ -90,16 +90,6 @@ font-size:16px;
 font-weight:bold;
 }
 
-.blueBtn{
-background:#1976d2;
-color:white;
-border:none;
-border-radius:8px;
-padding:10px 20px;
-font-size:16px;
-margin:5px;
-}
-
 .bar button:active, .blueBtn:active{transform:scale(0.96);}
 
 #shop{
@@ -118,13 +108,33 @@ background:white;
 border-radius:8px;
 margin:5px;
 cursor:pointer;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
 }
 
 .shopItem.noMoney{
 background:#ef9a9a;
 }
 
+.shopItem button{
+margin-top:4px;
+font-size:14px;
+padding:2px 5px;
+}
+
 footer{
 margin-top:20px;
 font-size:12px;
+}
+
+.blueBtn{
+background:#1976d2;
+color:white;
+border:none;
+border-radius:8px;
+padding:10px 20px;
+font-size:16px;
+margin:5px;
 }
