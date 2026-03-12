@@ -19,8 +19,8 @@ gap:10px;
 }
 
 .logo{
-width:50px;
-height:50px;
+width:70px;
+height:70px;
 }
 
 .stats{
@@ -31,11 +31,21 @@ padding:10px;
 border-bottom:4px solid #00bcd4;
 }
 
+.exercisesContainer{
+margin:10px;
+}
+
+.exerciseRow{
+display:flex;
+justify-content:space-around;
+margin-bottom:10px;
+}
+
 .exercise{
 background:white;
 padding:10px;
-margin:10px;
 border-radius:8px;
+width:45%;
 }
 
 .exercise input{
@@ -53,8 +63,15 @@ padding:10px 20px;
 font-size:18px;
 }
 
+.rewardText{
+margin-top:10px;
+font-weight:bold;
+color:#ff5722;
+}
+
 .bar{
 display:flex;
+flex-wrap:wrap;
 justify-content:space-around;
 padding:10px;
 }
@@ -73,8 +90,8 @@ font-size:16px;
 font-weight:bold;
 }
 
-.greenBtn{
-background:#388e3c;
+.blueBtn{
+background:#1976d2;
 color:white;
 border:none;
 border-radius:8px;
@@ -83,13 +100,16 @@ font-size:16px;
 margin:5px;
 }
 
-.bar button:active, .greenBtn:active{transform:scale(0.96);}
+.bar button:active, .blueBtn:active{transform:scale(0.96);}
 
 #shop{
 padding:10px;
 background:white;
 border-radius:8px;
 margin:10px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
 }
 
 .shopItem{
@@ -97,6 +117,11 @@ padding:10px;
 background:white;
 border-radius:8px;
 margin:5px;
+cursor:pointer;
+}
+
+.shopItem.noMoney{
+background:#ef9a9a;
 }
 
 footer{
