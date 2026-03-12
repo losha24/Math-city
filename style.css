@@ -31,16 +31,10 @@ padding:10px;
 border-bottom:4px solid #00bcd4;
 }
 
-.exerciseGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-padding:10px;
-}
-
 .exercise{
 background:white;
 padding:10px;
+margin:10px;
 border-radius:8px;
 }
 
@@ -60,9 +54,8 @@ font-size:18px;
 }
 
 .bar{
-display:grid;
-grid-template-columns:repeat(6, 1fr);
-gap:10px;
+display:flex;
+justify-content:space-around;
 padding:10px;
 }
 
@@ -80,8 +73,8 @@ font-size:16px;
 font-weight:bold;
 }
 
-.blueBtn{
-background:#1976d2;
+.greenBtn{
+background:#388e3c;
 color:white;
 border:none;
 border-radius:8px;
@@ -90,30 +83,20 @@ font-size:16px;
 margin:5px;
 }
 
-.bar button:active, .blueBtn:active{transform:scale(0.96);}
+.bar button:active, .greenBtn:active{transform:scale(0.96);}
 
 #shop{
-display:grid;
-grid-template-columns:repeat(3, 1fr);
-gap:10px;
 padding:10px;
+background:white;
+border-radius:8px;
+margin:10px;
 }
 
 .shopItem{
 padding:10px;
 background:white;
 border-radius:8px;
-}
-
-.noMoney{
-background:#ffcdd2;
-}
-
-#rewards{
-padding:10px;
-background:#fff3e0;
-border-radius:8px;
-margin:10px;
+margin:5px;
 }
 
 footer{
