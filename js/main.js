@@ -1,8 +1,6 @@
-// נתוני משחק
 let level = 1, points = 0, coins = 0;
 let correctAnswersCount = 0, parentMode = false;
 
-// התחלת המשחק
 function startGame() {
     document.getElementById('startScreen').style.display='none';
     document.getElementById('gameScreen').style.display='block';
@@ -11,7 +9,6 @@ function startGame() {
     loadShop();
 }
 
-// יצירת 4 תרגילים 2x2
 function generateExercises() {
     const area = document.getElementById('mathArea');
     area.innerHTML = '';
@@ -24,7 +21,6 @@ function generateExercises() {
     }
 }
 
-// בדיקה של כל התרגילים
 function checkAnswers() {
     let allCorrect=true;
     for(let i=0;i<4;i++){
@@ -50,24 +46,20 @@ function checkAnswers() {
     generateExercises();
 }
 
-// עדכון סטטיסטיקה
 function updateStats() {
     document.getElementById('level').textContent = level;
     document.getElementById('points').textContent = points;
     document.getElementById('coins').textContent = coins;
 }
 
-// גלגל מזל
 function spinReward(){
     document.getElementById('rewardText').textContent = "קיבלת פרס! 🎁";
 }
 
-// מתנה יומית
 function dailyReward(){
     document.getElementById('rewardText').textContent = "מתנה יומית! 🎁";
 }
 
-// חנות
 const shopItemsData=[
     {name:"פריט 1",price:5,icon:"🎯"},
     {name:"פריט 2",price:8,icon:"🛡️"},
@@ -114,14 +106,12 @@ function deleteItem(index){
     loadShop();
 }
 
-// איפוס משחק
 function resetGame(){
     level=1; points=0; coins=0; correctAnswersCount=0;
     updateStats();
     generateExercises();
 }
 
-// עדכון גרסה
 function checkUpdate(){
     fetch('version.json').then(r=>r.json()).then(v=>{
         const current="1.0.2";
