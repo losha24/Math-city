@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.3</title>
+<title>Math City 1.0.4</title>
 <style>
 body{margin:0;font-family:Arial;text-align:center;background:#f2f2f2;}
 header{display:flex;flex-direction:column;align-items:center;}
@@ -32,6 +32,7 @@ input{width:60px;font-size:18px;text-align:center;}
 .buy-green{background:#2ecc71;color:white;}
 .buy-red{background:#e74c3c;color:white;}
 .message{margin-top:10px;font-weight:bold;color:#2c3e50;}
+select{font-size:16px;}
 footer{margin-top:20px;font-size:12px;color:#555;}
 </style>
 </head>
@@ -84,7 +85,7 @@ footer{margin-top:20px;font-size:12px;color:#555;}
 <div id="statsPanel" class="statsPanel"></div>
 
 <footer>
-&copy; 2026 אלכסיי זבודיסקר - גרסה 1.0.3
+&copy; 2026 אלכסיי זבודיסקר - גרסה 1.0.4
 </footer>
 
 <script>
@@ -120,7 +121,7 @@ let a=Math.floor(Math.random()*10);
 let b=Math.floor(Math.random()*10);
 let div=document.createElement("div");
 div.className="question";
-div.innerHTML=`${a}+${b}=<input data-answer="${a+b}">`;
+div.innerHTML=`${a}+${b}=<input data-answer="${a+b}" data-attempted="false">`;
 questions.appendChild(div);
 }
 }
@@ -136,7 +137,7 @@ let ans=parseInt(input.value);let real=parseInt(input.dataset.answer);
 if(ans===real){
 input.parentElement.classList.remove("wrong");input.parentElement.classList.add("correct");correctCount++;
 }else{
-if(!input.dataset.attempted){
+if(input.dataset.attempted=="false"){
 input.dataset.attempted="true";
 input.parentElement.classList.add("wrong");
 setTimeout(()=>input.parentElement.classList.remove("wrong"),500);
@@ -168,12 +169,17 @@ data.items.forEach((item,i)=>{
 let canBuy=data.coins>=item.price;
 let div=document.createElement("div");div.className="item";
 div.innerHTML=`<div>${item.name}</div><div>${item.price}🪙</div><button class="${canBuy?'buy-green':'buy-red'}" onclick="buy(${i})">קנה</button>`;
-if(parentMode){let iconOptions="";icons.forEach((ic,j)=>iconOptions+=`${j+1}:${ic} `);div.innerHTML+=`<button onclick="editItem(${i})">✏️</button><button onclick="deleteItem(${i})">🗑</button>`;}
+if(parentMode){
+let iconOptions="<select id='iconSelect'>";
+icons.forEach((ic,j)=>iconOptions+=`<option value='${ic}'>${ic}</option>`);
+iconOptions+="</select>";
+div.innerHTML+=`<button onclick="editItem(${i})">✏️</button><button onclick="deleteItem(${i})">🗑</button><br>בחר אייקון:${iconOptions}`;
+}
 shopItems.appendChild(div);
 });
 }
 function buy(i){let item=data.items[i];if(data.coins<item.price)return;data.coins-=item.price;msg.innerText="קנית "+item.name;save();updateStats();renderShop();}
-function addItem(){if(!parentMode)return;let name=prompt("שם מתנה");if(!name)return;let price=parseInt(prompt("מחיר"));let icon=parseInt(prompt("בחר מספר אייקון 1-15"));icon=icons[icon-1]||"🎁";data.items.push({name:icon+" "+name,price:price});save();renderShop();}
+function addItem(){if(!parentMode)return;let name=prompt("שם מתנה");if(!name)return;let price=parseInt(prompt("מחיר"));let icon=document.getElementById("iconSelect")?.value||"🎁";data.items.push({name:icon+" "+name,price:price});save();renderShop();}
 function editItem(i){let item=data.items[i];let name=prompt("שם חדש",item.name);let price=prompt("מחיר חדש",item.price);item.name=name;item.price=parseInt(price);save();renderShop();}
 function deleteItem(i){if(!confirm("למחוק?"))return;data.items.splice(i,1);save();renderShop();}
 
