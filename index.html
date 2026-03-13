@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.9</title>
+<title>Math City 1.0.10</title>
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -17,7 +17,7 @@ header h1{margin:0}
 .buttons{margin-top:10px}
 .buttons button{margin:4px;padding:10px 16px;border:none;border-radius:8px;background:#4CAF50;color:white;font-weight:bold;cursor:pointer}
 .buttons button.active{background:#e53935}
-#installBtn{margin-left:10px}
+#installBtn{background:#2196F3;color:white;}
 #game{display:block;padding:20px}
 #topbar{background:#e3f2fd;padding:10px;margin-bottom:15px;font-weight:bold}
 .exercise{margin:10px;font-size:20px}
@@ -50,7 +50,7 @@ footer{margin-top:20px;color:#666}
 <button onclick="toggleShop(this)">חנות</button>
 <button onclick="togglePrizes(this)">פרסים</button>
 <button onclick="toggleStats(this)">סטטיסטיקה</button>
-<button id="installBtn" style="display:none" onclick="installApp()">התקנת אפליקציה</button>
+<button id="installBtn">התקנת אפליקציה</button>
 <button onclick="dailyReward()">פרס יומי</button>
 <button onclick="spinWheel()">גלגל מזל</button>
 <button onclick="resetGame()">איפוס</button>
@@ -94,39 +94,30 @@ footer{margin-top:20px;color:#666}
 </div>
 
 <footer>
-© Math City – Version 1.0.9 – אלכסיי זבודיסקר
+© Math City – Version 1.0.10 – אלכסיי זבודיסקר
 </footer>
 
 <script>
-// --------- Service Worker ----------
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js')
-  .then(()=>console.log('Service Worker Registered'))
-  .catch(err=>console.log('SW registration failed:',err))
-}
+// Service Worker
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>console.log('SW Registered')).catch(err=>console.log(err))}
 
-// --------- PWA Install ----------
+// --- PWA Install ---
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
-window.addEventListener('beforeinstallprompt', (e) => {
+window.addEventListener('beforeinstallprompt',(e)=>{
   e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'inline-block';
+  deferredPrompt=e;
 });
-function installApp() {
+installBtn.addEventListener('click',()=>{
   if(deferredPrompt){
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
-    });
-  }
-}
+    deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
+  } else {alert("האפליקציה כבר מותקנת או לא נתמכת");}
+});
 
-// --------- Variables ----------
+// --- Variables ---
 let coins=0, points=0, level=1;
-let correct=0, wrong=0, solved=0;
-let correctForLevel=0;
+let correct=0, wrong=0, solved=0, correctForLevel=0;
 let prizes=[], exercises=[];
 let shopItems=[
 {name:"🎁 פרס",price:20},{name:"🎮 משחק",price:30},{name:"🚗 מכונית",price:25},
@@ -134,7 +125,7 @@ let shopItems=[
 {name:"🧸 דובי",price:22},{name:"🚀 טיל",price:35},{name:"🎨 צבעים",price:17}
 ];
 
-// --------- Local Storage ----------
+// --- Local Storage ---
 function save(){
 localStorage.setItem("coins",coins)
 localStorage.setItem("points",points)
@@ -144,7 +135,6 @@ localStorage.setItem("wrong",wrong)
 localStorage.setItem("solved",solved)
 localStorage.setItem("prizes",JSON.stringify(prizes))
 }
-
 function load(){
 coins=parseInt(localStorage.getItem("coins"))||0
 points=parseInt(localStorage.getItem("points"))||0
@@ -160,34 +150,27 @@ generateExercises()
 renderShop()
 }
 
-// --------- Bar Update ----------
+// --- Bar Update ---
 function updateBar(){
 document.getElementById("coins").textContent=coins
 document.getElementById("points").textContent=points
 document.getElementById("level").textContent=level
 }
 
-// --------- Refresh / Update ----------
+// --- Refresh / Update ---
+const currentVersion="1.0.10"
 function refreshOrUpdate(){
-    const currentVersion = "1.0.9";
-    fetch("version.json")
-    .then(res => res.json())
-    .then(data => {
-        if(data.version && data.version !== currentVersion){
-            alert(`גרסה עודכנה! גרסה חדשה: ${data.version}`);
-            location.reload();
-        } else {
-            location.reload();
-        }
-    })
-    .catch(err => { location.reload(); });
+fetch("version.json").then(res=>res.json()).then(data=>{
+if(data.version && data.version!==currentVersion){
+alert(`גרסה עודכנה! גרסה חדשה: ${data.version}`);
+location.reload();
+}else{location.reload();}
+}).catch(err=>location.reload());
 }
 
-// --------- Exercises ----------
+// --- Exercises ---
 function generateExercises(){
-exercises=[]
-let box=document.getElementById("exercises")
-box.innerHTML=""
+exercises=[]; let box=document.getElementById("exercises"); box.innerHTML=""
 let difficulty=10 + (level-1)*5
 for(let i=0;i<3;i++){
 let a=Math.floor(Math.random()*difficulty)+1
@@ -196,10 +179,7 @@ let op=Math.random()<0.5?"+":"-"
 if(op=="-" && b>a){let tmp=a;a=b;b=tmp}
 let ans=op=="+"?a+b:a-b
 exercises.push({value:ans,done:false,attempted:false})
-box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`
-}
-
-}
+box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`}}
 
 function generateSingleExercise(i){
 let difficulty=10 + (level-1)*5
@@ -210,10 +190,9 @@ if(op=="-" && b>a){let tmp=a;a=b;b=tmp}
 let ans=op=="+"?a+b:a-b
 exercises[i]={value:ans,done:false,attempted:false}
 let box=document.getElementById("ans"+i).parentElement
-box.innerHTML=`${a} ${op} ${b} = <input id="ans${i}">`
-}
+box.innerHTML=`${a} ${op} ${b} = <input id="ans${i}">`}
 
-// --------- Check Answers ----------
+// --- Check Answers ---
 function checkAnswers(){
 for(let i=0;i<3;i++){
 let input=document.getElementById("ans"+i)
@@ -221,39 +200,32 @@ let val=parseInt(input.value)
 if(isNaN(val)) continue
 
 if(val===exercises[i].value){
-input.classList.remove("wrong")
-input.classList.add("correct")
+input.classList.remove("wrong"); input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++; correctForLevel++
 generateSingleExercise(i)
 }else{
 if(!exercises[i].attempted){ 
 exercises[i].attempted=true
-input.classList.add("wrong")
-input.style.animation='shake .3s'
+input.classList.add("wrong"); input.style.animation='shake .3s'
 wrong++
 }else{ 
-input.classList.remove("wrong")
-input.style.animation=''
+input.classList.remove("wrong"); input.style.animation=''
 exercises[i].attempted=false
 }
 }
+
 }
 
 let required=10 + (level-1)*5
 if(correctForLevel>=required){
-level++
-let reward=Math.floor(Math.random()*21)+30
-coins+=reward
-correctForLevel=0
+level++; let reward=Math.floor(Math.random()*21)+30; coins+=reward; correctForLevel=0
 alert(`עלית לרמה ${level} וקיבלת ${reward} מטבעות פרס!`)
 }
 
-updateBar()
-updateStats()
-save()
+updateBar(); updateStats(); save()
 }
 
-// --------- Shop ----------
+// --- Shop / Prizes ---
 function renderShop(){
 let grid=document.getElementById("shopGrid")
 grid.innerHTML=""
@@ -262,51 +234,25 @@ let can=coins>=i.price
 grid.innerHTML+=`<div class="item">${i.name}<br>${i.price} 💰<br><button class="buy ${can?'green':'red'}" onclick="buyItem(${index})">קניה</button></div>`
 })
 }
-
 function buyItem(i){
-let item=shopItems[i]
-if(coins<item.price)return
-coins-=item.price
-prizes.push(item.name)
-renderPrizes()
-updateBar()
-renderShop()
-save()
+let item=shopItems[i]; if(coins<item.price)return
+coins-=item.price; prizes.push(item.name); renderPrizes(); updateBar(); renderShop(); save()
 }
+function renderPrizes(){let list=document.getElementById("prizeList"); list.innerHTML=""; prizes.forEach(p=>{list.innerHTML+=`<li>${p}</li>`})}
 
-function renderPrizes(){
-let list=document.getElementById("prizeList")
-list.innerHTML=""
-prizes.forEach(p=>{list.innerHTML+=`<li>${p}</li>`})
-}
+// --- Toggles ---
+function toggleShop(btn){let box=document.getElementById("shop"); box.style.display=box.style.display==="block"?"none":"block"; btn.classList.toggle("active")}
+function toggleStats(btn){let box=document.getElementById("stats"); box.style.display=box.style.display==="block"?"none":"block"; btn.classList.toggle("active")}
+function togglePrizes(btn){let box=document.getElementById("prizes"); box.style.display=box.style.display==="block"?"none":"block"; btn.classList.toggle("active")}
 
-// --------- Toggles ----------
-function toggleShop(btn){
-let box=document.getElementById("shop")
-box.style.display=box.style.display==="block"?"none":"block"
-btn.classList.toggle("active")
-}
-
-function toggleStats(btn){
-let box=document.getElementById("stats")
-box.style.display=box.style.display==="block"?"none":"block"
-btn.classList.toggle("active")
-}
-
-function togglePrizes(btn){
-let box=document.getElementById("prizes")
-box.style.display=box.style.display==="block"?"none":"block"
-btn.classList.toggle("active")
-}
-
-// --------- Stats ----------
+// --- Stats ---
 function updateStats(){
 document.getElementById("sCorrect").textContent=correct
 document.getElementById("sWrong").textContent=wrong
 document.getElementById("sSolved").textContent=solved
 }
 
-// --------- Rewards ----------
+// --- Rewards ---
 function dailyReward(){
 let lastReward=parseInt(localStorage.getItem("lastDailyReward"))||0
 let now=Date.now()
@@ -321,16 +267,10 @@ let remain=8-hoursPassed
 alert(`פרס יומי זמין בעוד ${remain.toFixed(1)} שעות`)
 }
 }
+function spinWheel(){if(correct<15){alert("צריך 15 תשובות נכונות"); return} coins+=10; updateBar(); save()}
 
-function spinWheel(){
-if(correct<15){alert("צריך 15 תשובות נכונות"); return}
-coins+=10
-updateBar(); save()
-}
-
-// --------- Reset / Parent ----------
+// --- Reset / Parent ---
 function resetGame(){localStorage.clear(); location.reload()}
-
 function addItem(){
 let name=document.getElementById("itemIcon").value+" "+document.getElementById("itemName").value
 let price=parseInt(document.getElementById("itemPrice").value)
