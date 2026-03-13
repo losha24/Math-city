@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.4</title>
+<title>Math City 1.0.5</title>
 <style>
 body{margin:0;font-family:Arial;text-align:center;background:#f2f2f2;}
 header{display:flex;flex-direction:column;align-items:center;}
-#topBar{background:#27ae60;color:white;padding:10px;width:100%;display:flex;flex-direction:column;align-items:center;}
+#topBar{background:#27ae60;color:white;padding:5px;width:100%;display:flex;flex-direction:column;align-items:center;}
 #topBar .title{font-size:32px;font-weight:bold;margin:5px;}
 #topBar img{height:180px;margin-top:5px;}
 .bar{display:flex;justify-content:center;gap:10px;margin:10px;flex-wrap:wrap;}
@@ -22,7 +22,7 @@ button{padding:10px 14px;border:none;border-radius:8px;font-size:16px;cursor:poi
 .game{display:none;padding:10px;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:400px;margin:auto;}
 .question{background:white;padding:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-input{width:60px;font-size:18px;text-align:center;}
+input{width:50px;font-size:18px;text-align:center;}
 .correct{background:#c8f7c5;}
 .wrong{background:#ffcccc;animation:shake .3s;}
 @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}100%{transform:translateX(0)}}
@@ -65,8 +65,8 @@ footer{margin-top:20px;font-size:12px;color:#555;}
 <button onclick="checkAnswers()" style="margin-top:10px;">בדיקה</button>
 <div class="message" id="msg"></div>
 <div class="bar">
-<button onclick="toggleShop()">🛒 חנות</button>
-<button onclick="toggleStats()">📊 סטטיסטיקה</button>
+<button onclick="toggleShop()" id="shopBtn">🛒 חנות</button>
+<button onclick="toggleStats()" id="statsBtn">📊 סטטיסטיקה</button>
 <button onclick="spinReward()">🎡 פרס</button>
 <button onclick="dailyReward()">🎁 מתנה יומית</button>
 <button onclick="checkUpdate()">🔄 עדכון</button>
@@ -85,15 +85,14 @@ footer{margin-top:20px;font-size:12px;color:#555;}
 <div id="statsPanel" class="statsPanel"></div>
 
 <footer>
-&copy; 2026 אלכסיי זבודיסקר - גרסה 1.0.4
+&copy; 2026 אלכסיי זבודיסקר - גרסה 1.0.5
 </footer>
 
 <script>
-// אייקונים
 const icons=["🍦","🍕","🍔","🍩","🍭","⚽","🎮","🚗","🧸","🎧","📱","🎲","🎁","🛴","🏀"];
 let parentMode=false;
+let rewardCooldown=20000; // כל 20 תרגילים
 
-// נתוני משחק
 let data = JSON.parse(localStorage.getItem("mathcity")) || {
 points:0, coins:0, level:1, correct:0, lastGift:0,
 items:[
@@ -105,6 +104,7 @@ items:[
 
 function save(){localStorage.setItem("mathcity",JSON.stringify(data));}
 function updateStats(){level.innerText=data.level;points.innerText=data.points;coins.innerText=data.coins;}
+
 function startGame(){
 document.getElementById("startScreen").style.display="none";
 document.getElementById("gameScreen").style.display="block";
@@ -135,7 +135,13 @@ let correctCount=0;
 inputs.forEach(input=>{
 let ans=parseInt(input.value);let real=parseInt(input.dataset.answer);
 if(ans===real){
-input.parentElement.classList.remove("wrong");input.parentElement.classList.add("correct");correctCount++;
+input.parentElement.classList.remove("wrong");input.parentElement.classList.add("correct");
+correctCount++;
+// מחליף תרגיל חדש
+let a=Math.floor(Math.random()*10);let b=Math.floor(Math.random()*10);
+input.value="";input.dataset.answer=a+b;input.dataset.attempted="false";
+input.parentElement.classList.remove("correct");
+input.parentElement.innerHTML=`${a}+${b}=<input data-answer="${a+b}" data-attempted="false">`;
 }else{
 if(input.dataset.attempted=="false"){
 input.dataset.attempted="true";
@@ -146,21 +152,23 @@ input.parentElement.classList.remove("wrong");
 input.value=real;
 input.parentElement.classList.add("correct");
 correctCount++;
+let a=Math.floor(Math.random()*10);let b=Math.floor(Math.random()*10);
+input.value="";input.dataset.answer=a+b;input.dataset.attempted="false";
+input.parentElement.classList.remove("correct");
+input.parentElement.innerHTML=`${a}+${b}=<input data-answer="${a+b}" data-attempted="false">`;
 }
 }
 });
-data.points+=correctCount;
-data.coins+=correctCount;
+data.points+=correctCount;data.coins+=correctCount;
 data.correct+=correctCount;
 if(data.points>=data.level*10)data.level++;
 msg.innerText="תשובות נכונות: "+correctCount;
-// פרס רק כל 20 תרגילים
 if(data.correct>=20){spinReward();data.correct=0;}
-save();updateStats();
+save();updateStats();renderStatsPanel();
 }
 
 // חנות
-function toggleShop(){shop.style.display=shop.style.display=="block"?"none":"block";renderShop();}
+function toggleShop(){shop.style.display=shop.style.display=="block"?"none":"block";toggleBtnColor("shopBtn");renderShop();}
 function toggleParentMode(){parentMode=!parentMode;renderShop();}
 function renderShop(){
 const shopItems=document.getElementById("shopItems");
@@ -179,30 +187,37 @@ shopItems.appendChild(div);
 });
 }
 function buy(i){let item=data.items[i];if(data.coins<item.price)return;data.coins-=item.price;msg.innerText="קנית "+item.name;save();updateStats();renderShop();}
-function addItem(){if(!parentMode)return;let name=prompt("שם מתנה");if(!name)return;let price=parseInt(prompt("מחיר"));let icon=document.getElementById("iconSelect")?.value||"🎁";data.items.push({name:icon+" "+name,price:price});save();renderShop();}
+function addItem(){if(!parentMode)return;let name=prompt("שם מתנה");if(!name)return;let price=parseInt(prompt("מחיר"));let icon=prompt("בחר אייקון מתוך: "+icons.join(" "));if(!icons.includes(icon))icon="🎁";data.items.push({name:icon+" "+name,price:price});save();renderShop();}
 function editItem(i){let item=data.items[i];let name=prompt("שם חדש",item.name);let price=prompt("מחיר חדש",item.price);item.name=name;item.price=parseInt(price);save();renderShop();}
 function deleteItem(i){if(!confirm("למחוק?"))return;data.items.splice(i,1);save();renderShop();}
 
 // גלגל מזל
-function spinReward(){let prizes=[5,10,15,20];let prize=prizes[Math.floor(Math.random()*prizes.length)];data.coins+=prize;msg.innerText="🎡 זכית ב "+prize+" מטבעות!";save();updateStats();}
+function spinReward(){let prizes=[5,10,15,20];let prize=prizes[Math.floor(Math.random()*prizes.length)];data.coins+=prize;msg.innerText="🎡 זכית ב "+prize+" מטבעות!";save();updateStats();renderStatsPanel();}
 
 // מתנה יומית
-function dailyReward(){let now=Date.now();if(now-data.lastGift<28800000){msg.innerText="⏳ המתנה כבר נלקחה";return;}let prize=50;data.coins+=prize;data.lastGift=now;msg.innerText="🎁 מתנה יומית "+prize+" מטבעות!";save();updateStats();}
+function dailyReward(){let now=Date.now();if(now-data.lastGift<28800000){msg.innerText="⏳ המתנה כבר נלקחה";return;}let prize=50;data.coins+=prize;data.lastGift=now;msg.innerText="🎁 מתנה יומית "+prize+" מטבעות!";save();updateStats();renderStatsPanel();}
 
 // סטטיסטיקה
 let currentStatsStyle="";
 function toggleStats(){
 const panel=document.getElementById("statsPanel");
-if(panel.style.display=="block"){panel.style.display="none";return;}
-panel.style.display="block";
+if(panel.style.display=="block"){panel.style.display="none";toggleBtnColor("statsBtn");return;}
+panel.style.display="block";toggleBtnColor("statsBtn");
+renderStatsPanel();
+}
+function renderStatsPanel(){
 currentStatsStyle="<h3>סטטיסטיקה</h3><table class='statsTable'><tr><th>רמה</th><th>נקודות</th><th>כסף</th></tr>";
 currentStatsStyle+=`<tr><td>${data.level}</td><td>${data.points}</td><td>${data.coins}</td></tr></table>`;
 currentStatsStyle+="<h3>פרסים מהחנות</h3><ul>";
 data.items.forEach(item=>{currentStatsStyle+=`<li>${item.name} - ${item.price}🪙</li>`;});
-currentStatsStyle+="</ul>";
-panel.innerHTML=currentStatsStyle;
+document.getElementById("statsPanel").innerHTML=currentStatsStyle;
 }
-function restoreStatsDesign(){document.getElementById("statsPanel").innerHTML=currentStatsStyle;}
+
+// צבע כפתור ירוק/אדום
+function toggleBtnColor(id){
+let btn=document.getElementById(id);
+btn.style.backgroundColor = btn.style.backgroundColor=="#e74c3c"?"#2ecc71":"#e74c3c";
+}
 
 // עדכון
 function checkUpdate(){location.reload();}
