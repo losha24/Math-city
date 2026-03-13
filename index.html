@@ -94,6 +94,7 @@ let coins=0, points=0, level=1;
 let correct=0, wrong=0, solved=0;
 let correctForLevel=0;
 let prizes=[], exercises=[];
+
 let shopItems=[
 {name:"🎁 פרס",price:20},{name:"🎮 משחק",price:30},{name:"🚗 מכונית",price:25},
 {name:"⚽ כדור",price:15},{name:"🎯 חץ",price:18},{name:"🎲 קוביה",price:12},
@@ -132,8 +133,7 @@ document.getElementById("level").textContent=level
 }
 
 function refreshOrUpdate(){
-  // כאן אפשר לבדוק גרסה חדשה (דוגמה)
-  let newVersion=false; // אם נדרש לבדוק מהשרת
+  let newVersion=false; // בדיקה אם יש עדכון
   if(newVersion){
     alert("מותקן עדכון חדש!")
     // קוד להורדה/עדכון גרסה
@@ -141,8 +141,6 @@ function refreshOrUpdate(){
   generateExercises()
   alert("תרגילים רועננו!")
 }
-
-function startGame(){generateExercises(); renderShop()}
 
 function generateExercises(){
 exercises=[]
@@ -153,6 +151,7 @@ for(let i=0;i<3;i++){
 let a=Math.floor(Math.random()*difficulty)+1
 let b=Math.floor(Math.random()*difficulty)+1
 let op=Math.random()<0.5?"+":"-"
+if(op=="-" && b>a){let tmp=a;a=b;b=tmp} // חיסור לא שלילי
 let ans=op=="+"?a+b:a-b
 exercises.push({value:ans,done:false,attempted:false})
 box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`
@@ -164,6 +163,7 @@ let difficulty=10 + (level-1)*5
 let a=Math.floor(Math.random()*difficulty)+1
 let b=Math.floor(Math.random()*difficulty)+1
 let op=Math.random()<0.5?"+":"-"
+if(op=="-" && b>a){let tmp=a;a=b;b=tmp} 
 let ans=op=="+"?a+b:a-b
 exercises[i]={value:ans,done:false,attempted:false}
 let box=document.getElementById("ans"+i).parentElement
@@ -185,13 +185,12 @@ generateSingleExercise(i)
 if(!exercises[i].attempted){ 
 exercises[i].attempted=true
 input.classList.add("wrong")
-input.style.animation='shake 0.3s'
+input.style.animation='shake .3s'
 wrong++
 }else{ 
 input.classList.remove("wrong")
 input.style.animation=''
 exercises[i].attempted=false
-generateSingleExercise(i)
 }
 }
 }
