@@ -3,33 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.2</title>
+<title>Math City 1.0.2 - מקצועית</title>
 <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
-    #header { background:#4CAF50; text-align:center; padding:10px 0; position:relative; }
-    #header img { width:200px; display:block; margin:0 auto; }
-    #header h1 { color:white; margin:5px 0 0 0; font-size:2em; }
-    #intro-buttons { margin-top:10px; }
-    .btn { padding:10px 20px; margin:5px; cursor:pointer; border:none; color:white; border-radius:5px; }
-    .green { background:#4CAF50; }
-    .red { background:#f44336; }
-    #main { padding:20px; display:none; }
-    #exercise { margin-bottom:20px; }
-    .exercise-box { display:inline-block; width:45%; margin:2%; vertical-align:top; }
-    .exercise-box input { width:100%; padding:5px; font-size:1em; text-align:center; }
-    #check-btn { display:block; margin:20px auto; background:#2196F3; }
-    #shop, #stats, #prizes { display:none; border:1px solid #ccc; background:white; padding:10px; margin-top:10px; }
-    .shop-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
-    .shop-item img { width:40px; }
-    #reward-msg { margin-top:10px; font-weight:bold; text-align:center; }
-    .shake { animation: shake 0.5s; }
-    @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
-        100% { transform: translateX(0); }
-    }
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
+#header { background:#4CAF50; text-align:center; padding:10px 0; position:relative; }
+#header img { width:200px; display:block; margin:0 auto; }
+#header h1 { color:white; margin:5px 0 0 0; font-size:2em; }
+#intro-buttons { margin-top:10px; }
+.btn { padding:10px 20px; margin:5px; cursor:pointer; border:none; color:white; border-radius:5px; }
+.green { background:#4CAF50; }
+.red { background:#f44336; }
+.blue { background:#2196F3; }
+#main { padding:20px; display:none; }
+#exercise { margin-bottom:20px; }
+.exercise-box { display:inline-block; width:45%; margin:2%; vertical-align:top; }
+.exercise-box input { width:100%; padding:5px; font-size:1em; text-align:center; }
+#check-btn { display:block; margin:20px auto; background:#2196F3; }
+#shop, #stats, #prizes { display:none; border:1px solid #ccc; background:white; padding:10px; margin-top:10px; }
+.shop-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+.shop-item img { width:40px; }
+#reward-msg { margin-top:10px; font-weight:bold; text-align:center; }
+.shake { animation: shake 0.5s; }
+@keyframes shake {0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }}
 </style>
 </head>
 <body>
@@ -51,7 +46,7 @@
         <div class="exercise-box"><div>תרגיל 2: <span class="question">2+7</span></div><input type="number" class="answer"></div>
         <div class="exercise-box"><div>תרגיל 3: <span class="question">6+4</span></div><input type="number" class="answer"></div>
         <div class="exercise-box"><div>תרגיל 4: <span class="question">3+8</span></div><input type="number" class="answer"></div>
-        <button class="btn" id="check-btn">בדיקה</button>
+        <button class="btn blue" id="check-btn">בדיקה</button>
         <div id="reward-msg"></div>
     </div>
 
@@ -89,6 +84,11 @@ let answersCorrect = 0;
 let totalCorrect = 0;
 let rewardCooldown = 0;
 let coins = 0;
+let shopItems = [
+    {name:"פריט 1", price:10, icon:"🎁"},
+    {name:"פריט 2", price:15, icon:"🪀"},
+    {name:"פריט 3", price:20, icon:"⚽"},
+];
 
 // ---- פונקציות עזר ----
 function shuffleExercises() {
@@ -136,6 +136,7 @@ function saveState(){
     localStorage.setItem("answersCorrect", answersCorrect);
     localStorage.setItem("totalCorrect", totalCorrect);
     localStorage.setItem("coins", coins);
+    localStorage.setItem("shopItems", JSON.stringify(shopItems));
 }
 
 // ---- פתיחה ----
@@ -145,12 +146,14 @@ document.getElementById("start-btn").addEventListener("click", ()=>{
     shuffleExercises();
 });
 
+// ---- איפוס ----
 document.getElementById("reset-btn").addEventListener("click", ()=>{
     answersCorrect=0; totalCorrect=0; coins=0; rewardCooldown=0;
     saveState();
     location.reload();
 });
 
+// ---- עדכון גרסה ----
 document.getElementById("update-btn").addEventListener("click", ()=>{
     alert("בדיקה אם קיימת גרסה חדשה...");
     location.reload();
@@ -158,7 +161,59 @@ document.getElementById("update-btn").addEventListener("click", ()=>{
 
 // ---- כפתור בדיקה ----
 document.getElementById("check-btn").addEventListener("click", checkAnswers);
-</script>
 
+// ---- חנות ----
+document.getElementById("shop-btn").addEventListener("click", ()=>{
+    let shop = document.getElementById("shop");
+    shop.style.display = shop.style.display==="block" ? "none":"block";
+});
+
+function renderShop() {
+    let container = document.getElementById("shop-items");
+    container.innerHTML="";
+    shopItems.forEach((item,i)=>{
+        let div = document.createElement("div");
+        div.className="shop-item";
+        let btnBuy = document.createElement("button");
+        btnBuy.textContent=`קנה (${item.price})`;
+        btnBuy.className = coins>=item.price ? "btn green":"btn red";
+        btnBuy.onclick=()=>{
+            if(coins>=item.price){
+                coins -= item.price;
+                updateStats(item);
+                saveState();
+                renderShop();
+            } else alert("אין מספיק כסף");
+        };
+        div.innerHTML=`${item.name} ${item.icon}`;
+        div.appendChild(btnBuy);
+        container.appendChild(div);
+    });
+}
+
+function updateStats(item){
+    let tbody = document.getElementById("stats-body");
+    let row = document.createElement("tr");
+    row.innerHTML=`<td>${item.name}</td><td>${item.price}</td><td>${item.icon}</td>`;
+    tbody.appendChild(row);
+}
+
+document.getElementById("add-item-btn").addEventListener("click", ()=>{
+    let name = prompt("שם פריט:");
+    let price = parseInt(prompt("מחיר:"));
+    let iconOptions = ["🎁","🪀","⚽","🏀","🎯","🎮","🧸","🚗","🚀","🎹","🎨","🎲","🛹","🎤","🎬"];
+    let icon = prompt(`בחר אייקון מתוך: ${iconOptions.join(" ")}`, iconOptions[0]);
+    shopItems.push({name, price, icon});
+    saveState();
+    renderShop();
+});
+
+// ---- סטטיסטיקה ----
+document.getElementById("stats-btn").addEventListener("click", ()=>{
+    let stats = document.getElementById("stats");
+    stats.style.display = stats.style.display==="block"?"none":"block";
+});
+
+</script>
 </body>
 </html>
