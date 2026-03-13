@@ -4,171 +4,253 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math City 1.0.2</title>
+
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
-#header { background:#4CAF50; text-align:center; padding:10px 0; position:relative; }
-#header img { width:200px; display:block; margin:0 auto; }
-#header h1 { color:white; margin:5px 0 0 0; font-size:2em; }
-#intro-buttons { margin-top:10px; }
-.btn { padding:10px 20px; margin:5px; cursor:pointer; border:none; color:white; border-radius:5px; transition:0.3s; }
-.green { background:#4CAF50; }
-.red { background:#f44336; }
-.blue { background:#2196F3; }
-#main { padding:20px; display:none; }
-#exercise { margin-bottom:20px; }
-.exercise-box input { width:100%; padding:5px; font-size:1em; text-align:center; }
-#check-btn { display:block; margin:20px auto; background:#2196F3; }
-#shop, #stats { display:none; border:1px solid #ccc; background:white; padding:10px; margin-top:10px; }
-.shop-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
-.shop-item img { width:40px; }
-#reward-msg { margin-top:10px; font-weight:bold; text-align:center; }
-.shake { animation: shake 0.5s; }
-@keyframes shake {0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }}
-#footer { text-align:center; padding:10px; background:#ddd; margin-top:20px; }
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+text-align:center;
+}
+
+header{
+background:#4CAF50;
+color:white;
+padding:15px;
+}
+
+header img{
+width:120px;
+display:block;
+margin:auto;
+}
+
+#menu button{
+margin:5px;
+padding:10px 18px;
+border:none;
+border-radius:6px;
+background:#4CAF50;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+#menu button.active{
+background:#e53935;
+}
+
+#game{
+display:none;
+padding:20px;
+}
+
+#topbar{
+background:#e3f2fd;
+padding:10px;
+margin-bottom:15px;
+font-weight:bold;
+}
+
+.exercise{
+margin:10px;
+}
+
+.exercise input{
+width:60px;
+padding:6px;
+font-size:18px;
+text-align:center;
+}
+
+.correct{
+background:#c8e6c9;
+}
+
+.wrong{
+background:#ffcdd2;
+animation:shake .3s;
+}
+
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(-4px)}
+50%{transform:translateX(4px)}
+75%{transform:translateX(-4px)}
+100%{transform:translateX(0)}
+}
+
+#check{
+margin-top:10px;
+padding:10px 25px;
+font-size:16px;
+background:#2196F3;
+border:none;
+color:white;
+border-radius:6px;
+}
+
+footer{
+margin-top:30px;
+padding:10px;
+font-size:14px;
+color:#555;
+}
+
 </style>
 </head>
+
 <body>
 
-<div id="header">
-    <img src="logo.png" alt="Logo">
-    <h1>Math City</h1>
-    <div id="intro-buttons">
-        <button class="btn green" id="start-btn">התחלת משחק</button>
-        <button class="btn green" id="reset-btn">איפוס</button>
-        <button class="btn green" id="update-btn">עדכון גרסה</button>
-    </div>
+<header>
+<img src="logo.png">
+<h1>Math City</h1>
+
+<div id="menu">
+<button onclick="startGame()">התחלת משחק</button>
+<button onclick="resetGame()">איפוס</button>
+<button onclick="updateGame()">עדכון</button>
 </div>
 
-<div id="main">
-    <!-- תרגיל אחד -->
-    <div id="exercise">
-        <div class="exercise-box">
-            <div>תרגיל: <span class="question">5+3</span></div>
-            <input type="number" class="answer">
-        </div>
-        <button class="btn blue" id="check-btn">בדיקה</button>
-        <div id="reward-msg"></div>
-    </div>
+</header>
 
-    <!-- חנות בסיסית -->
-    <button class="btn green" id="shop-btn">חנות</button>
-    <div id="shop">
-        <div id="shop-items"></div>
-    </div>
+<div id="game">
 
-    <!-- סטטיסטיקה בסיסית -->
-    <button class="btn green" id="stats-btn">סטטיסטיקה</button>
-    <div id="stats">
-        <table border="1" width="100%">
-            <thead>
-                <tr><th>פריט</th><th>מחיר</th></tr>
-            </thead>
-            <tbody id="stats-body"></tbody>
-        </table>
-    </div>
+<div id="topbar">
+⭐ רמה: <span id="level">1</span> |
+🧮 נקודות: <span id="points">0</span> |
+💰 מטבעות: <span id="coins">0</span>
 </div>
 
-<div id="footer">© 2026 Math City - גרסה 1.0.2</div>
+<div id="exercises"></div>
+
+<button id="check" onclick="checkAnswers()">בדיקה</button>
+
+</div>
+
+<footer>
+© Math City – Version 1.0.2
+</footer>
 
 <script>
-// ---- משתנים ----
-let exercise = {q:"5+3", a:8};
-let coins = 0;
-let shopItems = [
-    {name:"פריט 1", price:10},
-    {name:"פריט 2", price:15},
-    {name:"פריט 3", price:20},
-];
 
-// ---- פונקציות ----
-function checkAnswer() {
-    let input = document.querySelector(".answer");
-    let val = parseInt(input.value);
-    if(isNaN(val)) return;
-    if(val === exercise.a){
-        input.style.backgroundColor="lightgreen";
-        coins +=5;
-        document.getElementById("reward-msg").textContent="תשובה נכונה! +5 מטבעות";
-        newExercise();
-    } else {
-        input.style.backgroundColor="salmon";
-        input.classList.add("shake");
-        setTimeout(()=>input.classList.remove("shake"),500);
-    }
-    saveState();
+let coins=0
+let points=0
+let level=1
+let correctCount=0
+
+let exercises=[]
+
+function save(){
+localStorage.setItem("mathCoins",coins)
+localStorage.setItem("mathPoints",points)
+localStorage.setItem("mathLevel",level)
 }
 
-function newExercise(){
-    // פשוט מחזיר אותו תרגיל, גרסה בסיסית
-    document.querySelector(".answer").value="";
-    document.querySelector(".answer").style.backgroundColor="";
+function load(){
+coins=parseInt(localStorage.getItem("mathCoins"))||0
+points=parseInt(localStorage.getItem("mathPoints"))||0
+level=parseInt(localStorage.getItem("mathLevel"))||1
+updateBar()
 }
 
-function renderShop() {
-    let container = document.getElementById("shop-items");
-    container.innerHTML="";
-    shopItems.forEach((item,i)=>{
-        let div = document.createElement("div");
-        div.className="shop-item";
-        let btnBuy = document.createElement("button");
-        btnBuy.textContent=`קנה (${item.price})`;
-        btnBuy.className = coins>=item.price ? "btn green":"btn red";
-        btnBuy.onclick=()=>{
-            if(coins>=item.price){
-                coins -= item.price;
-                updateStats(item);
-                saveState();
-                renderShop();
-            } else alert("אין מספיק כסף");
-        };
-        div.textContent=item.name;
-        div.appendChild(btnBuy);
-        container.appendChild(div);
-    });
+function updateBar(){
+document.getElementById("coins").textContent=coins
+document.getElementById("points").textContent=points
+document.getElementById("level").textContent=level
 }
 
-function updateStats(item){
-    let tbody = document.getElementById("stats-body");
-    let row = document.createElement("tr");
-    row.innerHTML=`<td>${item.name}</td><td>${item.price}</td>`;
-    tbody.appendChild(row);
+function startGame(){
+document.getElementById("game").style.display="block"
+generateExercises()
 }
 
-function saveState(){
-    localStorage.setItem("coins", coins);
-    localStorage.setItem("shopItems", JSON.stringify(shopItems));
+function resetGame(){
+localStorage.clear()
+location.reload()
 }
 
-// ---- אירועים ----
-document.getElementById("start-btn").addEventListener("click", ()=>{
-    document.getElementById("main").style.display="block";
-    document.getElementById("intro-buttons").style.display="none";
-});
+function updateGame(){
+location.reload()
+}
 
-document.getElementById("reset-btn").addEventListener("click", ()=>{
-    coins=0;
-    saveState();
-    location.reload();
-});
+function difficulty(){
+if(points<10)return 10
+if(points<30)return 20
+if(points<60)return 50
+return 100
+}
 
-document.getElementById("update-btn").addEventListener("click", ()=>{
-    alert("בדיקה אם קיימת גרסה חדשה...");
-    location.reload();
-});
+function generateExercises(){
 
-document.getElementById("check-btn").addEventListener("click", checkAnswer);
+let max=difficulty()
+exercises=[]
 
-document.getElementById("shop-btn").addEventListener("click", ()=>{
-    let shop = document.getElementById("shop");
-    shop.style.display = shop.style.display==="block" ? "none":"block";
-});
+let container=document.getElementById("exercises")
+container.innerHTML=""
 
-document.getElementById("stats-btn").addEventListener("click", ()=>{
-    let stats = document.getElementById("stats");
-    stats.style.display = stats.style.display==="block"?"none":"block";
-});
+for(let i=0;i<3;i++){
 
-renderShop();
+let a=Math.floor(Math.random()*max)+1
+let b=Math.floor(Math.random()*max)+1
+
+let op=Math.random()<0.6?"+":"-"
+
+let answer=op==="+"?a+b:a-b
+
+exercises.push(answer)
+
+let div=document.createElement("div")
+div.className="exercise"
+
+div.innerHTML=`
+${a} ${op} ${b} =
+<input id="ans${i}">
+`
+
+container.appendChild(div)
+
+}
+
+}
+
+function checkAnswers(){
+
+for(let i=0;i<3;i++){
+
+let input=document.getElementById("ans"+i)
+let val=parseInt(input.value)
+
+if(val===exercises[i]){
+
+input.classList.remove("wrong")
+input.classList.add("correct")
+
+coins+=2
+points+=1
+correctCount++
+
+if(correctCount%5===0)level++
+
+generateExercises()
+
+}else{
+
+input.classList.remove("correct")
+input.classList.add("wrong")
+
+}
+
+}
+
+updateBar()
+save()
+
+}
+
+load()
+
 </script>
 
 </body>
