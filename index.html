@@ -148,16 +148,27 @@ let a=Math.floor(Math.random()*difficulty)+1
 let b=Math.floor(Math.random()*difficulty)+1
 let op=Math.random()<0.5?"+":"-"
 let ans=op=="+"?a+b:a-b
-exercises.push({value:ans,done:false})
+exercises.push({value:ans,done:false,attempted:false})
 box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`
 }
+}
+
+function generateSingleExercise(i){
+let difficulty=10 + (level-1)*5
+let a=Math.floor(Math.random()*difficulty)+1
+let b=Math.floor(Math.random()*difficulty)+1
+let op=Math.random()<0.5?"+":"-"
+let ans=op=="+"?a+b:a-b
+exercises[i]={value:ans,done:false,attempted:false}
+let box=document.getElementById("ans"+i).parentElement
+box.innerHTML=`${a} ${op} ${b} = <input id="ans${i}">`
 }
 
 function checkAnswers(){
 for(let i=0;i<3;i++){
 let input=document.getElementById("ans"+i)
 let val=parseInt(input.value)
-if(isNaN(val) || exercises[i].done) continue
+if(isNaN(val)) continue
 
 if(val===exercises[i].value){
 input.classList.remove("wrong")
@@ -165,16 +176,22 @@ input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++; correctForLevel++
 exercises[i].done=true
 }else{
-input.classList.remove("correct")
+if(!exercises[i].attempted){ 
+exercises[i].attempted=true
 input.classList.add("wrong")
 input.style.animation='shake 0.3s'
 wrong++
-exercises[i].done=false
-setTimeout(()=>{ input.classList.remove("wrong"); input.style.animation=''; input.value=''; }, 600)
+}else{ 
+input.classList.remove("wrong")
+input.style.animation=''
+exercises[i].attempted=false
+exercises[i].done=true
+generateSingleExercise(i)
+}
 }
 }
 
-// עלייה ברמה כל 15 תשובות נכונות (או לפי ניסוי אחר)
+// עלייה ברמה
 let required=10 + (level-1)*5
 if(correctForLevel>=required){
 level++
@@ -186,7 +203,6 @@ alert(`עלית לרמה ${level} וקיבלת ${reward} מטבעות פרס!`)
 
 updateBar()
 updateStats()
-generateExercises()
 save()
 }
 
