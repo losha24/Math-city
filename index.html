@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.7</title>
+<title>Math City 1.0.9</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4CAF50">
+
 <style>
 body{font-family:Arial;margin:0;background:#f4f6f8;text-align:center}
 header{background:#4CAF50;color:white;padding:15px;position:relative}
@@ -12,6 +17,7 @@ header h1{margin:0}
 .buttons{margin-top:10px}
 .buttons button{margin:4px;padding:10px 16px;border:none;border-radius:8px;background:#4CAF50;color:white;font-weight:bold;cursor:pointer}
 .buttons button.active{background:#e53935}
+#installBtn{margin-left:10px}
 #game{display:block;padding:20px}
 #topbar{background:#e3f2fd;padding:10px;margin-bottom:15px;font-weight:bold}
 .exercise{margin:10px;font-size:20px}
@@ -33,6 +39,7 @@ footer{margin-top:20px;color:#666}
 </style>
 </head>
 <body>
+
 <header>
 <img src="logo.png">
 <h1>Math City</h1>
@@ -43,6 +50,7 @@ footer{margin-top:20px;color:#666}
 <button onclick="toggleShop(this)">חנות</button>
 <button onclick="togglePrizes(this)">פרסים</button>
 <button onclick="toggleStats(this)">סטטיסטיקה</button>
+<button id="installBtn" style="display:none" onclick="installApp()">התקנת אפליקציה</button>
 <button onclick="dailyReward()">פרס יומי</button>
 <button onclick="spinWheel()">גלגל מזל</button>
 <button onclick="resetGame()">איפוס</button>
@@ -80,27 +88,53 @@ footer{margin-top:20px;color:#666}
 <div id="stats">
 <h3>סטטיסטיקה</h3>
 <table>
-<tr><th>נכונות</th><th>שגויות</th><th>תרגילים שנפתרו</th></tr>
+<tr><th>נכונות</th><th>שגויות</th><th>תרגילים נפתרו</th></tr>
 <tr><td id="sCorrect">0</td><td id="sWrong">0</td><td id="sSolved">0</td></tr>
 </table>
 </div>
 
 <footer>
-© Math City – Version 1.0.7 – אלכסיי זבודיסקר
+© Math City – Version 1.0.9 – אלכסיי זבודיסקר
 </footer>
 
 <script>
+// --------- Service Worker ----------
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js')
+  .then(()=>console.log('Service Worker Registered'))
+  .catch(err=>console.log('SW registration failed:',err))
+}
+
+// --------- PWA Install ----------
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'inline-block';
+});
+function installApp() {
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
+}
+
+// --------- Variables ----------
 let coins=0, points=0, level=1;
 let correct=0, wrong=0, solved=0;
 let correctForLevel=0;
 let prizes=[], exercises=[];
-
 let shopItems=[
 {name:"🎁 פרס",price:20},{name:"🎮 משחק",price:30},{name:"🚗 מכונית",price:25},
 {name:"⚽ כדור",price:15},{name:"🎯 חץ",price:18},{name:"🎲 קוביה",price:12},
 {name:"🧸 דובי",price:22},{name:"🚀 טיל",price:35},{name:"🎨 צבעים",price:17}
 ];
 
+// --------- Local Storage ----------
 function save(){
 localStorage.setItem("coins",coins)
 localStorage.setItem("points",points)
@@ -126,22 +160,30 @@ generateExercises()
 renderShop()
 }
 
+// --------- Bar Update ----------
 function updateBar(){
 document.getElementById("coins").textContent=coins
 document.getElementById("points").textContent=points
 document.getElementById("level").textContent=level
 }
 
+// --------- Refresh / Update ----------
 function refreshOrUpdate(){
-  let newVersion=false; // בדיקה אם יש עדכון
-  if(newVersion){
-    alert("מותקן עדכון חדש!")
-    // קוד להורדה/עדכון גרסה
-  }
-  generateExercises()
-  alert("תרגילים רועננו!")
+    const currentVersion = "1.0.9";
+    fetch("version.json")
+    .then(res => res.json())
+    .then(data => {
+        if(data.version && data.version !== currentVersion){
+            alert(`גרסה עודכנה! גרסה חדשה: ${data.version}`);
+            location.reload();
+        } else {
+            location.reload();
+        }
+    })
+    .catch(err => { location.reload(); });
 }
 
+// --------- Exercises ----------
 function generateExercises(){
 exercises=[]
 let box=document.getElementById("exercises")
@@ -151,11 +193,12 @@ for(let i=0;i<3;i++){
 let a=Math.floor(Math.random()*difficulty)+1
 let b=Math.floor(Math.random()*difficulty)+1
 let op=Math.random()<0.5?"+":"-"
-if(op=="-" && b>a){let tmp=a;a=b;b=tmp} // חיסור לא שלילי
+if(op=="-" && b>a){let tmp=a;a=b;b=tmp}
 let ans=op=="+"?a+b:a-b
 exercises.push({value:ans,done:false,attempted:false})
 box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`
 }
+
 }
 
 function generateSingleExercise(i){
@@ -170,6 +213,7 @@ let box=document.getElementById("ans"+i).parentElement
 box.innerHTML=`${a} ${op} ${b} = <input id="ans${i}">`
 }
 
+// --------- Check Answers ----------
 function checkAnswers(){
 for(let i=0;i<3;i++){
 let input=document.getElementById("ans"+i)
@@ -180,7 +224,7 @@ if(val===exercises[i].value){
 input.classList.remove("wrong")
 input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++; correctForLevel++
-generateSingleExercise(i) 
+generateSingleExercise(i)
 }else{
 if(!exercises[i].attempted){ 
 exercises[i].attempted=true
@@ -209,6 +253,7 @@ updateStats()
 save()
 }
 
+// --------- Shop ----------
 function renderShop(){
 let grid=document.getElementById("shopGrid")
 grid.innerHTML=""
@@ -235,6 +280,7 @@ list.innerHTML=""
 prizes.forEach(p=>{list.innerHTML+=`<li>${p}</li>`})
 }
 
+// --------- Toggles ----------
 function toggleShop(btn){
 let box=document.getElementById("shop")
 box.style.display=box.style.display==="block"?"none":"block"
@@ -253,19 +299,20 @@ box.style.display=box.style.display==="block"?"none":"block"
 btn.classList.toggle("active")
 }
 
+// --------- Stats ----------
 function updateStats(){
 document.getElementById("sCorrect").textContent=correct
 document.getElementById("sWrong").textContent=wrong
 document.getElementById("sSolved").textContent=solved
 }
 
+// --------- Rewards ----------
 function dailyReward(){
 let lastReward=parseInt(localStorage.getItem("lastDailyReward"))||0
 let now=Date.now()
 let hoursPassed=(now-lastReward)/(1000*60*60)
 if(hoursPassed>=8 || points>=20){
 coins+=10
-alert("קיבלת פרס יומי! 💰+10 מטבעות")
 localStorage.setItem("lastDailyReward",now)
 if(points>=20) points=0
 updateBar(); save()
@@ -281,6 +328,7 @@ coins+=10
 updateBar(); save()
 }
 
+// --------- Reset / Parent ----------
 function resetGame(){localStorage.clear(); location.reload()}
 
 function addItem(){
