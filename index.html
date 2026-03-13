@@ -1,315 +1,138 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math City</title>
-
 <style>
-
-body{
-font-family:Arial;
-margin:0;
-background:#f3f3f3;
-text-align:center;
-}
-
-header{
-background:#2ecc71;
-color:white;
-padding:15px;
-}
-
-.logo{
-font-size:40px;
-}
-
-.title{
-font-size:28px;
-font-weight:bold;
-}
-
-.stats{
-display:flex;
-justify-content:center;
-gap:20px;
-background:#e9fff3;
-padding:10px;
-font-size:18px;
-}
-
-button{
-padding:10px 15px;
-margin:5px;
-border:none;
-border-radius:10px;
-font-size:16px;
-cursor:pointer;
-}
-
-.green{background:#27ae60;color:white;}
-.blue{background:#3498db;color:white;}
-
-#game{display:none}
-
-input{
-font-size:20px;
-padding:10px;
-width:120px;
-text-align:center;
-}
-
-.shake{
-animation:shake .3s;
-}
-
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-5px)}
-50%{transform:translateX(5px)}
-75%{transform:translateX(-5px)}
-100%{transform:translateX(0)}
-}
-
-.shop{
-display:none;
-background:white;
-margin:10px;
-padding:10px;
-border-radius:10px;
-}
-
-.items{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-}
-
-.item{
-border:1px solid #ccc;
-padding:10px;
-border-radius:10px;
-}
-
-footer{
-margin-top:20px;
-font-size:12px;
-color:#777;
-}
-
+body{font-family:Arial;margin:0;background:#f2f2f2;text-align:center;}
+header{background:#27ae60;color:white;padding:10px;}
+.logo{font-size:30px;font-weight:bold;}
+.stats{background:#e8f8f0;padding:8px;display:flex;justify-content:center;gap:20px;font-weight:bold;}
+.game{padding:10px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:400px;margin:auto;}
+.question{background:white;padding:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+input{width:60px;font-size:18px;text-align:center;}
+.correct{background:#c8f7c5;}
+.wrong{background:#ffcccc;animation:shake .3s;}
+@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}100%{transform:translateX(0)}}
+button{padding:10px 14px;margin:5px;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
+.bar button{background:#2ecc71;color:white;}
+#shop{display:none;background:white;padding:10px;margin:10px;border-radius:10px;}
+.shopgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.item{border:1px solid #ccc;padding:10px;border-radius:8px;}
+.buy-green{background:#2ecc71;color:white;}
+.buy-red{background:#e74c3c;color:white;}
+.message{margin-top:10px;font-weight:bold;color:#2c3e50;}
 </style>
 </head>
-
 <body>
 
 <header>
-
-<div class="logo">🏙️</div>
-<div class="title">Math City</div>
-
+<div class="logo">🏙️ Math City</div>
 </header>
 
 <div class="stats">
-
-<div>⭐ <span id="level">1</span></div>
-<div>🏆 <span id="points">0</span></div>
-<div>💰 <span id="coins">0</span></div>
-
+<span>⭐ רמה: <span id="level"></span></span>
+<span>🎯 נקודות: <span id="points"></span></span>
+<span>🪙 כסף: <span id="coins"></span></span>
 </div>
 
-<div id="menu">
-
-<button class="blue" onclick="startGame()">▶ התחלת משחק</button>
-<button class="blue" onclick="resetGame()">🔄 איפוס</button>
-<button class="blue" onclick="updateApp()">🔁 עדכון</button>
-
+<div class="game">
+<div class="grid" id="questions"></div>
+<button onclick="checkAnswers()">בדיקה</button>
+<div class="message" id="msg"></div>
+<div class="bar">
+<button onclick="toggleShop()">🛒 חנות</button>
+<button onclick="showStats()">📊 סטטיסטיקה</button>
+<button onclick="spinReward()">🎡 פרס</button>
+<button onclick="dailyReward()">🎁 מתנה</button>
+<button onclick="checkUpdate()">🔄 עדכון</button>
+<button onclick="resetGame()">♻️ איפוס</button>
+<button onclick="installApp()">📲 התקן אפליקציה</button>
+</div>
 </div>
 
-<div id="game">
-
-<h2 id="question"></h2>
-
-<input id="answer">
-
-<br><br>
-
-<button class="green" onclick="check()">בדיקה</button>
-<button class="green" onclick="toggleShop()">חנות</button>
-
-<p id="msg"></p>
-
-</div>
-
-<div id="shop" class="shop">
-
+<div id="shop">
 <h3>חנות</h3>
-
-<div class="items" id="shopItems"></div>
-
+<button onclick="toggleParentMode()">👨‍👩‍👧 מצב הורים</button>
+<div class="shopgrid" id="shopItems"></div>
 </div>
-
-<footer>
-© אלכסיי זבודיסקר
-</footer>
 
 <script>
+// מאגר אייקונים 15
+const icons=["🍦","🍕","🍔","🍩","🍭","⚽","🎮","🚗","🧸","🎧","📱","🎲","🎁","🛴","🏀"];
 
-let points=0
-let coins=0
-let level=1
-let correct=0
-let retry=false
-let answer=0
+let parentMode=false;
 
-let gifts=[
-{name:"🍭 ממתק",price:5},
-{name:"⚽ כדור",price:10},
-{name:"🚗 מכונית",price:15},
-{name:"🎮 משחק",price:20},
-{name:"🧸 בובה",price:12},
-{name:"🍕 פיצה",price:8},
-{name:"📚 ספר",price:7},
-{name:"🎨 צבעים",price:9},
-{name:"🎁 הפתעה",price:10}
+let data = JSON.parse(localStorage.getItem("mathcity")) || {
+points:0, coins:0, level:1, correct:0, lastGift:0,
+items:[
+{name:"🍦 גלידה",price:10},{name:"⚽ כדור",price:15},{name:"🎮 משחק",price:20},
+{name:"🍕 פיצה",price:12},{name:"🚗 צעצוע",price:18},{name:"🎧 אוזניות",price:25},
+{name:"📱 טלפון",price:40},{name:"🎲 קוביות",price:8},{name:"🎁 הפתעה",price:30}
 ]
+};
 
-function startGame(){
-
-document.getElementById("menu").style.display="none"
-document.getElementById("game").style.display="block"
-
-newQuestion()
-renderShop()
-
+function save(){localStorage.setItem("mathcity",JSON.stringify(data));}
+function updateStats(){level.innerText=data.level;points.innerText=data.points;coins.innerText=data.coins;}
+function newQuestions(){questions.innerHTML="";for(let i=0;i<4;i++){let a=Math.floor(Math.random()*10);let b=Math.floor(Math.random()*10);let div=document.createElement("div");div.className="question";div.innerHTML=`${a}+${b}=<input data-answer="${a+b}">`;questions.appendChild(div);}}
+function checkAnswers(){
+let inputs=document.querySelectorAll("input");
+let correctCount=0;
+inputs.forEach(input=>{
+let ans=parseInt(input.value);let real=parseInt(input.dataset.answer);
+if(ans===real){input.parentElement.classList.remove("wrong");input.parentElement.classList.add("correct");correctCount++;}else{input.parentElement.classList.add("wrong");setTimeout(()=>input.parentElement.classList.remove("wrong"),500);}});
+if(correctCount>0){
+data.points+=correctCount;data.coins+=correctCount;data.correct+=correctCount;
+if(data.points>=data.level*10){data.level++;}
+msg.innerText="כל הכבוד! +" + correctCount;}
+if(data.correct>=10){spinReward();data.correct=0;}
+save();updateStats();newQuestions();
 }
 
-function newQuestion(){
+// גלגל מזל
+function spinReward(){let prizes=[5,10,15,20];let prize=prizes[Math.floor(Math.random()*prizes.length)];data.coins+=prize;msg.innerText="🎡 זכית ב "+prize+" מטבעות!";save();updateStats();}
 
-let a=Math.floor(Math.random()*10)+1
-let b=Math.floor(Math.random()*10)+1
-
-answer=a+b
-
-document.getElementById("question").innerText=a+" + "+b
-document.getElementById("answer").value=""
-
+// מתנה יומית
+function dailyReward(){
+let now=Date.now();
+if(now-data.lastGift<28800000){msg.innerText="⏳ המתנה כבר נלקחה";return;}
+let prize=50;data.coins+=prize;data.lastGift=now;msg.innerText="🎁 מתנה יומית "+prize+" מטבעות!";save();updateStats();
 }
 
-function check(){
-
-let val=parseInt(document.getElementById("answer").value)
-
-if(val===answer){
-
-points++
-coins++
-correct++
-
-updateStats()
-
-retry=false
-
-if(correct%10===0){
-
-coins+=10
-document.getElementById("msg").innerText="🎁 גלגל פרס! קיבלת 10 מטבעות"
-
-}
-
-newQuestion()
-
-}else{
-
-let box=document.getElementById("answer")
-
-if(!retry){
-
-retry=true
-box.style.background="red"
-box.classList.add("shake")
-
-setTimeout(()=>box.classList.remove("shake"),300)
-
-}else{
-
-retry=false
-box.style.background="white"
-newQuestion()
-
-}
-
-}
-
-}
-
-function updateStats(){
-
-document.getElementById("points").innerText=points
-document.getElementById("coins").innerText=coins
-
-}
-
-function toggleShop(){
-
-let shop=document.getElementById("shop")
-
-shop.style.display=shop.style.display==="block"?"none":"block"
-
-}
-
+// חנות
+function toggleShop(){shop.style.display=shop.style.display=="block"?"none":"block";renderShop();}
+function toggleParentMode(){parentMode=!parentMode;renderShop();}
 function renderShop(){
+shopItems.innerHTML="";
+data.items.forEach((item,i)=>{
+let canBuy=data.coins>=item.price;
+let div=document.createElement("div");div.className="item";
+div.innerHTML=`<div>${item.name}</div><div>${item.price}🪙</div><button class="${canBuy?'buy-green':'buy-red'}" onclick="buy(${i})">קנה</button>`;
+if(parentMode){div.innerHTML+=`<button onclick="editItem(${i})">✏️</button><button onclick="deleteItem(${i})">🗑</button>`;}
+shopItems.appendChild(div);
+});}
+function buy(i){let item=data.items[i];if(data.coins<item.price)return;data.coins-=item.price;msg.innerText="קנית "+item.name;save();updateStats();renderShop();}
+function addItem(){let name=prompt("שם מתנה");if(!name)return;let price=parseInt(prompt("מחיר"));let icon=prompt("בחר מספר אייקון 1-15");icon=icons[icon-1]||"🎁";data.items.push({name:icon+" "+name,price:price});save();renderShop();}
+function editItem(i){let item=data.items[i];let name=prompt("שם חדש",item.name);let price=prompt("מחיר חדש",item.price);item.name=name;item.price=parseInt(price);save();renderShop();}
+function deleteItem(i){if(!confirm("למחוק?"))return;data.items.splice(i,1);save();renderShop();}
 
-let html=""
+// סטטיסטיקה
+function showStats(){alert("רמה: "+data.level+"\nנקודות: "+data.points+"\nכסף: "+data.coins+"\nתרגילים נכונים: "+data.correct);}
 
-gifts.forEach((g,i)=>{
+// עדכון
+function checkUpdate(){location.reload();}
 
-html+=`
-<div class="item">
-${g.name}<br>
-${g.price}💰<br>
-<button onclick="buy(${i})">קנה</button>
-</div>
-`
+// איפוס
+function resetGame(){if(confirm("לאפס הכל?")){localStorage.removeItem("mathcity");location.reload();}}
 
-})
+// התקנת אפליקציה
+let installPrompt;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;});
+function installApp(){if(!installPrompt)return;installPrompt.prompt();}
 
-document.getElementById("shopItems").innerHTML=html
-
-}
-
-function buy(i){
-
-if(coins>=gifts[i].price){
-
-coins-=gifts[i].price
-updateStats()
-
-alert("קנית: "+gifts[i].name)
-
-}else{
-
-alert("אין מספיק מטבעות")
-
-}
-
-}
-
-function resetGame(){
-
-localStorage.clear()
-location.reload()
-
-}
-
-function updateApp(){
-
-location.reload()
-
-}
-
+updateStats();newQuestions();
 </script>
-
 </body>
 </html>
