@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.6</title>
+<title>Math City 1.0.7</title>
 <style>
 body{font-family:Arial;margin:0;background:#f4f6f8;text-align:center}
 header{background:#4CAF50;color:white;padding:15px;position:relative}
-header img{width:200px;display:block;margin:auto;margin-bottom:10px}
+header img{width:250px;display:block;margin:auto;margin-bottom:10px}
 header h1{margin:0}
 .buttons{margin-top:10px}
 .buttons button{margin:4px;padding:10px 16px;border:none;border-radius:8px;background:#4CAF50;color:white;font-weight:bold;cursor:pointer}
 .buttons button.active{background:#e53935}
-#game{display:none;padding:20px}
+#game{display:block;padding:20px}
 #topbar{background:#e3f2fd;padding:10px;margin-bottom:15px;font-weight:bold}
 .exercise{margin:10px;font-size:20px}
 .exercise input{width:70px;padding:6px;font-size:18px;text-align:center}
@@ -86,10 +86,8 @@ footer{margin-top:20px;color:#666}
 </table>
 </div>
 
-</div>
-
 <footer>
-© Math City – Version 1.0.6 – אלכסיי זבודיסקר
+© Math City – Version 1.0.7 – אלכסיי זבודיסקר
 </footer>
 
 <script>
@@ -123,6 +121,8 @@ prizes=JSON.parse(localStorage.getItem("prizes"))||[]
 updateBar()
 updateStats()
 renderPrizes()
+generateExercises()
+renderShop()
 }
 
 function updateBar(){
@@ -141,36 +141,37 @@ function generateExercises(){
 exercises=[]
 let box=document.getElementById("exercises")
 box.innerHTML=""
-for(let i=0;i<4;i++){
+for(let i=0;i<3;i++){
 let a=Math.floor(Math.random()*20)+1
 let b=Math.floor(Math.random()*20)+1
 let op=Math.random()<0.5?"+":"-"
 let ans=op=="+"?a+b:a-b
-exercises.push(ans)
+exercises.push({value:ans,done:false})
 box.innerHTML+=`<div class="exercise">${a} ${op} ${b} = <input id="ans${i}"></div>`
 }
 }
 
 function checkAnswers(){
-let allAnswered=true
-for(let i=0;i<4;i++){
+for(let i=0;i<3;i++){
 let input=document.getElementById("ans"+i)
 let val=parseInt(input.value)
-if(isNaN(val)){allAnswered=false; continue}
-if(val===exercises[i]){
+if(isNaN(val) || exercises[i].done) continue
+if(val===exercises[i].value){
 input.classList.remove("wrong")
 input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++
+exercises[i].done=true
 }else{
 input.classList.remove("correct")
 input.classList.add("wrong")
 wrong++
+exercises[i].done=false
 }
 }
 if(points%15===0 && points>0){level++}
 updateBar()
 updateStats()
-if(allAnswered){generateExercises()}
+generateExercises()
 save()
 }
 
