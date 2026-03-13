@@ -93,6 +93,7 @@ footer{margin-top:20px;color:#666}
 <script>
 let coins=0, points=0, level=1;
 let correct=0, wrong=0, solved=0;
+let correctForLevel=0;
 let prizes=[], exercises=[];
 let shopItems=[
 {name:"🎁 פרס",price:20},{name:"🎮 משחק",price:30},{name:"🚗 מכונית",price:25},
@@ -141,9 +142,10 @@ function generateExercises(){
 exercises=[]
 let box=document.getElementById("exercises")
 box.innerHTML=""
+let difficulty=10 + (level-1)*5
 for(let i=0;i<3;i++){
-let a=Math.floor(Math.random()*20)+1
-let b=Math.floor(Math.random()*20)+1
+let a=Math.floor(Math.random()*difficulty)+1
+let b=Math.floor(Math.random()*difficulty)+1
 let op=Math.random()<0.5?"+":"-"
 let ans=op=="+"?a+b:a-b
 exercises.push({value:ans,done:false})
@@ -156,19 +158,32 @@ for(let i=0;i<3;i++){
 let input=document.getElementById("ans"+i)
 let val=parseInt(input.value)
 if(isNaN(val) || exercises[i].done) continue
+
 if(val===exercises[i].value){
 input.classList.remove("wrong")
 input.classList.add("correct")
-coins+=3; points+=1; correct++; solved++
+coins+=3; points+=1; correct++; solved++; correctForLevel++
 exercises[i].done=true
 }else{
 input.classList.remove("correct")
 input.classList.add("wrong")
+input.style.animation='shake 0.3s'
 wrong++
 exercises[i].done=false
+setTimeout(()=>{ input.classList.remove("wrong"); input.style.animation=''; input.value=''; }, 600)
 }
 }
-if(points%15===0 && points>0){level++}
+
+// עלייה ברמה כל 15 תשובות נכונות (או לפי ניסוי אחר)
+let required=10 + (level-1)*5
+if(correctForLevel>=required){
+level++
+let reward=Math.floor(Math.random()*21)+30
+coins+=reward
+correctForLevel=0
+alert(`עלית לרמה ${level} וקיבלת ${reward} מטבעות פרס!`)
+}
+
 updateBar()
 updateStats()
 generateExercises()
@@ -226,17 +241,17 @@ document.getElementById("sSolved").textContent=solved
 }
 
 function dailyReward(){
-let lastReward = parseInt(localStorage.getItem("lastDailyReward")) || 0;
-let now = Date.now();
-let hoursPassed = (now - lastReward)/(1000*60*60);
+let lastReward=parseInt(localStorage.getItem("lastDailyReward"))||0
+let now=Date.now()
+let hoursPassed=(now-lastReward)/(1000*60*60)
 if(hoursPassed>=8 || points>=20){
 coins+=10
 alert("קיבלת פרס יומי! 💰+10 מטבעות")
-localStorage.setItem("lastDailyReward", now)
-if(points>=20){points=0}
+localStorage.setItem("lastDailyReward",now)
+if(points>=20) points=0
 updateBar(); save()
 }else{
-let remain = 8 - hoursPassed
+let remain=8-hoursPassed
 alert(`פרס יומי זמין בעוד ${remain.toFixed(1)} שעות`)
 }
 }
@@ -249,6 +264,7 @@ updateBar(); save()
 
 function resetGame(){localStorage.clear(); location.reload()}
 function updatePage(){location.reload()}
+
 function addItem(){
 let name=document.getElementById("itemIcon").value+" "+document.getElementById("itemName").value
 let price=parseInt(document.getElementById("itemPrice").value)
