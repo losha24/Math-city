@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.2</title>
+<title>Math City 1.0.3</title>
 
 <style>
 
@@ -30,20 +30,27 @@ margin:auto
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:6px
+gap:8px;
+border:3px solid #4CAF50;
+padding:10px;
+background:white
 }
 
 .menu button{
-padding:9px 14px;
-border:none;
-border-radius:6px;
+
+padding:10px 16px;
+border-radius:8px;
+border:2px solid #4CAF50;
 background:#4CAF50;
 color:white;
-cursor:pointer
+cursor:pointer;
+font-weight:bold
+
 }
 
 .menu button.active{
-background:#e53935
+background:#e53935;
+border-color:#e53935
 }
 
 #game{
@@ -52,10 +59,12 @@ padding:20px
 }
 
 #topbar{
+
 background:#e3f2fd;
 padding:10px;
 margin-bottom:15px;
 font-weight:bold
+
 }
 
 .exercise{
@@ -64,10 +73,12 @@ font-size:20px
 }
 
 .exercise input{
+
 width:70px;
 padding:6px;
 font-size:18px;
 text-align:center
+
 }
 
 .correct{
@@ -80,47 +91,59 @@ animation:shake .3s
 }
 
 @keyframes shake{
+
 0%{transform:translateX(0)}
 25%{transform:translateX(-4px)}
 50%{transform:translateX(4px)}
 75%{transform:translateX(-4px)}
 100%{transform:translateX(0)}
+
 }
 
 #check{
+
 padding:10px 30px;
 background:#2196F3;
 border:none;
 color:white;
 border-radius:6px
+
 }
 
 .shop{
+
 display:none;
 margin-top:20px
+
 }
 
 .shop-grid{
+
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 max-width:500px;
 margin:auto
+
 }
 
 .item{
+
 background:white;
 padding:10px;
 border-radius:8px;
 box-shadow:0 0 5px rgba(0,0,0,.2)
+
 }
 
 .buy{
+
 margin-top:5px;
 padding:5px;
 border:none;
 border-radius:4px;
 color:white
+
 }
 
 .green{background:#4CAF50}
@@ -131,19 +154,38 @@ display:none;
 margin-top:20px
 }
 
+#prizes{
+display:none;
+margin-top:20px
+}
+
 table{
+
 border-collapse:collapse;
 margin:auto
+
 }
 
 th,td{
+
 border:1px solid #ccc;
 padding:6px
+
 }
 
 footer{
+
 margin-top:20px;
 color:#666
+
+}
+
+.parent{
+
+margin-top:10px;
+border-top:2px dashed #aaa;
+padding-top:10px
+
 }
 
 </style>
@@ -160,13 +202,12 @@ color:#666
 
 <button onclick="startGame()">התחלת משחק</button>
 <button onclick="toggleShop(this)">חנות</button>
+<button onclick="togglePrizes(this)">פרסים</button>
 <button onclick="toggleStats(this)">סטטיסטיקה</button>
-<button onclick="toggleParents()">בקרת הורים</button>
 <button onclick="dailyReward()">פרס יומי</button>
 <button onclick="spinWheel()">גלגל מזל</button>
 <button onclick="installApp()">התקן אפליקציה</button>
 <button onclick="resetGame()">איפוס</button>
-<button onclick="location.reload()">עדכון</button>
 
 </div>
 
@@ -175,22 +216,57 @@ color:#666
 <div id="game">
 
 <div id="topbar">
+
 ⭐ רמה <span id="level">1</span> |
 🧮 נקודות <span id="points">0</span> |
 💰 מטבעות <span id="coins">0</span>
+
 </div>
 
 <div id="exercises"></div>
 
 <button id="check" onclick="checkAnswers()">בדיקה</button>
 
-<div id="msg"></div>
-
 <div class="shop" id="shop">
 
 <h3>חנות</h3>
 
 <div class="shop-grid" id="shopGrid"></div>
+
+<div class="parent">
+
+<h4>ניהול הורים</h4>
+
+<input id="itemName" placeholder="שם פרס">
+
+<input id="itemPrice" type="number" placeholder="מחיר">
+
+<select id="itemIcon">
+
+<option>🎁</option>
+<option>🎮</option>
+<option>🚗</option>
+<option>⚽</option>
+<option>🎯</option>
+<option>🎲</option>
+<option>🧸</option>
+<option>🚀</option>
+<option>🎨</option>
+<option>🏆</option>
+
+</select>
+
+<button onclick="addItem()">הוסף</button>
+
+</div>
+
+</div>
+
+<div id="prizes">
+
+<h3>פרסים שנקנו</h3>
+
+<ul id="prizeList"></ul>
 
 </div>
 
@@ -220,7 +296,7 @@ color:#666
 
 <footer>
 
-© Math City – Version 1.0.2 – אלכסיי זבודיסקר
+© Math City – Version 1.0.3 – אלכסיי זבודיסקר
 
 </footer>
 
@@ -233,6 +309,8 @@ let level=1
 let correct=0
 let wrong=0
 let solved=0
+
+let prizes=[]
 
 let exercises=[]
 
@@ -260,6 +338,8 @@ localStorage.setItem("correct",correct)
 localStorage.setItem("wrong",wrong)
 localStorage.setItem("solved",solved)
 
+localStorage.setItem("prizes",JSON.stringify(prizes))
+
 }
 
 function load(){
@@ -272,8 +352,11 @@ correct=parseInt(localStorage.getItem("correct"))||0
 wrong=parseInt(localStorage.getItem("wrong"))||0
 solved=parseInt(localStorage.getItem("solved"))||0
 
+prizes=JSON.parse(localStorage.getItem("prizes"))||[]
+
 updateBar()
 updateStats()
+renderPrizes()
 
 }
 
@@ -326,6 +409,7 @@ let ans=op=="+"?a+b:a-b
 exercises.push(ans)
 
 box.innerHTML+=`
+
 <div class="exercise">
 
 ${a} ${op} ${b} =
@@ -333,6 +417,7 @@ ${a} ${op} ${b} =
 <input id="ans${i}">
 
 </div>
+
 `
 
 }
@@ -352,15 +437,16 @@ if(isNaN(val))continue
 if(val===exercises[i]){
 
 input.classList.remove("wrong")
-
 input.classList.add("correct")
 
-coins+=2
-points++
+coins+=3
+points+=1
 correct++
 solved++
 
-document.getElementById("msg").textContent="ענית על תשובה נכונה"
+if(points%15===0){
+level++
+}
 
 generateExercises()
 
@@ -369,7 +455,6 @@ break
 }else{
 
 input.classList.remove("correct")
-
 input.classList.add("wrong")
 
 wrong++
@@ -390,7 +475,7 @@ let grid=document.getElementById("shopGrid")
 
 grid.innerHTML=""
 
-shopItems.forEach(i=>{
+shopItems.forEach((i,index)=>{
 
 let can=coins>=i.price
 
@@ -402,7 +487,7 @@ ${i.name}<br>
 
 ${i.price} 💰<br>
 
-<button class="buy ${can?'green':'red'}">
+<button class="${can?'green':'red'} buy" onclick="buyItem(${index})">
 
 קניה
 
@@ -416,25 +501,47 @@ ${i.price} 💰<br>
 
 }
 
+function buyItem(i){
+
+let item=shopItems[i]
+
+if(coins<item.price)return
+
+coins-=item.price
+
+prizes.push(item.name)
+
+renderPrizes()
+
+updateBar()
+
+renderShop()
+
+save()
+
+}
+
+function renderPrizes(){
+
+let list=document.getElementById("prizeList")
+
+list.innerHTML=""
+
+prizes.forEach(p=>{
+
+list.innerHTML+=`<li>${p}</li>`
+
+})
+
+}
+
 function toggleShop(btn){
 
 let box=document.getElementById("shop")
 
-if(box.style.display==="block"){
+box.style.display=box.style.display==="block"?"none":"block"
 
-box.style.display="none"
-
-btn.classList.remove("active")
-
-}else{
-
-box.style.display="block"
-
-btn.classList.add("active")
-
-renderShop()
-
-}
+btn.classList.toggle("active")
 
 }
 
@@ -442,19 +549,19 @@ function toggleStats(btn){
 
 let box=document.getElementById("stats")
 
-if(box.style.display==="block"){
+box.style.display=box.style.display==="block"?"none":"block"
 
-box.style.display="none"
-
-btn.classList.remove("active")
-
-}else{
-
-box.style.display="block"
-
-btn.classList.add("active")
+btn.classList.toggle("active")
 
 }
+
+function togglePrizes(btn){
+
+let box=document.getElementById("prizes")
+
+box.style.display=box.style.display==="block"?"none":"block"
+
+btn.classList.toggle("active")
 
 }
 
@@ -468,27 +575,11 @@ document.getElementById("sSolved").textContent=solved
 
 function dailyReward(){
 
-let last=localStorage.getItem("daily")
-
-let now=Date.now()
-
-if(last && now-last<28800000){
-
-alert("כבר קיבלת פרס")
-
-return
-
-}
-
 coins+=10
-
-localStorage.setItem("daily",now)
 
 updateBar()
 
 save()
-
-alert("קיבלת 10 מטבעות")
 
 }
 
@@ -502,29 +593,17 @@ return
 
 }
 
-let prize=Math.floor(Math.random()*3)
-
-if(prize==0)coins+=10
-if(prize==1)coins+=20
-if(prize==2)points+=5
+coins+=10
 
 updateBar()
 
 save()
 
-alert("זכית בפרס")
-
 }
 
 function installApp(){
 
-alert("אפשר להתקין דרך הדפדפן")
-
-}
-
-function toggleParents(){
-
-alert("מצב הורים")
+alert("ניתן להתקין דרך הדפדפן")
 
 }
 
@@ -533,6 +612,20 @@ function resetGame(){
 localStorage.clear()
 
 location.reload()
+
+}
+
+function addItem(){
+
+let name=document.getElementById("itemIcon").value+" "+document.getElementById("itemName").value
+
+let price=parseInt(document.getElementById("itemPrice").value)
+
+if(!name || !price)return
+
+shopItems.push({name,price})
+
+renderShop()
 
 }
 
