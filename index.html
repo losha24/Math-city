@@ -39,13 +39,12 @@ footer{margin-top:20px;color:#666}
 </header>
 
 <div class="buttons">
-<button onclick="startGame()">התחלת משחק</button>
+<button onclick="refreshOrUpdate()">עדכון</button>
 <button onclick="toggleShop(this)">חנות</button>
 <button onclick="togglePrizes(this)">פרסים</button>
 <button onclick="toggleStats(this)">סטטיסטיקה</button>
 <button onclick="dailyReward()">פרס יומי</button>
 <button onclick="spinWheel()">גלגל מזל</button>
-<button onclick="updatePage()">עדכון</button>
 <button onclick="resetGame()">איפוס</button>
 </div>
 
@@ -132,11 +131,18 @@ document.getElementById("points").textContent=points
 document.getElementById("level").textContent=level
 }
 
-function startGame(){
-document.getElementById("game").style.display="block"
-generateExercises()
-renderShop()
+function refreshOrUpdate(){
+  // כאן אפשר לבדוק גרסה חדשה (דוגמה)
+  let newVersion=false; // אם נדרש לבדוק מהשרת
+  if(newVersion){
+    alert("מותקן עדכון חדש!")
+    // קוד להורדה/עדכון גרסה
+  }
+  generateExercises()
+  alert("תרגילים רועננו!")
 }
+
+function startGame(){generateExercises(); renderShop()}
 
 function generateExercises(){
 exercises=[]
@@ -174,7 +180,7 @@ if(val===exercises[i].value){
 input.classList.remove("wrong")
 input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++; correctForLevel++
-generateSingleExercise(i) // ✅ החלפת תרגיל מיד
+generateSingleExercise(i) 
 }else{
 if(!exercises[i].attempted){ 
 exercises[i].attempted=true
@@ -190,7 +196,6 @@ generateSingleExercise(i)
 }
 }
 
-// עלייה ברמה
 let required=10 + (level-1)*5
 if(correctForLevel>=required){
 level++
@@ -278,7 +283,6 @@ updateBar(); save()
 }
 
 function resetGame(){localStorage.clear(); location.reload()}
-function updatePage(){location.reload()}
 
 function addItem(){
 let name=document.getElementById("itemIcon").value+" "+document.getElementById("itemName").value
