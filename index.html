@@ -6,43 +6,41 @@
 <title>Math City</title>
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
-<script src="js/main.js" defer></script>
 </head>
 <body>
 
 <div id="startScreen">
-    <div id="topBar">
-        <img src="logo.png" alt="Math City" id="logo">
-        <h1>Math City</h1>
-    </div>
-    <div class="startButtons">
-        <button onclick="startGame()" class="btn start">התחל משחק</button>
-        <button onclick="resetGame()" class="btn reset">איפוס</button>
-        <button onclick="checkUpdate()" class="btn update">עדכון גרסה</button>
-    </div>
+  <div id="topBar">
+    <img src="logo.png" id="logo">
+    <h1>Math City</h1>
+  </div>
+  <button class="btn start" onclick="startGame()">התחל משחק</button>
+  <button class="btn reset" onclick="resetGame()">איפוס</button>
+  <button class="btn update" onclick="checkUpdate()">עדכון גרסה</button>
 </div>
 
 <div id="gameScreen" style="display:none;">
-    <div id="statsBar">
-        <span>רמה: <span id="level">1</span></span>
-        <span>נקודות: <span id="points">0</span></span>
-        <span>מטבעות: <span id="coins">0</span></span>
-    </div>
+  <div id="statsBar">
+    <span>רמה: <span id="level">1</span> ⭐</span>
+    <span>נקודות: <span id="points">0</span> 🏆</span>
+    <span>מטבעות: <span id="coins">0</span> 💰</span>
+  </div>
 
-    <div id="mathArea"></div>
-    <button onclick="checkAnswers()" class="btn checkAll">בדוק את כולם</button>
-    <div id="rewardText"></div>
-    <button onclick="spinReward()" class="btn reward">גלגל מזל</button>
-    <button onclick="dailyReward()" class="btn reward">מתנה יומית</button>
+  <div id="mathArea">
+    <div class="mathBox"><span id="exercise">5+3</span><br><input type="number" id="answer"></div>
+  </div>
+  <button class="btn check" onclick="checkAnswer()">בדוק תשובה</button>
+  <div id="rewardText"></div>
+  <button class="btn reward" onclick="spinReward()">גלגל מזל</button>
+  <button class="btn reward" onclick="dailyReward()">מתנה יומית</button>
 
-    <div id="shop">
-        <h2>חנות</h2>
-        <div id="shopItems"></div>
-        <button onclick="toggleParentMode()" class="btn parentMode">ניהול הורים</button>
-    </div>
+  <h2>חנות</h2>
+  <div id="shopItems"></div>
+  <button class="btn parentMode" onclick="toggleParentMode()">ניהול הורים</button>
 
-    <div id="footer">© 2026 אלכסיי זבודיסקר</div>
+  <div id="footer">© 2026 אלכסיי זבודיסקר</div>
 </div>
 
+<script src="js/main.js"></script>
 </body>
 </html>
