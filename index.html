@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.2 - תקינה</title>
+<title>Math City 1.0.2</title>
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
 #header { background:#4CAF50; text-align:center; padding:10px 0; position:relative; }
@@ -16,15 +16,15 @@ body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; 
 .blue { background:#2196F3; }
 #main { padding:20px; display:none; }
 #exercise { margin-bottom:20px; }
-.exercise-box { display:inline-block; width:45%; margin:2%; vertical-align:top; }
 .exercise-box input { width:100%; padding:5px; font-size:1em; text-align:center; }
 #check-btn { display:block; margin:20px auto; background:#2196F3; }
-#shop, #stats, #prizes { display:none; border:1px solid #ccc; background:white; padding:10px; margin-top:10px; }
+#shop, #stats { display:none; border:1px solid #ccc; background:white; padding:10px; margin-top:10px; }
 .shop-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
 .shop-item img { width:40px; }
 #reward-msg { margin-top:10px; font-weight:bold; text-align:center; }
 .shake { animation: shake 0.5s; }
 @keyframes shake {0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }}
+#footer { text-align:center; padding:10px; background:#ddd; margin-top:20px; }
 </style>
 </head>
 <body>
@@ -40,133 +40,69 @@ body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; 
 </div>
 
 <div id="main">
-    <!-- תרגילים -->
+    <!-- תרגיל אחד -->
     <div id="exercise">
-        <div class="exercise-box"><div>תרגיל 1: <span class="question">5+3</span></div><input type="number" class="answer"></div>
-        <div class="exercise-box"><div>תרגיל 2: <span class="question">2+7</span></div><input type="number" class="answer"></div>
-        <div class="exercise-box"><div>תרגיל 3: <span class="question">6+4</span></div><input type="number" class="answer"></div>
-        <div class="exercise-box"><div>תרגיל 4: <span class="question">3+8</span></div><input type="number" class="answer"></div>
+        <div class="exercise-box">
+            <div>תרגיל: <span class="question">5+3</span></div>
+            <input type="number" class="answer">
+        </div>
         <button class="btn blue" id="check-btn">בדיקה</button>
         <div id="reward-msg"></div>
     </div>
 
-    <!-- חנות -->
+    <!-- חנות בסיסית -->
     <button class="btn green" id="shop-btn">חנות</button>
     <div id="shop">
-        <div id="parent-controls" style="display:none;">
-            <button class="btn green" id="add-item-btn">הוספת פריט</button>
-        </div>
         <div id="shop-items"></div>
     </div>
 
-    <!-- סטטיסטיקה -->
+    <!-- סטטיסטיקה בסיסית -->
     <button class="btn green" id="stats-btn">סטטיסטיקה</button>
     <div id="stats">
         <table border="1" width="100%">
             <thead>
-                <tr><th>פריט</th><th>מחיר</th><th>אייקון</th></tr>
+                <tr><th>פריט</th><th>מחיר</th></tr>
             </thead>
             <tbody id="stats-body"></tbody>
         </table>
     </div>
-
-    <!-- פרסים -->
-    <button class="btn green" id="prizes-btn">פרסים</button>
-    <div id="prizes"></div>
 </div>
+
+<div id="footer">© 2026 Math City - גרסה 1.0.2</div>
 
 <script>
 // ---- משתנים ----
-let exercises = [
-    {q:"5+3", a:8},{q:"2+7", a:9},{q:"6+4", a:10},{q:"3+8", a:11}
-];
-let answersCorrect = 0;
-let totalCorrect = 0;
-let rewardCooldown = 0;
+let exercise = {q:"5+3", a:8};
 let coins = 0;
 let shopItems = [
-    {name:"פריט 1", price:10, icon:"🎁"},
-    {name:"פריט 2", price:15, icon:"🪀"},
-    {name:"פריט 3", price:20, icon:"⚽"},
+    {name:"פריט 1", price:10},
+    {name:"פריט 2", price:15},
+    {name:"פריט 3", price:20},
 ];
 
-// ---- פונקציות עזר ----
-function shuffleExercises() {
-    exercises.sort(()=>Math.random()-0.5);
-    let boxes = document.querySelectorAll(".exercise-box");
-    boxes.forEach((box,i)=>{
-        box.querySelector(".question").textContent = exercises[i].q;
-        box.querySelector("input").value="";
-        box.querySelector("input").style.backgroundColor="";
-    });
-}
-
-function checkAnswers() {
-    let boxes = document.querySelectorAll(".exercise-box");
-    let allAnswered = true;
-    boxes.forEach((box,i)=>{
-        let val = parseInt(box.querySelector("input").value);
-        if(isNaN(val)) allAnswered=false;
-    });
-    if(!allAnswered) return;
-
-    boxes.forEach((box,i)=>{
-        let input = box.querySelector("input");
-        if(parseInt(input.value)===exercises[i].a){
-            input.style.backgroundColor="lightgreen";
-            totalCorrect++;
-            answersCorrect++;
-            coins += 5;
-            if(answersCorrect>=14 && rewardCooldown===0){
-                document.getElementById("reward-msg").textContent="🎁 פרס! קיבלת מתנה";
-                rewardCooldown = 1;
-            }
-            shuffleExercises();
-        }else{
-            input.style.backgroundColor="salmon";
-            input.classList.add("shake");
-            setTimeout(()=>input.classList.remove("shake"),500);
-        }
-    });
+// ---- פונקציות ----
+function checkAnswer() {
+    let input = document.querySelector(".answer");
+    let val = parseInt(input.value);
+    if(isNaN(val)) return;
+    if(val === exercise.a){
+        input.style.backgroundColor="lightgreen";
+        coins +=5;
+        document.getElementById("reward-msg").textContent="תשובה נכונה! +5 מטבעות";
+        newExercise();
+    } else {
+        input.style.backgroundColor="salmon";
+        input.classList.add("shake");
+        setTimeout(()=>input.classList.remove("shake"),500);
+    }
     saveState();
 }
 
-// ---- שמירה בלוקאל ----
-function saveState(){
-    localStorage.setItem("answersCorrect", answersCorrect);
-    localStorage.setItem("totalCorrect", totalCorrect);
-    localStorage.setItem("coins", coins);
-    localStorage.setItem("shopItems", JSON.stringify(shopItems));
+function newExercise(){
+    // פשוט מחזיר אותו תרגיל, גרסה בסיסית
+    document.querySelector(".answer").value="";
+    document.querySelector(".answer").style.backgroundColor="";
 }
-
-// ---- פתיחה ----
-document.getElementById("start-btn").addEventListener("click", ()=>{
-    document.getElementById("main").style.display="block";
-    document.getElementById("intro-buttons").style.display="none";
-    shuffleExercises();
-});
-
-// ---- איפוס ----
-document.getElementById("reset-btn").addEventListener("click", ()=>{
-    answersCorrect=0; totalCorrect=0; coins=0; rewardCooldown=0;
-    saveState();
-    location.reload();
-});
-
-// ---- עדכון גרסה ----
-document.getElementById("update-btn").addEventListener("click", ()=>{
-    alert("בדיקה אם קיימת גרסה חדשה...");
-    location.reload();
-});
-
-// ---- כפתור בדיקה ----
-document.getElementById("check-btn").addEventListener("click", checkAnswers);
-
-// ---- חנות ----
-document.getElementById("shop-btn").addEventListener("click", ()=>{
-    let shop = document.getElementById("shop");
-    shop.style.display = shop.style.display==="block" ? "none":"block";
-});
 
 function renderShop() {
     let container = document.getElementById("shop-items");
@@ -185,7 +121,7 @@ function renderShop() {
                 renderShop();
             } else alert("אין מספיק כסף");
         };
-        div.innerHTML=`${item.name} ${item.icon}`;
+        div.textContent=item.name;
         div.appendChild(btnBuy);
         container.appendChild(div);
     });
@@ -194,25 +130,45 @@ function renderShop() {
 function updateStats(item){
     let tbody = document.getElementById("stats-body");
     let row = document.createElement("tr");
-    row.innerHTML=`<td>${item.name}</td><td>${item.price}</td><td>${item.icon}</td>`;
+    row.innerHTML=`<td>${item.name}</td><td>${item.price}</td>`;
     tbody.appendChild(row);
 }
 
-document.getElementById("add-item-btn").addEventListener("click", ()=>{
-    let name = prompt("שם פריט:");
-    let price = parseInt(prompt("מחיר:"));
-    let iconOptions = ["🎁","🪀","⚽","🏀","🎯","🎮","🧸","🚗","🚀","🎹","🎨","🎲","🛹","🎤","🎬"];
-    let icon = prompt(`בחר אייקון מתוך: ${iconOptions.join(" ")}`, iconOptions[0]);
-    shopItems.push({name, price, icon});
-    saveState();
-    renderShop();
+function saveState(){
+    localStorage.setItem("coins", coins);
+    localStorage.setItem("shopItems", JSON.stringify(shopItems));
+}
+
+// ---- אירועים ----
+document.getElementById("start-btn").addEventListener("click", ()=>{
+    document.getElementById("main").style.display="block";
+    document.getElementById("intro-buttons").style.display="none";
 });
 
-// ---- סטטיסטיקה ----
+document.getElementById("reset-btn").addEventListener("click", ()=>{
+    coins=0;
+    saveState();
+    location.reload();
+});
+
+document.getElementById("update-btn").addEventListener("click", ()=>{
+    alert("בדיקה אם קיימת גרסה חדשה...");
+    location.reload();
+});
+
+document.getElementById("check-btn").addEventListener("click", checkAnswer);
+
+document.getElementById("shop-btn").addEventListener("click", ()=>{
+    let shop = document.getElementById("shop");
+    shop.style.display = shop.style.display==="block" ? "none":"block";
+});
+
 document.getElementById("stats-btn").addEventListener("click", ()=>{
     let stats = document.getElementById("stats");
     stats.style.display = stats.style.display==="block"?"none":"block";
 });
+
+renderShop();
 </script>
 
 </body>
