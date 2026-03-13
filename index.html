@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math City 1.0.3</title>
+<title>Math City 1.0.4</title>
 
 <style>
 
@@ -17,7 +17,7 @@ text-align:center
 header{
 background:#4CAF50;
 color:white;
-padding:16px
+padding:18px
 }
 
 header img{
@@ -26,31 +26,27 @@ display:block;
 margin:auto
 }
 
-.menu{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:8px;
-border:3px solid #4CAF50;
-padding:10px;
-background:white
+.buttons{
+
+margin-top:10px
+
 }
 
-.menu button{
+.buttons button{
 
+margin:4px;
 padding:10px 16px;
+border:none;
 border-radius:8px;
-border:2px solid #4CAF50;
 background:#4CAF50;
 color:white;
-cursor:pointer;
-font-weight:bold
+font-weight:bold;
+cursor:pointer
 
 }
 
-.menu button.active{
-background:#e53935;
-border-color:#e53935
+.buttons button.active{
+background:#e53935
 }
 
 #game{
@@ -59,12 +55,10 @@ padding:20px
 }
 
 #topbar{
-
 background:#e3f2fd;
 padding:10px;
 margin-bottom:15px;
 font-weight:bold
-
 }
 
 .exercise{
@@ -73,12 +67,10 @@ font-size:20px
 }
 
 .exercise input{
-
 width:70px;
 padding:6px;
 font-size:18px;
 text-align:center
-
 }
 
 .correct{
@@ -101,49 +93,39 @@ animation:shake .3s
 }
 
 #check{
-
 padding:10px 30px;
 background:#2196F3;
 border:none;
 color:white;
 border-radius:6px
-
 }
 
 .shop{
-
 display:none;
 margin-top:20px
-
 }
 
 .shop-grid{
-
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 max-width:500px;
 margin:auto
-
 }
 
 .item{
-
 background:white;
 padding:10px;
 border-radius:8px;
 box-shadow:0 0 5px rgba(0,0,0,.2)
-
 }
 
 .buy{
-
 margin-top:5px;
 padding:5px;
 border:none;
 border-radius:4px;
 color:white
-
 }
 
 .green{background:#4CAF50}
@@ -160,32 +142,24 @@ margin-top:20px
 }
 
 table{
-
 border-collapse:collapse;
 margin:auto
-
 }
 
 th,td{
-
 border:1px solid #ccc;
 padding:6px
-
-}
-
-footer{
-
-margin-top:20px;
-color:#666
-
 }
 
 .parent{
-
 margin-top:10px;
 border-top:2px dashed #aaa;
 padding-top:10px
+}
 
+footer{
+margin-top:20px;
+color:#666
 }
 
 </style>
@@ -198,7 +172,9 @@ padding-top:10px
 <img src="logo.png">
 <h1>Math City</h1>
 
-<div class="menu">
+</header>
+
+<div class="buttons">
 
 <button onclick="startGame()">התחלת משחק</button>
 <button onclick="toggleShop(this)">חנות</button>
@@ -206,12 +182,10 @@ padding-top:10px
 <button onclick="toggleStats(this)">סטטיסטיקה</button>
 <button onclick="dailyReward()">פרס יומי</button>
 <button onclick="spinWheel()">גלגל מזל</button>
-<button onclick="installApp()">התקן אפליקציה</button>
+<button onclick="location.reload()">עדכון</button>
 <button onclick="resetGame()">איפוס</button>
 
 </div>
-
-</header>
 
 <div id="game">
 
@@ -296,7 +270,7 @@ padding-top:10px
 
 <footer>
 
-© Math City – Version 1.0.3 – אלכסיי זבודיסקר
+© Math City – Version 1.0.4 – אלכסיי זבודיסקר
 
 </footer>
 
@@ -311,7 +285,6 @@ let wrong=0
 let solved=0
 
 let prizes=[]
-
 let exercises=[]
 
 let shopItems=[
@@ -377,19 +350,7 @@ renderShop()
 
 }
 
-function difficulty(){
-
-if(points<10)return 10
-if(points<30)return 20
-if(points<60)return 50
-
-return 100
-
-}
-
 function generateExercises(){
-
-let max=difficulty()
 
 exercises=[]
 
@@ -399,8 +360,8 @@ box.innerHTML=""
 
 for(let i=0;i<3;i++){
 
-let a=Math.floor(Math.random()*max)+1
-let b=Math.floor(Math.random()*max)+1
+let a=Math.floor(Math.random()*20)+1
+let b=Math.floor(Math.random()*20)+1
 
 let op=Math.random()<0.5?"+":"-"
 
@@ -441,6 +402,7 @@ input.classList.add("correct")
 
 coins+=3
 points+=1
+
 correct++
 solved++
 
@@ -487,7 +449,7 @@ ${i.name}<br>
 
 ${i.price} 💰<br>
 
-<button class="${can?'green':'red'} buy" onclick="buyItem(${index})">
+<button class="buy ${can?'green':'red'}" onclick="buyItem(${index})">
 
 קניה
 
@@ -598,12 +560,6 @@ coins+=10
 updateBar()
 
 save()
-
-}
-
-function installApp(){
-
-alert("ניתן להתקין דרך הדפדפן")
 
 }
 
