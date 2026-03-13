@@ -174,7 +174,7 @@ if(val===exercises[i].value){
 input.classList.remove("wrong")
 input.classList.add("correct")
 coins+=3; points+=1; correct++; solved++; correctForLevel++
-exercises[i].done=true
+generateSingleExercise(i) // ✅ החלפת תרגיל מיד
 }else{
 if(!exercises[i].attempted){ 
 exercises[i].attempted=true
@@ -185,7 +185,6 @@ wrong++
 input.classList.remove("wrong")
 input.style.animation=''
 exercises[i].attempted=false
-exercises[i].done=true
 generateSingleExercise(i)
 }
 }
